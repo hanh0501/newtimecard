@@ -439,10 +439,11 @@ def check_time():
 
     OT = driver.find_element_by_xpath(data["TIMECARD"]["OT"])
     Logging(">> OT Time: " + OT.text)
+    OT_time = OT.text
 
-    return output_clockin,output_clockout,break_time,working_time,clock_in_time,work_method_up,today_work_date
+    return output_clockin,output_clockout,break_time,working_time,clock_in_time,work_method_up,today_work_date, OT_time
 
-def timesheet_list(output_clockin,output_clockout,break_time,working_time):
+def timesheet_list(output_clockin,output_clockout,break_time,working_time, OT_time):
     date_clockin = driver.find_element_by_xpath("//*[@class='admin_status']//div[contains(@class,'daily-wrapper')]/div/div/div/div[2]/div/div[2]/div/div/span")
     #Logging(date_clockin.text)
     date_clock_in = date_clockin.text
@@ -465,8 +466,30 @@ def timesheet_list(output_clockin,output_clockout,break_time,working_time):
             Logging("Clock-out Time is correct")
         else:
             Logging("Clock-out Time is wrong")
+
+        workingtime_li = driver.find_element_by_xpath("//*[contains(@class,'list-table-wrapper')]//div[contains(@col-id,'date') and contains(.,'" + date_clock_in + "')]/following-sibling::div[contains(@col-id,'work_time_label')]/div/div")
+        if working_time == workingtime_li.text:
+            Logging("- Correct working time")
+        else:
+            Logging("- Wrong working time")
+            
+        OTtime_li = driver.find_element_by_xpath("//*[contains(@class,'list-table-wrapper')]//div[contains(@col-id,'date') and contains(.,'" + date_clock_in + "')]/following-sibling::div[contains(@col-id,'over_time_label')]/div/div")
+        Logging(OT_time)
+        Logging(OTtime_li)
+        if OT_time == OTtime_li.text:
+            Logging("OT Time is correct")
+        elif OTtime_li.text == "-":
+            Logging("No OT Time")
+        else:
+            Logging("OT Time is wrong")
+
+        
+            
+                
     else:
         Logging("- Cannot find date")
+
+        
 
     #approval_OT()
 
@@ -7823,18 +7846,18 @@ def timecard():
     nightwork()
     breaktime()
     clock_out()
-    output_clockin,output_clockout,break_time,working_time,clock_in_time,work_method_up,today_work_date = check_time()
-    #timesheet_list(output_clockin,output_clockout,break_time,working_time)
-    add_event2()
-    view_details()
-    working_status()
+    output_clockin,output_clockout,break_time,working_time,clock_in_time,work_method_up,today_work_date, OT_time = check_time()
+    timesheet_list(output_clockin,output_clockout,break_time,working_time, OT_time)
+    # add_event2()
+    # view_details()
+    # working_status()
 
-    # day_list = find_date(today_work_date)
-    #work_schedule(day_list)
-    manager()
-    total_manager()
-    # work_correction()
-    delete_punch()
+    # # day_list = find_date(today_work_date)
+    # #work_schedule(day_list)
+    # manager()
+    # total_manager()
+    # # work_correction()
+    # delete_punch()
 
 def time_card():
     # # # # Napproval_OT()
@@ -7892,5 +7915,3 @@ def time_card():
     # # # OT_post_midnight()
 
     # work_shift()
-
-#test123
