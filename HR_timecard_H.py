@@ -455,27 +455,25 @@ def timesheet_list(output_clockin,output_clockout,break_time,working_time, OT_ti
     today.location_once_scrolled_into_view
     time.sleep(2)
     if today.is_displayed():
-        clockin = driver.find_element_by_xpath("//*[contains(@class,'list-table-wrapper')]//div[contains(@col-id,'date') and contains(.,'" + date_clock_in + "')]/following-sibling::div[contains(@col-id,'clock_in')]/div/div/div")
+        clockin = driver.find_element_by_xpath("//div[contains(.,'" + date_clock_in + "')]/following-sibling::div[contains(@col-id,'clock_in')]/div/div/div")
         if output_clockin == clockin.text:
             Logging("Clock-in Time is correct")
         else:
             Logging("Clock-in Time is wrong")
 
-        clockout = driver.find_element_by_xpath("//*[contains(@class,'list-table-wrapper')]//div[contains(@col-id,'date') and contains(.,'" + date_clock_in + "')]/following-sibling::div[contains(@col-id,'clock_out')]/div/div/div")
+        clockout = driver.find_element_by_xpath("//div[contains(.,'" + date_clock_in + "')]/following-sibling::div[contains(@col-id,'clock_out')]/div/div/div")
         if output_clockout == clockout.text:
             Logging("Clock-out Time is correct")
         else:
             Logging("Clock-out Time is wrong")
 
-        workingtime_li = driver.find_element_by_xpath("//*[contains(@class,'list-table-wrapper')]//div[contains(@col-id,'date') and contains(.,'" + date_clock_in + "')]/following-sibling::div[contains(@col-id,'work_time_label')]/div/div")
-        if working_time == workingtime_li.text:
-            Logging("- Correct working time")
+        breaktime_li = driver.find_element_by_xpath("//div[contains(.,'" + date_clock_in + "')]/following-sibling::div[contains(@col-id,'break_time_label')]/div/div")
+        if break_time == breaktime_li.text:
+            Logging("Break Time is correct")
         else:
-            Logging("- Wrong working time")
-            
-        OTtime_li = driver.find_element_by_xpath("//*[contains(@class,'list-table-wrapper')]//div[contains(@col-id,'date') and contains(.,'" + date_clock_in + "')]/following-sibling::div[contains(@col-id,'over_time_label')]/div/div")
-        Logging(OT_time)
-        Logging(OTtime_li)
+            Logging("Break Time is wrong")
+
+        OTtime_li = driver.find_element_by_xpath("//div[contains(.,'" + date_clock_in + "')]/following-sibling::div[contains(@col-id,'over_time_label')]/div/div")
         if OT_time == OTtime_li.text:
             Logging("OT Time is correct")
         elif OTtime_li.text == "-":
@@ -483,8 +481,11 @@ def timesheet_list(output_clockin,output_clockout,break_time,working_time, OT_ti
         else:
             Logging("OT Time is wrong")
 
-        
-            
+        event_li = driver.find_element_by_xpath("//div[contains(.,'" + date_clock_in + "')]/following-sibling::div[contains(@col-id,'day_name')]/div/div")
+        if event_li.text == "Work Day":
+            Logging("Today is work day")
+        else:
+            Logging("No Event")
                 
     else:
         Logging("- Cannot find date")
