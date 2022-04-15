@@ -473,6 +473,12 @@ def timesheet_list(output_clockin,output_clockout,break_time,working_time, OT_ti
         else:
             Logging("Break Time is wrong")
 
+        workingtime_li = driver.find_element_by_xpath("//div[contains(.,'" + date_clock_in + "')]/following-sibling::div[contains(@col-id,'work_time_label')]/div/div")
+        if working_time == workingtime_li.text:
+            Logging("Working Time is correct")
+        else:
+            Logging("Working Time is wrong")
+
         OTtime_li = driver.find_element_by_xpath("//div[contains(.,'" + date_clock_in + "')]/following-sibling::div[contains(@col-id,'over_time_label')]/div/div")
         if OT_time == OTtime_li.text:
             Logging("OT Time is correct")
@@ -484,6 +490,10 @@ def timesheet_list(output_clockin,output_clockout,break_time,working_time, OT_ti
         event_li = driver.find_element_by_xpath("//div[contains(.,'" + date_clock_in + "')]/following-sibling::div[contains(@col-id,'day_name')]/div/div")
         if event_li.text == "Work Day":
             Logging("Today is work day")
+        if event_li.text == "Day Off":
+            Logging("Today is day off")
+        if event_li.text == "Holiday":
+            Logging("Today is holiday")
         else:
             Logging("No Event")
                 
