@@ -499,9 +499,6 @@ def timesheet_list(output_clockin,output_clockout,break_time,working_time, OT_ti
                 
     else:
         Logging("- Cannot find date")
-
-        
-
     #approval_OT()
 
 def add_event2():
@@ -2356,6 +2353,20 @@ def clockin():
         Logging(red('Clock in failed', 'bright')) 
         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["clockin_through_avatar"]["fail"])
 
+def timesheet_calendar_check():
+    driver.find_element_by_xpath("//span[contains(@class, 'text-truncate') and contains(., 'Timesheets')]").click()
+    WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.XPATH, "//span[contains(.,'Break time')] ")))
+    time.sleep(1)
+    output_clock_in = driver.find_element_by_xpath("//div[contains(@class, 'content-body')]//div[contains(@class, 'header')]//div[contains(@class, 'check-in-status')]")
+    Logging(">> Clock-in: " + output_clock_in.text)
+    output_clockin = output_clock_in.text
+    time.sleep(1)
+    driver.find_element_by_xpath(data["TIMECARD"]["calendar"]).click()
+    WebDriverWait(driver,10).until(EC.presence_of_element_located((By.XPATH, data["TIMECARD"]["wait_calendar"])))
+    #Find today's clockin
+    today_clockin = driver.find_element_by_xpath("//span[contains('" "Tardiness" + output_clockin + "']")
+    Logging(today_clockin.text)
+    time.sleep(1)
 
 def clockout():
     try:
@@ -7881,6 +7892,7 @@ def time_card():
     break_time_report_decimal=rp[2]
 
     clockin()
+    timesheet_calendar_check()
     clockout()
     edit_clockin()
 
