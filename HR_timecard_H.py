@@ -2339,10 +2339,19 @@ def report():
 
 def clockin():
     try:
+        night_work = driver.find_element_by_xpath("//span[contains(.,'Confirm Nightwork')]")
+        if night_work.is_displayed():
+            driver.find_element_by_xpath("//span[contains(.,'Confirm Nightwork')]/..//button").click()
+            time.sleep(3)
+    except:
+        Logging(" ")
+
+    try:
         driver.find_element_by_xpath("//*[@id='0']").click()
         driver.find_element_by_xpath("//span[contains(.,'Clock-In')]").click()
         time.sleep(3)
         driver.find_element_by_xpath("//div[contains(@class,'modal-content')]//button[contains(@type,'button')]/span").click()
+        time.sleep(3)
         Logging(" ")
         #Logging("clock in successfully")
         Logging(green('Clock in successfully', 'bright'))  
@@ -2360,11 +2369,15 @@ def timesheet_calendar_check():
     output_clock_in = driver.find_element_by_xpath("//div[contains(@class, 'content-body')]//div[contains(@class, 'header')]//div[contains(@class, 'check-in-status')]")
     Logging(">> Clock-in: " + output_clock_in.text)
     output_clockin = output_clock_in.text
+    out_put_status = driver.find_element_by_xpath("")
+    Logging(">> Clock-in: " + out_put_status.text)
+    output_status = out_put_status.text
     time.sleep(1)
     driver.find_element_by_xpath(data["TIMECARD"]["calendar"]).click()
     WebDriverWait(driver,10).until(EC.presence_of_element_located((By.XPATH, data["TIMECARD"]["wait_calendar"])))
+    time.sleep(3)
     #Find today's clockin
-    today_clockin = driver.find_element_by_xpath("//span[contains('" "Tardiness" + output_clockin + "']")
+    today_clockin = driver.find_element_by_xpath("//span[contains(.,'" + output_status + output_clockin + "')]")
     Logging(today_clockin.text)
     time.sleep(1)
 
