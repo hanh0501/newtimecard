@@ -2369,17 +2369,31 @@ def timesheet_calendar_check():
     output_clock_in = driver.find_element_by_xpath("//div[contains(@class, 'content-body')]//div[contains(@class, 'header')]//div[contains(@class, 'check-in-status')]")
     Logging(">> Clock-in: " + output_clock_in.text)
     output_clockin = output_clock_in.text
-    out_put_status = driver.find_element_by_xpath("")
-    Logging(">> Clock-in: " + out_put_status.text)
+    out_put_status = driver.find_element_by_xpath("//*[@id='app']/div/div[2]/div/div/div[1]/div[2]/div/div[2]/div/div[2]/div[2]/div[4]/div/div/div[2]/nav/div[4]")
+    time.sleep(5)
+    Logging(">> Status: " + out_put_status.text)
     output_status = out_put_status.text
     time.sleep(1)
     driver.find_element_by_xpath(data["TIMECARD"]["calendar"]).click()
     WebDriverWait(driver,10).until(EC.presence_of_element_located((By.XPATH, data["TIMECARD"]["wait_calendar"])))
-    time.sleep(3)
+    time.sleep(5)
     #Find today's clockin
-    today_clockin = driver.find_element_by_xpath("//span[contains(.,'" + output_status + output_clockin + "')]")
+    today_clockin = driver.find_element_by_xpath("//span[contains(.,'" + output_status + " " + output_clockin + "')]")
     Logging(today_clockin.text)
     time.sleep(1)
+    try:
+        if today_clockin.is_displayed():
+            today_clockin.click()
+            clock_in_UI = driver.find_element_by_xpath("//div[contains(@class, 'content-body')]//div[contains(@class, 'header')]//div[contains(@class, 'check-in-status')]")
+            if clock_in_UI.text == output_clockin():
+                Logging ("Clock in time is correct")
+            else:
+                Logging ("Clock in time is wrong")
+        else:
+            Logging("Can't find date")
+    except:
+        Logging("Can't find date")
+    
 
 def clockout():
     try:
