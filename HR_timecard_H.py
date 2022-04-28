@@ -2373,7 +2373,7 @@ def timesheet_calendar_check():
         output_clockin = None
         Logging("No Clock-in")
     else:
-        out_put_status = driver.find_element_by_xpath("//div[contains(@class, 'timeline-body-clock')]//nav//div[4]")
+        out_put_status = driver.find_element_by_xpath("//div[contains(@class, 'timeline-body-clock')]//div[contains(.,'Clock-In')]/../div[4]")
         time.sleep(5)
         Logging(">> Status: " + out_put_status.text)
         output_status = out_put_status.text
@@ -2397,6 +2397,40 @@ def timesheet_calendar_check():
         except:
             Logging("Can't find date")
     
+    driver.find_element_by_xpath("//span[contains(@class, 'text-truncate') and contains(., 'Timesheets')]").click()
+    WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.XPATH, "//span[contains(.,'Break time')] ")))
+    time.sleep(1) 
+    
+    output_clock_out = driver.find_element_by_xpath("//div[contains(@class, 'content-body')]//div[contains(@class, 'header')]//div[contains(@class, 'check-out-status')]")
+    Logging(">> Clock-out: " + output_clock_out.text)
+    output_clockout = output_clock_out.text
+    if output_clockout == "-":
+        output_clockout = None
+        Logging("No Clock-out")
+    else:
+        out_put_status_clockout = driver.find_element_by_xpath("//div[contains(@class, 'timeline-body-clock')]//div[contains(.,'Clock-Out')]/../div[4]")
+        time.sleep(5)
+        Logging(">> Status: " + out_put_status_clockout.text)
+        output_status_clockout = out_put_status_clockout.text
+        driver.find_element_by_xpath(data["TIMECARD"]["calendar"]).click()
+        WebDriverWait(driver,10).until(EC.presence_of_element_located((By.XPATH, data["TIMECARD"]["wait_calendar"])))
+        time.sleep(5)
+        #Find today's clockout
+        today_clockout = driver.find_element_by_xpath("//span[contains(.,'" + output_status_clockout + " " + output_clockout + "')]")
+        Logging(today_clockout.text)
+        time.sleep(1)
+        try:
+            if today_clockout.is_displayed():
+                today_clockout.click()
+                clock_out_UI = driver.find_element_by_xpath("//div[contains(@class, 'content-body')]//div[contains(@class, 'header')]//div[contains(@class, 'check-out-status')]")
+                if clock_out_UI.text == output_clockout:
+                    Logging ("Clock out time is correct")
+                else:
+                    Logging ("Clock out time is wrong")
+            else:
+                Logging("Can't find clock-out time")
+        except:
+            Logging("Can't find date")
 
 def clockout():
     try:
