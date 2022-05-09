@@ -473,7 +473,7 @@ def timesheet_list(output_clockin,output_clockout,break_time,working_time, OT_ti
         else:
             Logging("Break Time is wrong")
 
-        workingtime_li = driver.find_element_by_xpath("//div[contains(.,'" + date_clock_in + "')]/following-sibling::div[contains(@col-id,'work_time_label')]/div/div")
+        workingtime_li = driver.find_element_by_xpath("//div[contains(.,'" + date_clock_in + "')]/following-sibling::div[contains(@col-id,'basic_work_label')]/div/div")
         if working_time == workingtime_li.text:
             Logging("Working Time is correct")
         else:
@@ -500,6 +500,18 @@ def timesheet_list(output_clockin,output_clockout,break_time,working_time, OT_ti
     else:
         Logging("- Cannot find date")
     #approval_OT()
+
+    return date_clock_in
+
+def report_list(output_clockin,output_clockout,break_time,working_time, OT_time, date_clock_in):
+    driver.find_element_by_xpath("//a[contains(@href,'/nhr/hr/timecard/user/statistics')]").click()
+    Logging("- Reports: List")
+    WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.XPATH, "//span[contains(.,'Working status')] ")))
+    time.sleep(5)
+    today = driver.find_element_by_xpath("//*[@class='admin_status']//div[contains(@class,'list-table-wrapper')]//form//div[contains(@ref,'eCenterContainer')]//div[contains(@col-id,'date')]/div[contains(.,'" + date_clock_in + "')]/../..")
+    Logging(today.text)
+    today.location_once_scrolled_into_view
+    time.sleep(2)
 
 def add_event2():
     #SELECT APPROVAL SETTING 
@@ -7933,7 +7945,8 @@ def timecard():
     breaktime()
     clock_out()
     output_clockin,output_clockout,break_time,working_time,clock_in_time,work_method_up,today_work_date, OT_time = check_time()
-    timesheet_list(output_clockin,output_clockout,break_time,working_time, OT_time)
+    date_clock_in = timesheet_list(output_clockin,output_clockout,break_time,working_time, OT_time)
+    report_list(output_clockin,output_clockout,break_time,working_time, OT_time, date_clock_in)
     # add_event2()
     # view_details()
     # working_status()
