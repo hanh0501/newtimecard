@@ -503,11 +503,15 @@ def timesheet_list(output_clockin,output_clockout,break_time,working_time, OT_ti
 
     return date_clock_in
 
-def report_list(output_clockin,output_clockout,break_time,working_time, OT_time, date_clock_in):
-    driver.find_element_by_xpath("//a[contains(@href,'/nhr/hr/timecard/user/statistics')]").click()
+def report_list1(output_clockin,output_clockout,break_time,working_time, OT_time, date_clock_in):
+    # date_clockin = driver.find_element_by_xpath("//*[@class='admin_status']//div[contains(@class,'daily-wrapper')]/div/div/div/div[2]/div/div[2]/div/div/span")
+    # #Logging(date_clockin.text)
+    # date_clock_in = date_clockin.text
     Logging("- Reports: List")
     WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.XPATH, "//span[contains(.,'Working status')] ")))
     time.sleep(5)
+    driver.find_element_by_xpath("//a[contains(@href,'/nhr/hr/timecard/user/statistics')]").click()
+    driver.find_element_by_xpath("//span[contains(@data-lang-id,'tc_action_list')]").click()
     today = driver.find_element_by_xpath("//*[@class='admin_status']//div[contains(@class,'list-table-wrapper')]//form//div[contains(@ref,'eCenterContainer')]//div[contains(@col-id,'date')]/div[contains(.,'" + date_clock_in + "')]/../..")
     Logging(today.text)
     today.location_once_scrolled_into_view
