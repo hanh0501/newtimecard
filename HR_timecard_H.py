@@ -507,15 +507,24 @@ def report_list1(output_clockin,output_clockout,break_time,working_time, OT_time
     # date_clockin = driver.find_element_by_xpath("//*[@class='admin_status']//div[contains(@class,'daily-wrapper')]/div/div/div/div[2]/div/div[2]/div/div/span")
     # #Logging(date_clockin.text)
     # date_clock_in = date_clockin.text
-    Logging("- Reports: List")
-    WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.XPATH, "//span[contains(.,'Working status')] ")))
-    time.sleep(5)
     driver.find_element_by_xpath("//a[contains(@href,'/nhr/hr/timecard/user/statistics')]").click()
     driver.find_element_by_xpath("//span[contains(@data-lang-id,'tc_action_list')]").click()
+    WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.XPATH, "//span[contains(@data-lang-id,'Working time')]")))
+    Logging("- Reports: List")
+    time.sleep(3)
     today = driver.find_element_by_xpath("//*[@class='admin_status']//div[contains(@class,'list-table-wrapper')]//form//div[contains(@ref,'eCenterContainer')]//div[contains(@col-id,'date')]/div[contains(.,'" + date_clock_in + "')]/../..")
     Logging(today.text)
     today.location_once_scrolled_into_view
     time.sleep(2)
+    if today.is_displayed():
+        list_clockin = driver.find_element_by_xpath("//div[contains(.,'" + date_clock_in + "')]/following-sibling::div[contains(@col-id,'clock_in')]/div/div/div")
+        if output_clockin == list_clockin.text:
+            Logging("Clock-in Time is correct")
+        else:
+            Logging("Clock-in Time is wrong")
+
+    else:
+        Logging("- Cannot find date")
 
 def add_event2():
     #SELECT APPROVAL SETTING 
