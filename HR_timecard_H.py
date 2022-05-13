@@ -523,6 +523,12 @@ def report_list1(output_clockin,output_clockout,break_time,working_time, OT_time
         else:
             Logging("Clock-in Time is wrong")
 
+        list_clockout = driver.find_element_by_xpath("//div[contains(.,'" + date_clock_in + "')]/following-sibling::div[contains(@col-id,'clock_out')]/div/div/div")
+        if output_clockout == list_clockout.text:
+            Logging("Clock-out Time is correct")
+        else:
+            Logging("Clock-out Time is wrong")
+
     else:
         Logging("- Cannot find date")
 
