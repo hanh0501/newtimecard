@@ -468,12 +468,22 @@ def timesheet_list(output_clockin,output_clockout,break_time,working_time, OT_ti
                     Logging(">> Correct time Clock-in")
                 else:
                     Logging(">> Wrong time Clock-in")
+
+                clockout = driver.find_element_by_xpath("//*[contains(@class,'list-table-wrapper')]//div[contains(@col-id,'date') and contains(.,'" + date_clock_in + "')]/following-sibling::div[contains(@col-id,'clock_out')]/div/div/div")
+                if output_clockout == clockout.text:
+                    Logging(">> Correct time Clock-out")
+                else:
+                    Logging(">> Wrong time Clock-out")
+            else:
+                Logging(">> Cannot find date")
+            
             break
         except:
             scrollbar = driver.find_element_by_xpath("//*[@id='app']/div/div[2]/div/div/div[1]/div[2]/div/div[2]/div[1]/div[2]/div[3]/div/div/form/div/div/div[1]/div[2]/div[3]")
             driver.execute_script("arguments[0].scrollBy(0,250)", scrollbar) 
             #driver.execute_script("arguments[0].scrollBy(0,arguments[0].scrollHeight)", scrollbar)
             continue
+
 
     # WebDriverWait(driver,10).until(EC.presence_of_element_located((By.XPATH, "//span[contains(@data-lang-id,'Working time')]")))
     # time.sleep(4)
