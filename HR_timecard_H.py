@@ -2,6 +2,7 @@ from calendar import timegm
 from logging import exception
 import re, sys, json#, testlink
 import time, random
+from tkinter.font import BOLD
 from selenium import webdriver
 from random import randint
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
@@ -33,6 +34,16 @@ now = datetime.now()
 date = now.strftime("%m/%d/%y %H:%M:%S")
 
 print_date = now.strftime("%H:%M")
+
+class bcolors:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
 
 def input_reason_late():
     try:
@@ -2018,14 +2029,15 @@ def weekly_status():
     try:
         Logging("")
         #Logging("***Weekly Status - Default***")    
-        Logging(yellow('***Weekly Status - Default***', 'bold'))    
+        #Logging(yellow('***Weekly Status - Default***', 'bold'))   
+        Logging(bcolors.WARNING + bcolors.BOLD + "***Weekly Status - Default***" + bcolors.ENDC)
         time.sleep(5)
         driver.find_element_by_xpath("//span[contains(@class, 'text-truncate') and contains(., 'Weekly Status')]").click()
         WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.XPATH, "//span[contains(.,'Name')] ")))
-        Logging("Access page successfully")
+        Logging(bcolors.OKGREEN + "Access page successfully" + bcolors.ENDC)
         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["access_weekly_status_page"]["pass"])
     except:
-        Logging("Access page fail")
+        Logging(bcolors.FAIL + "Access page fail" + bcolors.ENDC)
         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["access_weekly_status_page"]["fail"])
 
     try:
@@ -2207,8 +2219,8 @@ def weekly_status():
         Logging("total: " + total.text)
         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["weekly_status_data"]["pass"])
     except:
-        #Logging("Check data fail")
-        Logging(red('>>>Check data failed', 'bright')) 
+        Logging("Check data fail")
+        #Logging(red('>>>Check data failed', 'bright')) 
         
 
 def daily_status():
@@ -2216,7 +2228,8 @@ def daily_status():
         #Before login
         Logging("")
         #Logging("*** Daily Status - Default***")
-        Logging(yellow('***Daily Status - Default***', 'bold')) 
+        #Logging(yellow('***Daily Status - Default***', 'bold')) 
+        Logging(bcolors.WARNING + bcolors.BOLD + "***Daily Status - Default***" + bcolors.ENDC)
 
         time.sleep(5)
         driver.find_element_by_xpath("//span[contains(@class, 'text-truncate') and contains(., 'Daily Status')]").click()
@@ -2228,19 +2241,23 @@ def daily_status():
             time.sleep(10)
             if '2022' in driver.page_source:
                 #Logging ("Download file succcessfully")
-                Logging(green('>>>Download file succcessfully', 'bright')) 
+                #Logging(green('>>>Download file succcessfully', 'bright')) 
+                Logging(bcolors.OKGREEN + ">>>Download file successfully" + bcolors.ENDC)
                 TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["download_excel_file"]["pass"])
             else:
                 #Logging ("Download file failed")
-                Logging(red('>>>Download file failed', 'bright')) 
+                #Logging(red('>>>Download file failed', 'bright')) 
+                Logging(bcolors.FAIL + ">>>Download file failed" + bcolors.ENDC)
                 TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["download_excel_file"]["fail"])
         except:
             #Logging ("Download file failed")
-            Logging(red('>>>Download file failed', 'bright')) 
+            #Logging(red('>>>Download file failed', 'bright')) 
+            Logging(bcolors.FAIL + ">>>Download file failed" + bcolors.ENDC)
             
         time.sleep(10)
     except:
-        Logging("Access page fail")
+        #Logging("Access page fail")
+        Logging(bcolors.FAIL + "Access page fail" + bcolors.ENDC)
         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["access_daily_status_page"]["fail"])
 
     try:
@@ -2288,13 +2305,14 @@ def report():
         WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.XPATH, "//span[contains(.,'Working status')] ")))
         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["access_daily_status_page"]["pass"])
     except:
-        Logging (">>>Access page fail")
+        Logging(bcolors.FAIL + ">>>Access page fail" + bcolors.ENDC)
         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["access_daily_status_page"]["fail"])
 
     try:
         Logging("")
         #Logging("*** Report - Default***")
-        Logging(yellow('***Report - Default***', 'bold')) 
+        #Logging(yellow('***Report - Default***', 'bold')) 
+        Logging(bcolors.WARNING + bcolors.BOLD + "***Report - Default***" + bcolors.ENDC)
 
         #workingtimeUI_number
         Logging("Change working time to decimal")
@@ -2423,12 +2441,14 @@ def clockin():
         time.sleep(3)
         Logging(" ")
         #Logging("clock in successfully")
-        Logging(green('Clock in successfully', 'bright'))  
+        #Logging(green('Clock in successfully', 'bright'))  
+        Logging(bcolors.OKGREEN + "Clock in successfully" + bcolors.ENDC)
         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["clockin_through_avatar"]["pass"])
 
     except:
         #Logging("clock in failed")
-        Logging(red('Clock in failed', 'bright')) 
+        #Logging(red('Clock in failed', 'bright')) 
+        Logging(bcolors.FAIL + "Clock in failed" + bcolors.ENDC)
         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["clockin_through_avatar"]["fail"])
 
 def timesheet_calendar_check():
@@ -2466,6 +2486,10 @@ def timesheet_calendar_check():
         except:
             Logging("Can't find date")
     
+    # out_put_status = driver.find_element_by_xpath("//div[contains(@class, 'timeline-body-clock')]//nav//div[4]")
+    # time.sleep(5)
+    # Logging(">> Status: " + out_put_status.text)
+    # output_status = out_put_status.text
     driver.find_element_by_xpath("//span[contains(@class, 'text-truncate') and contains(., 'Timesheets')]").click()
     WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.XPATH, "//span[contains(.,'Break time')] ")))
     time.sleep(1) 
@@ -2484,7 +2508,7 @@ def timesheet_calendar_check():
         driver.find_element_by_xpath(data["TIMECARD"]["calendar"]).click()
         WebDriverWait(driver,10).until(EC.presence_of_element_located((By.XPATH, data["TIMECARD"]["wait_calendar"])))
         time.sleep(5)
-        #Find today's clockout
+        #Find today's clockin
         today_clockout = driver.find_element_by_xpath("//span[contains(.,'" + output_status_clockout + " " + output_clockout + "')]")
         Logging(today_clockout.text)
         time.sleep(1)
@@ -2501,6 +2525,35 @@ def timesheet_calendar_check():
         except:
             Logging("Can't find date")
 
+    # out_put_status_clockout = driver.find_element_by_xpath("//div[contains(@class, 'timeline-body-clock')]//nav//div[4]")
+    # time.sleep(5)
+    # Logging(">> Status: " + out_put_status_clockout.text)
+    # output_status_clockout = out_put_status_clockout.text
+    # time.sleep(1)
+    # driver.find_element_by_xpath(data["TIMECARD"]["calendar"]).click()
+    # WebDriverWait(driver,10).until(EC.presence_of_element_located((By.XPATH, data["TIMECARD"]["wait_calendar"])))
+    # time.sleep(5)
+    # #Find today's clockin
+    # today_clockin = driver.find_element_by_xpath("//span[contains(.,'" + output_status + " " + output_clockin + "')]")
+    # #Logging(today_clockin.text)
+    # time.sleep(1)
+    # try:
+    #     if today_clockin.is_displayed():
+    #         today_clockin.click()
+    #         clock_in_UI = driver.find_element_by_xpath("//div[contains(@class, 'content-body')]//div[contains(@class, 'header')]//div[contains(@class, 'check-in-status')]")
+    #         if clock_in_UI.text == output_clockin:
+    #             Logging ("Clock in time is correct")
+    #         else:
+    #             Logging ("Clock in time is wrong")
+    #     else:
+    #         Logging("Can't find clock-in time")
+    # except:
+    #     Logging("Can't find date")
+
+    
+
+    
+
 def clockout():
     try:
         time.sleep(5)
@@ -2511,11 +2564,13 @@ def clockout():
         time.sleep(2)
         driver.find_element_by_xpath(data["TIMECARD"]["save"]).click()
         #Logging("clock out successfully")
-        Logging(green('Clock out successfully', 'bright'))  
+        #Logging(green('Clock out successfully', 'bright'))  
+        Logging(bcolors.OKGREEN + "Clock out successfully" + bcolors.ENDC)
         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["clockout_through_avatar"]["pass"])
     except:
         #Logging("clock out failed")
-        Logging(red('Clock out failed', 'bright')) 
+        #Logging(red('Clock out failed', 'bright')) 
+        Logging(bcolors.FAIL + "Clock out failed" + bcolors.ENDC)
         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["clockout_through_avatar"]["fail"])
 
 
@@ -2549,12 +2604,14 @@ def edit_clockin():
         #Save
         Save = driver.find_element_by_xpath("//span[contains(.,'Save')]").click()
         #Logging("Edit clockin successfully")    
-        Logging(green('Edit clock in successfully', 'bright')) 
+        #Logging(green('Edit clock in successfully', 'bright')) 
+        Logging(bcolors.OKGREEN + "Edit clock in successfully" + bcolors.ENDC)
         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["edit_clockin"]["pass"])
 
     except:
         #Logging("Edit clockin failed")   
-        Logging(red('Edit clock in failed', 'bright')) 
+        #Logging(red('Edit clock in failed', 'bright')) 
+        Logging(bcolors.FAIL + "Edit clock in failed" + bcolors.ENDC)
         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["edit_clockin"]["fail"])
 
 
@@ -2585,11 +2642,13 @@ def edit_clockout():
         #Save
         Save = driver.find_element_by_xpath("//span[contains(.,'Save')]").click()
         #Logging("Edit clockout successfully")
-        Logging(green('Edit clock out successfully', 'bright')) 
+        #Logging(green('Edit clock out successfully', 'bright')) 
+        Logging(bcolors.OKGREEN + "Edit clock out successfully" + bcolors.ENDC)
         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["edit_clockout"]["pass"])        
         time.sleep(5)
     except:
-        Logging("Edit clockout failed")
+        #Logging("Edit clockout failed")
+        Logging(bcolors.FAIL + "Edit clock out failed" + bcolors.ENDC)
         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["edit_clockout"]["fail"])    
 
 #------------------------------------------------------------------------------------------#
@@ -2654,7 +2713,8 @@ def report_2nd():
 
         Logging("")
         #Logging("*** Report - After log in***")
-        Logging(yellow('***Report - After log in***', 'bold')) 
+        #Logging(yellow('***Report - After log in***', 'bold')) 
+        Logging(bcolors.WARNING + bcolors.BOLD + "***Report - After log in***" + bcolors.ENDC)
 
         #workingtimeUI_number
         Logging("Change working time to decimal")
@@ -2820,7 +2880,8 @@ def daily_status2(status1,break_number1,working_number1,OT_number1):
         #After login
         Logging("")
         #Logging("*** Daily Status - After log in***")
-        Logging(yellow('***Daily Status - After log in***', 'bold')) 
+        #Logging(yellow('***Daily Status - After log in***', 'bold')) 
+        Logging(bcolors.WARNING + bcolors.BOLD + "***Daily Status - After log in***" + bcolors.ENDC)
 
         time.sleep(5)
         driver.find_element_by_xpath("//span[contains(@class, 'text-truncate') and contains(., 'Daily Status')]").click()
@@ -2978,7 +3039,8 @@ def weekly_status2():
         
         Logging("")
         #Logging("***Weekly Status - After log in***")
-        Logging(yellow('***Weekly Status - After log in***', 'bold')) 
+        #Logging(yellow('***Weekly Status - After log in***', 'bold')) 
+        Logging(bcolors.WARNING + bcolors.BOLD + "***Weekly Status - After log in***" + bcolors.ENDC)
 
         time.sleep(5)
         driver.find_element_by_xpath("//span[contains(@class, 'text-truncate') and contains(., 'Weekly Status')]").click()
@@ -3357,7 +3419,8 @@ def company_timecard_reports():
         time.sleep(5)
         Logging("")
         #Logging("***Reports Default***")
-        Logging(yellow('***Reports Default***', 'bold')) 
+        #Logging(yellow('***Reports Default***', 'bold')) 
+        Logging(bcolors.WARNING + bcolors.BOLD + "***Reports Default***" + bcolors.ENDC)
 
         Logging("Change working day to decimal")
         working_day = driver.find_element_by_xpath("//*[@col-id='weekday']//div[contains(@class,'ag-react-container')]//div//div")
@@ -3457,9 +3520,11 @@ def company_timecard_reports():
         time.sleep(5)
         Logging("")
         #Logging("***MONTHLY***")
-        Logging(yellow('***MONTHLY***', ['bold', 'underlined'])) 
+        #Logging(yellow('***MONTHLY***', ['bold', 'underlined'])) 
+        Logging(bcolors.WARNING + bcolors.BOLD + bcolors.UNDERLINE + "***MONTHLY***" + bcolors.ENDC)
         #Logging("'''Monthly Scheduled Working'''")
-        Logging(yellow('***Monthly Scheduled Working***', 'bold')) 
+        #Logging(yellow('***Monthly Scheduled Working***', 'bold')) 
+        Logging(bcolors.WARNING + bcolors.BOLD + bcolors.UNDERLINE + "***Monthly Scheduled Working***" + bcolors.ENDC)
 
         #Monthly #Scheduled Working
         scheduled_workingday = driver.find_element_by_xpath("//span[contains(.,'Scheduled working day')]/../..//div[contains(@class,'d-flex ')]/following-sibling::div")
@@ -3505,7 +3570,8 @@ def company_timecard_reports():
     try:
         Logging("")
         #Logging("'''Monthly Working status'''")
-        Logging(yellow('***Monthly Working status***', 'bold')) 
+        #Logging(yellow('***Monthly Working status***', 'bold')) 
+        Logging(bcolors.WARNING + bcolors.BOLD + "***Monthly Working status***" + bcolors.ENDC)
 
         Logging("Change Avg.Working time per day to decimal")
         #Monthly #Working status
@@ -3577,7 +3643,8 @@ def company_timecard_reports():
     try:
         Logging("")
         #Logging("Events")
-        Logging(yellow('***Monthly Events***', 'bold')) 
+        #Logging(yellow('***Monthly Events***', 'bold')) 
+        Logging(bcolors.WARNING + bcolors.BOLD + "***Monthly Events***" + bcolors.ENDC)
 
         events_clockin = driver.find_element_by_xpath("//li[1]//span[contains(.,'Clock-In')]/../..//div[contains(@class,'d-flex ')]/following-sibling::div")
         Logging("Clock-In: " + events_clockin.text)
@@ -3650,7 +3717,8 @@ def company_timecard_reports():
     try:
         Logging("")
         #Logging("List")
-        Logging(yellow('***LIST***', 'bold')) 
+        #Logging(yellow('***LIST***', 'bold')) 
+        Logging(bcolors.WARNING + bcolors.BOLD + "***LIST***" + bcolors.ENDC)
 
         driver.find_element_by_xpath("//span[contains(.,'List')]").click()
         time.sleep(5)
@@ -3732,7 +3800,8 @@ def company_timecard_reports():
 
         Logging("")
         #Logging("Settlement")
-        Logging(yellow('Settlement', 'bold')) 
+        #Logging(yellow('Settlement', 'bold')) 
+        Logging(bcolors.WARNING + bcolors.BOLD + "Settlement" + bcolors.ENDC)
 
         settlement_holiday = driver.find_element_by_xpath("//div[contains(@data-lang-id,'tc_status_day_holiday')]//..//div//span")
         Logging("Holiday: " + settlement_holiday.text)
@@ -4365,8 +4434,10 @@ def work_place():
 
 def report_weekly():
     Logging(" ")
-    Logging(yellow('***REPORTS - WEEKLY***', ['bold', 'underlined']))
-    Logging(yellow('***Device', 'bold'))
+    #Logging(yellow('***REPORTS - WEEKLY***', ['bold', 'underlined']))
+    Logging(bcolors.WARNING + bcolors.BOLD + bcolors.UNDERLINE + "***REPORTS - WEEKLY***" + bcolors.ENDC)
+    #Logging(yellow('***Device', 'bold'))
+    Logging(bcolors.WARNING + bcolors.BOLD + "***Device" + bcolors.ENDC)
     time.sleep(4)
     try:
         driver.find_element_by_xpath("//span[contains(@class, 'text-truncate') and contains(., 'Dashboard')]").click()
@@ -4453,7 +4524,8 @@ def report_weekly():
     # Logging(yellow('***Weekly working time', 'bold'))
     # wwt_chart = driver.find_element_by_xpath("//div[contains(@data-lang-id, 'tc_title_week_schedule_msg')]/..//canvas")
     try:
-        Logging(yellow('***Weekly working time', 'bold'))
+        #Logging(yellow('***Weekly working time', 'bold'))
+        Logging(bcolors.WARNING + bcolors.BOLD + "***Weekly working time" + bcolors.ENDC)
         wwt_chart = driver.find_element_by_xpath("//div[contains(@data-lang-id, 'tc_title_week_schedule_msg')]/..//canvas")
         if wwt_chart.is_displayed():
             #Logging("Weekly working time - Data is displayed")
@@ -4467,7 +4539,8 @@ def report_weekly():
 
     Logging(" ")
     #Logging("Average working hour per week")
-    Logging(yellow('***Average working hour per week', 'bold'))
+    #Logging(yellow('***Average working hour per week', 'bold'))
+    Logging(bcolors.WARNING + bcolors.BOLD + "***Average working hour per week" + bcolors.ENDC)
 
     try:
         Logging("1st week")
@@ -5184,8 +5257,10 @@ def report_weekly():
 
 
     Logging(" ")
-    Logging(yellow('***Working hours per day of the week', 'bold'))
-    Logging("Weekly average")
+    #Logging(yellow('***Working hours per day of the week', 'bold'))
+    Logging(bcolors.WARNING + bcolors.BOLD + "***Working hours per day of the week" + bcolors.ENDC)
+    #Logging("Weekly average")
+    Logging(bcolors.WARNING + "Weekly average" + bcolors.ENDC)
     try:
         try:
             Logging("1st week")
@@ -5328,7 +5403,8 @@ def report_weekly():
 
 def report_list():
     Logging(" ")
-    Logging(yellow('***REPORTS - LIST***', ['bold', 'underlined']))
+    #Logging(yellow('***REPORTS - LIST***', ['bold', 'underlined']))
+    Logging(bcolors.WARNING + bcolors.BOLD + bcolors.UNDERLINE + "***REPORTS - LIST***" + bcolors.ENDC)
     time.sleep(4)
     try:
         try:
@@ -5480,7 +5556,8 @@ def report_list():
 
 def approval_my_request():
     Logging(" ")
-    Logging(yellow('***APPROVAL - MY REQUEST***', ['bold', 'underlined']))
+    #Logging(yellow('***APPROVAL - MY REQUEST***', ['bold', 'underlined']))
+    Logging(bcolors.WARNING + bcolors.BOLD + bcolors.UNDERLINE + "***APPROVAL - MY REQUEST***" + bcolors.ENDC)
     time.sleep(3)
     try:
         driver.find_element_by_xpath("//a[contains(@href,'/nhr/hr/timecard/user/approval')]").click()
@@ -5624,7 +5701,8 @@ def approval_my_request():
         Logging("Over Time (Pre) - Can't check data")
 
     Logging(" ")
-    Logging(yellow('***APPROVAL - VIEW CC***', ['bold', 'underlined']))
+    #Logging(yellow('***APPROVAL - VIEW CC***', ['bold', 'underlined']))
+    Logging(bcolors.WARNING + bcolors.BOLD + bcolors.UNDERLINE + "***APPROVAL - VIEW CC***" + bcolors.ENDC)
     time.sleep(3)
     try:
         driver.find_element_by_xpath("//span[contains(@data-lang-id, 'tc_approval_view_cc') and contains(.,'View CC')]").click()
@@ -8001,74 +8079,74 @@ def timecard():
     nightwork()
     breaktime()
     clock_out()
-    output_clockin,output_clockout,break_time,working_time,clock_in_time,work_method_up,today_work_date, OT_time = check_time()
-    date_clock_in = timesheet_list(output_clockin,output_clockout,break_time,working_time, OT_time)
-    report_list(output_clockin,output_clockout,break_time,working_time, OT_time, date_clock_in)
-    # add_event2()
-    # view_details()
+    # output_clockin,output_clockout,break_time,working_time,clock_in_time,work_method_up,today_work_date, OT_time = check_time()
+    # date_clock_in = timesheet_list(output_clockin,output_clockout,break_time,working_time, OT_time)
+    # # #report_list1(output_clockin,output_clockout,break_time,working_time, OT_time, date_clock_in)
+    # # add_event2()
+    # # view_details()
     # working_status()
-
-    # # day_list = find_date(today_work_date)
-    # #work_schedule(day_list)
+    
+    # # #day_list = find_date(today_work_date)
+    # # #work_schedule(day_list)
     # manager()
     # total_manager()
-    # # work_correction()
-    # delete_punch()
+    # # # # work_correction()
+    # # # delete_punch()
 
 def time_card():
     # # # # Napproval_OT()
-    #weekly_status()
-    status1 = daily_status()
+    weekly_status()
+    # status1 = daily_status()
 
-    rp=report()
-    working_time_report_decimal=rp[0]
-    worked_time_report_decimal=rp[1]
-    break_time_report_decimal=rp[2]
+    # rp=report()
+    # working_time_report_decimal=rp[0]
+    # worked_time_report_decimal=rp[1]
+    # break_time_report_decimal=rp[2]
 
-    clockin()
-    timesheet_calendar_check()
-    clockout()
-    edit_clockin()
+    # clockin()
+    # #timesheet_calendar_check()
+    # clockout()
+    # edit_clockin()
 
-    nb_out=edit_clockout()
-    hour_number1=nb_out[0]
-    working_number1=nb_out[1]
-    break_number1=nb_out[2]
-    OT_number1=nb_out[3]
+    # nb_out=edit_clockout()
+    # hour_number1=nb_out[0]
+    # working_number1=nb_out[1]
+    # break_number1=nb_out[2]
+    # OT_number1=nb_out[3]
 
-    nb_report=report_2nd()
-    working_time_decimal_2nd=nb_report[0]
-    worked_time_decimal_2nd =nb_report[1]
-    break_time_decimal_2nd = nb_report[2]
+    # nb_report=report_2nd()
+    # working_time_decimal_2nd=nb_report[0]
+    # worked_time_decimal_2nd =nb_report[1]
+    # break_time_decimal_2nd = nb_report[2]
 
-    calculation(working_time_report_decimal,worked_time_report_decimal,break_time_report_decimal,hour_number1,working_number1,break_number1,working_time_decimal_2nd,worked_time_decimal_2nd,break_time_decimal_2nd)
+    # calculation(working_time_report_decimal,worked_time_report_decimal,break_time_report_decimal,hour_number1,working_number1,break_number1,working_time_decimal_2nd,worked_time_decimal_2nd,break_time_decimal_2nd)
 
-    daily_status2(status1,break_number1,working_number1,OT_number1)
+    # daily_status2(status1,break_number1,working_number1,OT_number1)
 
-    #weekly_status2()
+    # weekly_status2()
 
-    company_timecard_reports()
+    # company_timecard_reports()
 
-    timeline()
-
-
-    work_place()
-
-    report_weekly()
-
-    report_list()
+    # timeline()
 
 
-    dashboard()
+    # work_place()
 
-    basic_gps()
+    # report_weekly()
 
-    exception_users()
+    # report_list()
 
-    outside_users()
 
-    arbitrary_decision()
+    # dashboard()
+
+    # basic_gps()
+
+    # exception_users()
+
+    # outside_users()
+
+    # arbitrary_decision()
     
-    # # # OT_post_midnight()
+    # # # # OT_post_midnight()
 
-    # work_shift()
+    # # work_shift()
