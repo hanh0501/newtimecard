@@ -24,6 +24,7 @@ import select
 from H_functions import driver, data, ValidateFailResultAndSystem,TesCase_LogResult, Logging#, TestlinkResult_Fail, TestlinkResult_Pass
 from simple_colors import *
 
+
 now = datetime.now()
 date_time = now.strftime("%Y/%m/%d, %H:%M:%S")
 
@@ -35,15 +36,6 @@ date = now.strftime("%m/%d/%y %H:%M:%S")
 
 print_date = now.strftime("%H:%M")
 
-class bcolors:
-    HEADER = '\033[95m'
-    OKBLUE = '\033[94m'
-    OKGREEN = '\033[92m'
-    WARNING = '\033[93m'
-    FAIL = '\033[91m'
-    ENDC = '\033[0m'
-    BOLD = '\033[1m'
-    UNDERLINE = '\033[4m'
 
 def input_reason_late():
     try:
@@ -452,7 +444,8 @@ def check_time():
     Logging(">> OT Time: " + OT.text)
     OT_time = OT.text
 
-    return output_clockin,output_clockout,break_time,working_time,clock_in_time,work_method_up,today_work_date, OT_time
+    data = [output_clockin,output_clockout,break_time,working_time,clock_in_time,work_method_up,today_work_date, OT_time]
+    return data
 
 def timesheet_list(output_clockin,output_clockout,break_time,working_time, OT_time):
     date_clockin = driver.find_element_by_xpath("//*[@class='admin_status']//div[contains(@class,'daily-wrapper')]/div/div/div/div[2]/div/div[2]/div/div/span")
@@ -477,14 +470,43 @@ def timesheet_list(output_clockin,output_clockout,break_time,working_time, OT_ti
                 clockin = driver.find_element_by_xpath("//*[contains(@class,'list-table-wrapper')]//div[contains(@col-id,'date') and contains(.,'" + date_clock_in + "')]/following-sibling::div[contains(@col-id,'clock_in')]/div/div/div")
                 if output_clockin == clockin.text:
                     Logging(">> Correct time Clock-in")
+                    #TestCase_LogResult(**data["testcase_result"]["hr"]["list_clock_in"]["pass"])
                 else:
                     Logging(">> Wrong time Clock-in")
+                    #TestCase_LogResult(**data["testcase_result"]["hr"]["list_clock_in"]["fail"])
 
                 clockout = driver.find_element_by_xpath("//*[contains(@class,'list-table-wrapper')]//div[contains(@col-id,'date') and contains(.,'" + date_clock_in + "')]/following-sibling::div[contains(@col-id,'clock_out')]/div/div/div")
                 if output_clockout == clockout.text:
                     Logging(">> Correct time Clock-out")
+                    #TestCase_LogResult(**data["testcase_result"]["hr"]["list_clock_out"]["pass"])
                 else:
                     Logging(">> Wrong time Clock-out")
+                    #TestCase_LogResult(**data["testcase_result"]["hr"]["list_clock_out"]["fail"])
+
+                breaktime_li = driver.find_element_by_xpath("//*[contains(@class,'list-table-wrapper')]//div[contains(@col-id,'date') and contains(.,'" + date_clock_in + "')]/following-sibling::div[contains(@col-id,'break_time_label')]/div/div")
+                #Logging(breaktime_li.text)
+                if break_time == "0H":
+                    if breaktime_li.text == "-":
+                        Logging(">> Correct break time")
+                        #TestCase_LogResult(**data["testcase_result"]["hr"]["list_breaktime"]["pass"])
+                    else:
+                        Logging(">> Wrong break time")
+                        #TestCase_LogResult(**data["testcase_result"]["hr"]["list_breaktime"]["fail"])
+                elif break_time != "0H":
+                    if break_time == breaktime_li.text:
+                        Logging(">> Correct break time")
+                        #TestCase_LogResult(**data["testcase_result"]["hr"]["list_breaktime"]["pass"])
+                    else:
+                        Logging(">> Wrong break time")
+                        #TestCase_LogResult(**data["testcase_result"]["hr"]["list_breaktime"]["fail"])
+
+                workingtime_li = driver.find_element_by_xpath("//*[contains(@class,'list-table-wrapper')]//div[contains(@col-id,'date') and contains(.,'" + date_clock_in + "')]/following-sibling::div[contains(@col-id,'basic_work_label')]/div/div")
+                if working_time == workingtime_li.text:
+                    Logging(">> Correct working time")
+                    #TestCase_LogResult(**data["testcase_result"]["hr"]["list_workingtime"]["pass"])
+                else:
+                    Logging(">> Wrong working time")
+                    #TestCase_LogResult(**data["testcase_result"]["hr"]["list_workingtime"]["fail"])
             else:
                 Logging(">> Cannot find date")
             
@@ -2029,20 +2051,21 @@ def weekly_status():
     try:
         Logging("")
         #Logging("***Weekly Status - Default***")    
-        #Logging(yellow('***Weekly Status - Default***', 'bold'))   
-        Logging(bcolors.WARNING + bcolors.BOLD + "***Weekly Status - Default***" + bcolors.ENDC)
+        Logging(yellow('***Weekly Status - Default***', 'bold'))   
+        #Logging(Yellow("***Weekly Status - Default***"))
+
         time.sleep(5)
         driver.find_element_by_xpath("//span[contains(@class, 'text-truncate') and contains(., 'Weekly Status')]").click()
         WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.XPATH, "//span[contains(.,'Name')] ")))
-        Logging(bcolors.OKGREEN + "Access page successfully" + bcolors.ENDC)
+        #Logging(bcolors.OKGREEN + "Access page successfully" + bcolors.ENDC)
         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["access_weekly_status_page"]["pass"])
     except:
-        Logging(bcolors.FAIL + "Access page fail" + bcolors.ENDC)
+        #Logging(bcolors.FAIL + "Access page fail" + bcolors.ENDC)
         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["access_weekly_status_page"]["fail"])
 
     try:
         driver.find_element_by_xpath("//div[contains(@class,'company-status-setting')]/div/div[2]/div/div[1]").click()
-        ws_search = driver.find_element_by_xpath("//input[contains(@class,'form-control')]")
+        ws_search = driver.find_element_by_xpath(data["TIMECARD"]["ws_search"])
         ws_search.send_keys(data["name_keyword"][0])
         ws_search.send_keys(Keys.ENTER)
         time.sleep(5)
@@ -2050,17 +2073,17 @@ def weekly_status():
         driver.find_element_by_xpath("//div[contains(@class,'company-status-setting')]/div/div[2]/div/div[1]").click()
         time.sleep(3)
 
-        avg_clockin = driver.find_element_by_xpath("//div[contains(@class,'ag-center-cols-viewport')]//span[contains(@class,'td-avg-clock-in')]")
+        avg_clockin = driver.find_element_by_xpath(data["TIMECARD"]["avg_clockin"])
         Logging("avg.clockin: " + avg_clockin.text)
 
-        avg_clockout = driver.find_element_by_xpath("//div[contains(@class,'ag-center-cols-viewport')]//span[contains(@class,'td-avg-clock-out')]")
+        avg_clockout = driver.find_element_by_xpath(data["TIMECARD"]["avg_clockout"])
         Logging("avg_clockout: " + avg_clockout.text)
 
-        avg_working_time = driver.find_element_by_xpath("//div[contains(@class,'ag-center-cols-viewport')]//span[contains(@class,'td-avg-work-hour')]")
+        avg_working_time = driver.find_element_by_xpath(data["TIMECARD"]["avg_working_time"])
         Logging("avg_working time: " + avg_working_time.text)
 
         time.sleep(5)
-        monday = driver.find_element_by_xpath("//*[@col-id='day_0']//div[contains(@class,'cursor-pointer')]/span")
+        monday = driver.find_element_by_xpath(data["TIMECARD"]["monday"])
         time.sleep(3)
         Logging("monday before change to decimal: " + monday.text)
         monday_time = monday.text
@@ -2087,7 +2110,7 @@ def weekly_status():
             monday_time_decimal = hour_number_monday_time
             Logging("monday after change to decimal: " + str(monday_time_decimal))
 
-        tuesday = driver.find_element_by_xpath("//*[@col-id='day_1']//div[contains(@class,'cursor-pointer')]/span")
+        tuesday = driver.find_element_by_xpath(data["TIMECARD"]["tuesday"])
         Logging("tuesday before change to decimal: " + tuesday.text)
         tuesday_time = tuesday.text
         try:
@@ -2112,7 +2135,7 @@ def weekly_status():
             tuesday_time_decimal = hour_number_tuesday_time
             Logging("tuesday after change to decimal: " + str(tuesday_time_decimal))
 
-        wednesday = driver.find_element_by_xpath("//*[@col-id='day_2']//div[contains(@class,'cursor-pointer')]/span")
+        wednesday = driver.find_element_by_xpath(data["TIMECARD"]["wednesday"])
         Logging("wednesday before change to decimal: " + wednesday.text)
         wednesday_time = wednesday.text
         try:
@@ -2137,7 +2160,7 @@ def weekly_status():
             wednesday_time_decimal = hour_number_wednesday_time
             Logging("wednesday after change to decimal: " + str(wednesday_time_decimal))
 
-        thursday = driver.find_element_by_xpath("//*[@col-id='day_3']//div[contains(@class,'cursor-pointer')]/span")
+        thursday = driver.find_element_by_xpath(data["TIMECARD"]["thursday"])
         Logging("thursday before change to decimal: " + thursday.text)
         thursday_time = thursday.text
         try:
@@ -2162,7 +2185,7 @@ def weekly_status():
             thursday_time_decimal = hour_number_thursday_time
             Logging("thursday after change to decimal: " + str(thursday_time_decimal))
 
-        friday = driver.find_element_by_xpath("//*[@col-id='day_4']//div[contains(@class,'cursor-pointer')]/span")
+        friday = driver.find_element_by_xpath(data["TIMECARD"]["friday"])
         Logging("friday before change to decimal: " + friday.text)
         friday_time = friday.text
         try:
@@ -2187,7 +2210,7 @@ def weekly_status():
             friday_time_decimal = hour_number_friday_time
             Logging("friday after change to decimal: " + str(friday_time_decimal))
 
-        saturday = driver.find_element_by_xpath("//*[@col-id='day_5']//div[contains(@class,'cursor-pointer')]/span")
+        saturday = driver.find_element_by_xpath(data["TIMECARD"]["saturday"])
         Logging("saturday before change to decimal: " + saturday.text)
         saturday_time = saturday.text
         try:
@@ -2212,7 +2235,7 @@ def weekly_status():
             saturday_time_decimal = hour_number_saturday_time
             Logging("saturday after change to decimal: " + str(saturday_time_decimal))
 
-        sunday = driver.find_element_by_xpath("//*[@col-id='day_6']//div[contains(@class,'cursor-pointer')]/span")
+        sunday = driver.find_element_by_xpath(data["TIMECARD"]["sunday"])
         Logging("sunday: " + sunday.text)
 
         total = driver.find_element_by_xpath("//span[contains(@class,'td-sum-of-time')]")
@@ -2228,8 +2251,8 @@ def daily_status():
         #Before login
         Logging("")
         #Logging("*** Daily Status - Default***")
-        #Logging(yellow('***Daily Status - Default***', 'bold')) 
-        Logging(bcolors.WARNING + bcolors.BOLD + "***Daily Status - Default***" + bcolors.ENDC)
+        Logging(yellow('***Daily Status - Default***', 'bold')) 
+        #Logging(bcolors.WARNING + bcolors.BOLD + "***Daily Status - Default***" + bcolors.ENDC)
 
         time.sleep(5)
         driver.find_element_by_xpath("//span[contains(@class, 'text-truncate') and contains(., 'Daily Status')]").click()
@@ -2241,23 +2264,23 @@ def daily_status():
             time.sleep(10)
             if '2022' in driver.page_source:
                 #Logging ("Download file succcessfully")
-                #Logging(green('>>>Download file succcessfully', 'bright')) 
-                Logging(bcolors.OKGREEN + ">>>Download file successfully" + bcolors.ENDC)
+                Logging(green('>>>Download file succcessfully', 'bright')) 
+                #Logging(bcolors.OKGREEN + ">>>Download file successfully" + bcolors.ENDC)
                 TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["download_excel_file"]["pass"])
             else:
                 #Logging ("Download file failed")
-                #Logging(red('>>>Download file failed', 'bright')) 
-                Logging(bcolors.FAIL + ">>>Download file failed" + bcolors.ENDC)
+                Logging(red('>>>Download file failed', 'bright')) 
+                #Logging(bcolors.FAIL + ">>>Download file failed" + bcolors.ENDC)
                 TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["download_excel_file"]["fail"])
         except:
             #Logging ("Download file failed")
-            #Logging(red('>>>Download file failed', 'bright')) 
-            Logging(bcolors.FAIL + ">>>Download file failed" + bcolors.ENDC)
+            Logging(red('>>>Download file failed', 'bright')) 
+            #Logging(bcolors.FAIL + ">>>Download file failed" + bcolors.ENDC)
             
         time.sleep(10)
     except:
-        #Logging("Access page fail")
-        Logging(bcolors.FAIL + "Access page fail" + bcolors.ENDC)
+        Logging("Access page fail")
+        #Logging(bcolors.FAIL + "Access page fail" + bcolors.ENDC)
         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["access_daily_status_page"]["fail"])
 
     try:
@@ -2305,14 +2328,15 @@ def report():
         WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.XPATH, "//span[contains(.,'Working status')] ")))
         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["access_daily_status_page"]["pass"])
     except:
-        Logging(bcolors.FAIL + ">>>Access page fail" + bcolors.ENDC)
+        Logging (">>>Access page fail")
+        #Logging(bcolors.FAIL + ">>>Access page fail" + bcolors.ENDC)
         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["access_daily_status_page"]["fail"])
 
     try:
         Logging("")
         #Logging("*** Report - Default***")
-        #Logging(yellow('***Report - Default***', 'bold')) 
-        Logging(bcolors.WARNING + bcolors.BOLD + "***Report - Default***" + bcolors.ENDC)
+        Logging(yellow('***Report - Default***', 'bold')) 
+        #Logging(bcolors.WARNING + bcolors.BOLD + "***Report - Default***" + bcolors.ENDC)
 
         #workingtimeUI_number
         Logging("Change working time to decimal")
@@ -2441,14 +2465,14 @@ def clockin():
         time.sleep(3)
         Logging(" ")
         #Logging("clock in successfully")
-        #Logging(green('Clock in successfully', 'bright'))  
-        Logging(bcolors.OKGREEN + "Clock in successfully" + bcolors.ENDC)
+        Logging(green('Clock in successfully', 'bright'))  
+        #Logging(bcolors.OKGREEN + "Clock in successfully" + bcolors.ENDC)
         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["clockin_through_avatar"]["pass"])
 
     except:
         #Logging("clock in failed")
-        #Logging(red('Clock in failed', 'bright')) 
-        Logging(bcolors.FAIL + "Clock in failed" + bcolors.ENDC)
+        Logging(red('Clock in failed', 'bright')) 
+        #Logging(bcolors.FAIL + "Clock in failed" + bcolors.ENDC)
         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["clockin_through_avatar"]["fail"])
 
 def timesheet_calendar_check():
@@ -2564,13 +2588,13 @@ def clockout():
         time.sleep(2)
         driver.find_element_by_xpath(data["TIMECARD"]["save"]).click()
         #Logging("clock out successfully")
-        #Logging(green('Clock out successfully', 'bright'))  
-        Logging(bcolors.OKGREEN + "Clock out successfully" + bcolors.ENDC)
+        Logging(green('Clock out successfully', 'bright'))  
+        #Logging(bcolors.OKGREEN + "Clock out successfully" + bcolors.ENDC)
         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["clockout_through_avatar"]["pass"])
     except:
         #Logging("clock out failed")
-        #Logging(red('Clock out failed', 'bright')) 
-        Logging(bcolors.FAIL + "Clock out failed" + bcolors.ENDC)
+        Logging(red('Clock out failed', 'bright')) 
+        #Logging(bcolors.FAIL + "Clock out failed" + bcolors.ENDC)
         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["clockout_through_avatar"]["fail"])
 
 
@@ -2604,14 +2628,14 @@ def edit_clockin():
         #Save
         Save = driver.find_element_by_xpath("//span[contains(.,'Save')]").click()
         #Logging("Edit clockin successfully")    
-        #Logging(green('Edit clock in successfully', 'bright')) 
-        Logging(bcolors.OKGREEN + "Edit clock in successfully" + bcolors.ENDC)
+        Logging(green('Edit clock in successfully', 'bright')) 
+        #Logging(bcolors.OKGREEN + "Edit clock in successfully" + bcolors.ENDC)
         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["edit_clockin"]["pass"])
 
     except:
         #Logging("Edit clockin failed")   
-        #Logging(red('Edit clock in failed', 'bright')) 
-        Logging(bcolors.FAIL + "Edit clock in failed" + bcolors.ENDC)
+        Logging(red('Edit clock in failed', 'bright')) 
+        #Logging(bcolors.FAIL + "Edit clock in failed" + bcolors.ENDC)
         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["edit_clockin"]["fail"])
 
 
@@ -2642,13 +2666,13 @@ def edit_clockout():
         #Save
         Save = driver.find_element_by_xpath("//span[contains(.,'Save')]").click()
         #Logging("Edit clockout successfully")
-        #Logging(green('Edit clock out successfully', 'bright')) 
-        Logging(bcolors.OKGREEN + "Edit clock out successfully" + bcolors.ENDC)
+        Logging(green('Edit clock out successfully', 'bright')) 
+        #Logging(bcolors.OKGREEN + "Edit clock out successfully" + bcolors.ENDC)
         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["edit_clockout"]["pass"])        
         time.sleep(5)
     except:
-        #Logging("Edit clockout failed")
-        Logging(bcolors.FAIL + "Edit clock out failed" + bcolors.ENDC)
+        Logging("Edit clockout failed")
+        #Logging(bcolors.FAIL + "Edit clock out failed" + bcolors.ENDC)
         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["edit_clockout"]["fail"])    
 
 #------------------------------------------------------------------------------------------#
@@ -2713,8 +2737,8 @@ def report_2nd():
 
         Logging("")
         #Logging("*** Report - After log in***")
-        #Logging(yellow('***Report - After log in***', 'bold')) 
-        Logging(bcolors.WARNING + bcolors.BOLD + "***Report - After log in***" + bcolors.ENDC)
+        Logging(yellow('***Report - After log in***', 'bold')) 
+        #Logging(bcolors.WARNING + bcolors.BOLD + "***Report - After log in***" + bcolors.ENDC)
 
         #workingtimeUI_number
         Logging("Change working time to decimal")
@@ -2826,6 +2850,8 @@ def report_2nd():
     except:
         #Logging("Check data fail")
         Logging(red('>>>Check data fail', 'bright')) 
+        #Logging(bcolors.FAIL + ">>>Check data fail" + bcolors.ENDC)
+
 
 
 def calculation(working_time_report_decimal,worked_time_report_decimal,break_time_report_decimal,hour_number1,working_number1,break_number1,working_time_decimal_2nd,worked_time_decimal_2nd,break_time_decimal_2nd):
@@ -2838,10 +2864,12 @@ def calculation(working_time_report_decimal,worked_time_report_decimal,break_tim
             # Logging(hour_number1)
             # Logging(working_time_decimal_2nd)
             #Logging("Result was the same - calculation was right")
-            Logging(green('>>>Result was the same - calculation was right', 'bright')) 
+            Logging(green('>>>Result was the same - calculation was right', 'bright'))
+            #Logging(bcolors.OKGREEN + ">>>Result was the same - calculation was right" + bcolors.ENDC) 
         else:
             #Logging("Result was different - calculation was wrong")
             Logging(red('>>>Result was different - calculation was wrong', 'bright')) 
+            #Logging(bcolors.FAIL + ">>>Result was different - calculation was wrong" + bcolors.ENDC)
 
         #Calculation step by step #worked time  
         Logging("Compare workedtime - before and after log in")
@@ -2851,9 +2879,11 @@ def calculation(working_time_report_decimal,worked_time_report_decimal,break_tim
             # Logging(worked_time_decimal_2nd)
             #Logging("Result was the same - calculation was right")
             Logging(green('>>>Result was the same - calculation was right', 'bright')) 
+            #Logging(bcolors.OKGREEN + ">>>Result was the same - calculation was right" + bcolors.ENDC) 
         else:
             #Logging("Result was different - calculation was wrong")
             Logging(red('>>>Result was different - calculation was wrong', 'bright')) 
+            #Logging(bcolors.FAIL + ">>>Result was different - calculation was wrong" + bcolors.ENDC)
 
         #Calculation step by step #break time
         Logging("Compare break time - before and after log in")  
@@ -2863,15 +2893,18 @@ def calculation(working_time_report_decimal,worked_time_report_decimal,break_tim
             # Logging(break_time_decimal_2nd)
             #Logging("Result was the same - calculation was right")
             Logging(green('>>>Result was the same - calculation was right', 'bright')) 
+            #Logging(bcolors.OKGREEN + ">>>Result was the same - calculation was right" + bcolors.ENDC) 
         else:
             #Logging("Result was different - calculation was wrong") 
             Logging(red('>>>Result was different - calculation was wrong', 'bright')) 
+            #Logging(bcolors.FAIL + ">>>Result was different - calculation was wrong" + bcolors.ENDC)
 
         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["compare_time"]["pass"])
 
     except:
         #Logging("Can't calculation")
         Logging(red('>>>Cant calculate', 'bright')) 
+        #Logging(bcolors.FAIL + ">>>Cant calculate" + bcolors.ENDC)
         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["compare_time"]["fail"])
 
 
@@ -2880,8 +2913,8 @@ def daily_status2(status1,break_number1,working_number1,OT_number1):
         #After login
         Logging("")
         #Logging("*** Daily Status - After log in***")
-        #Logging(yellow('***Daily Status - After log in***', 'bold')) 
-        Logging(bcolors.WARNING + bcolors.BOLD + "***Daily Status - After log in***" + bcolors.ENDC)
+        Logging(yellow('***Daily Status - After log in***', 'bold')) 
+        #Logging(bcolors.WARNING + bcolors.BOLD + "***Daily Status - After log in***" + bcolors.ENDC)
 
         time.sleep(5)
         driver.find_element_by_xpath("//span[contains(@class, 'text-truncate') and contains(., 'Daily Status')]").click()
@@ -2949,6 +2982,8 @@ def daily_status2(status1,break_number1,working_number1,OT_number1):
     except: 
         #Logging("Check data fail")
         Logging(red('>>>Check data failed', 'bright')) 
+        #Logging(bcolors.FAIL + ">>>Check data failed" + bcolors.ENDC)
+
 
     try:      
         #Compare Clockin
@@ -2957,11 +2992,13 @@ def daily_status2(status1,break_number1,working_number1,OT_number1):
         if x == clockin_UI.text:
             #Logging ("Result was the same - system is correct")
             Logging(green('>>>Result was the same - system is correct', 'bright'))
+            #Logging(bcolors.OKGREEN + ">>>Result was the same - system is correct" + bcolors.ENDC)
             TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["compare_clockin"]["pass"])
 
         else:
             #Logging("Result was different - system is false")
             Logging(red('>>>Result was different - system is false', 'bright')) 
+            #Logging(bcolors.FAIL + ">>>Result was different - system is false" + bcolors.ENDC)
             TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["compare_clockin"]["fail"])
 
 
@@ -2970,11 +3007,13 @@ def daily_status2(status1,break_number1,working_number1,OT_number1):
         if y == clockout_UI.text:
             #Logging ("Result was the same - system is correct")
             Logging(green('>>>Result was the same - system is correct', 'bright'))
+            #Logging(bcolors.OKGREEN + ">>>Result was the same - system is correct" + bcolors.ENDC)
             TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["compare_clockout"]["pass"])
 
         else:
             #Logging("Result was different - system is false")  
             Logging(red('>>>Result was different - system is false', 'bright'))   
+            #Logging(bcolors.FAIL + ">>>Result was different - system is false" + bcolors.ENDC)
             TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["compare_clockout"]["fail"])
 
         # #Compare status
@@ -2993,32 +3032,38 @@ def daily_status2(status1,break_number1,working_number1,OT_number1):
         if breaktime_number == break_number1:
             #Logging ("Result was the same - system is correct")
             Logging(green('>>>Result was the same - system is correct', 'bright'))
+            #Logging(bcolors.OKGREEN + ">>>Result was the same - system is correct" + bcolors.ENDC)
         else:
             #Logging("Result was different - system is false")
             Logging(red('>>>Result was different - system is false', 'bright')) 
+            #Logging(bcolors.FAIL + ">>>Result was different - system is false" + bcolors.ENDC)
 
         #Compare working time
         Logging("Compare daily status-working time and timesheet-working time")
         if working_number1 == workingtime_status_number:
             #Logging ("Result was the same - system is correct")
             Logging(green('>>>Result was the same - system is correct', 'bright'))
+            #Logging(bcolors.OKGREEN + ">>>Result was the same - system is correct" + bcolors.ENDC)
         else:
             #Logging("Result was different - system is false")
             Logging(red('>>>Result was different - system is false', 'bright')) 
+            #Logging(bcolors.FAIL + ">>>Result was different - system is false" + bcolors.ENDC)
 
         #Compare OT
         Logging("Compare daily status-OT time and timesheet-OT time")
         if OT_number == OT_number1:
             #Logging ("Result was the same - system is correct")
             Logging(green('>>>Result was the same - system is correct', 'bright'))
+            #Logging(bcolors.OKGREEN + ">>>Result was the same - system is correct" + bcolors.ENDC)
         else:
             #Logging("Result was different - system is false")
             Logging(red('>>>Result was different - system is false', 'bright')) 
+            #Logging(bcolors.FAIL + ">>>Result was different - system is false" + bcolors.ENDC)
 
         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["compare_time_daily"]["pass"])
     except:
-        #Logging("Can't compare")
-        Logging(red('>>>Cant compare', 'bright')) 
+        Logging("Can't compare")
+        #Logging(red('>>>Cant compare', 'bright')) 
         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["compare_time_daily"]["fail"])
 
 
@@ -3039,8 +3084,8 @@ def weekly_status2():
         
         Logging("")
         #Logging("***Weekly Status - After log in***")
-        #Logging(yellow('***Weekly Status - After log in***', 'bold')) 
-        Logging(bcolors.WARNING + bcolors.BOLD + "***Weekly Status - After log in***" + bcolors.ENDC)
+        Logging(yellow('***Weekly Status - After log in***', 'bold')) 
+        #Logging(bcolors.WARNING + bcolors.BOLD + "***Weekly Status - After log in***" + bcolors.ENDC)
 
         time.sleep(5)
         driver.find_element_by_xpath("//span[contains(@class, 'text-truncate') and contains(., 'Weekly Status')]").click()
@@ -3242,6 +3287,8 @@ def weekly_status2():
     except: 
         #Logging("Check data fail")
         Logging(red('>>>Check data failed', 'bright')) 
+        #Logging(bcolors.FAIL + ">>>Check data failed" + bcolors.ENDC)
+
 
     try:   
         #Calculation #Total working time
@@ -3250,10 +3297,12 @@ def weekly_status2():
         if round(monday_time_decimal2) + round(tuesday_time_decimal2) + round(wednesday_time_decimal2) + round(thursday_time_decimal2) + round(friday_time_decimal2) + round(saturday_time_decimal2) == round(total_time_decimal2):
             #Logging("Result was the same - System was correct")
             Logging(green('>>>Result was the same - calculation was right', 'bright')) 
+            #Logging(bcolors.OKGREEN + "Result was the same - calculation was right" + bcolors.ENDC)
             TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["total_working_time"]["pass"])
         else:
             #Logging("Result was different - System was false")
             Logging(red('>>>Result was different - System was false', 'bright')) 
+            #Logging(bcolors.FAIL + ">>>Result was different - System was false" + bcolors.ENDC)
             TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["total_working_time"]["fail"])
 
         #Click details
@@ -3324,9 +3373,12 @@ def weekly_status2():
         if ws_clockin_UI.text == e:
             #Logging("Result was the same - System was correct")
             Logging(green('>>>Result was the same - System was correct', 'bright')) 
+            #Logging(bcolors.OKGREEN + "Result was the same - System was correct" + bcolors.ENDC)
         else:
             #Logging("Result was different - System was false")
             Logging(red('>>>Result was different - System was false', 'bright')) 
+            #Logging(bcolors.FAIL + ">>>Result was different - System was false" + bcolors.ENDC)
+
 
         #Compare clock out
         Logging("")
