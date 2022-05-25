@@ -1,4 +1,5 @@
 from calendar import timegm
+from distutils.log import Log
 from logging import exception
 import re, sys, json#, testlink
 import time, random
@@ -444,8 +445,9 @@ def check_time():
     Logging(">> OT Time: " + OT.text)
     OT_time = OT.text
 
-    data = [output_clockin,output_clockout,break_time,working_time,clock_in_time,work_method_up,today_work_date, OT_time]
-    return data
+    # data = [output_clockin,output_clockout,break_time,working_time,clock_in_time,work_method_up,today_work_date, OT_time]
+    # return data
+    return output_clockin,output_clockout,break_time,working_time,clock_in_time,work_method_up,today_work_date, OT_time
 
 def timesheet_list(output_clockin,output_clockout,break_time,working_time, OT_time):
     date_clockin = driver.find_element_by_xpath("//*[@class='admin_status']//div[contains(@class,'daily-wrapper')]/div/div/div/div[2]/div/div[2]/div/div/span")
@@ -2057,13 +2059,16 @@ def weekly_status():
         time.sleep(5)
         driver.find_element_by_xpath("//span[contains(@class, 'text-truncate') and contains(., 'Weekly Status')]").click()
         WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.XPATH, "//span[contains(.,'Name')] ")))
+        Logging("Access page successfully")
         #Logging(bcolors.OKGREEN + "Access page successfully" + bcolors.ENDC)
         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["access_weekly_status_page"]["pass"])
     except:
+        Logging("Access page fail")
         #Logging(bcolors.FAIL + "Access page fail" + bcolors.ENDC)
         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["access_weekly_status_page"]["fail"])
 
     try:
+        Logging("1223")
         driver.find_element_by_xpath("//div[contains(@class,'company-status-setting')]/div/div[2]/div/div[1]").click()
         ws_search = driver.find_element_by_xpath(data["TIMECARD"]["ws_search"])
         ws_search.send_keys(data["name_keyword"][0])
@@ -2286,7 +2291,7 @@ def daily_status():
     try:
         Logging("")
         driver.find_element_by_xpath("//div[contains(@class,'company-time-card-real-time')]/div/div[2]/div/div[1]").click()
-        search = driver.find_element_by_xpath("//input[contains(@class,'form-control')]")
+        search = driver.find_element_by_xpath(data["TIMECARD"]["search"])
         search.send_keys(data["name_keyword"][0])
         search.send_keys(Keys.ENTER)
         time.sleep(5)
@@ -2294,23 +2299,23 @@ def daily_status():
         driver.find_element_by_xpath("//div[contains(@class,'company-time-card-real-time')]/div/div[2]/div/div[1]").click()
 
         time.sleep(5)
-        work_status = driver.find_element_by_xpath("//div[contains(@class,'label-rounded')]")
+        work_status = driver.find_element_by_xpath(data["TIMECARD"]["work_status"])
         Logging("work status: " + work_status.text)
         status1 = work_status.text
 
-        dailystatus_clockin = driver.find_element_by_xpath("//div[contains(@class,'ag-center-cols-viewport')]//*[@col-id='clock_in_title']/div[1]")
+        dailystatus_clockin = driver.find_element_by_xpath(data["TIMECARD"]["dailystatus_clockin"])
         Logging("clock-in: " + dailystatus_clockin.text)
 
-        dailystatus_clockout = driver.find_element_by_xpath("//div[contains(@class,'ag-center-cols-viewport')]//*[@col-id='clock_out_title']")
+        dailystatus_clockout = driver.find_element_by_xpath(data["TIMECARD"]["dailystatus_clockout"])
         Logging("clock-out: " + dailystatus_clockout.text)
 
-        dailystatus_breaktime = driver.find_element_by_xpath("//div[contains(@class,'ag-center-cols-viewport')]//*[@col-id='break_time']")
+        dailystatus_breaktime = driver.find_element_by_xpath(data["TIMECARD"]["dailystatus_breaktime"])
         Logging("break time: " + dailystatus_breaktime.text)
 
-        achievement = driver.find_element_by_xpath("//div[contains(@class,'ag-center-cols-viewport')]//*[@col-id='cumulative_work_time_percent']/div[1]/div")
+        achievement = driver.find_element_by_xpath(data["TIMECARD"]["achievement"])
         Logging("achievement: " + achievement.text)
 
-        estimate = driver.find_element_by_xpath("//div[contains(@class,'ag-center-cols-viewport')]//*[@col-id='over_time_since']/div[1]/div")
+        estimate = driver.find_element_by_xpath(data["TIMECARD"]["estimate"])
         Logging("estimate: " + estimate.text)
         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["daily_status_data"]["pass"])
 
@@ -2341,7 +2346,7 @@ def report():
         #workingtimeUI_number
         Logging("Change working time to decimal")
         time.sleep(5)
-        working_time_report = driver.find_element_by_xpath("//span[contains(.,'Working status')]//following-sibling::div//li[1]//span[contains(.,'Working time')]/../../div[2]")
+        working_time_report = driver.find_element_by_xpath(data["TIMECARD"]["working_time_report"])
         Logging("working time: " +  working_time_report.text)
         working_time_report1 = working_time_report.text
         try:
@@ -2375,7 +2380,7 @@ def report():
         #workedtimeUI_number
         Logging("Change worked time to decimal")
         time.sleep(5)
-        worked_time_report = driver.find_element_by_xpath("//span[contains(.,'Working status')]//following-sibling::div//li[2]//span[contains(.,'Worked time')]/../../div[2]")
+        worked_time_report = driver.find_element_by_xpath(data["TIMECARD"]["worked_time_report"])
         Logging("worked time: " + worked_time_report.text)
         worked_time_report1 = worked_time_report.text
         try:
@@ -2409,7 +2414,7 @@ def report():
         #breaktimeUI_number
         Logging("Change break time to decimal")
         time.sleep(5)
-        break_time_report = driver.find_element_by_xpath("//span[contains(.,'Working status')]//following-sibling::div//li[3]//span[contains(.,'Break time')]/../../div[2]")
+        break_time_report = driver.find_element_by_xpath(data["TIMECARD"]["break_time_report"])
         Logging("break time: " + break_time_report.text)
         break_time_report1 = break_time_report.text
         try:
@@ -2479,14 +2484,14 @@ def timesheet_calendar_check():
     driver.find_element_by_xpath("//span[contains(@class, 'text-truncate') and contains(., 'Timesheets')]").click()
     WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.XPATH, "//span[contains(.,'Break time')] ")))
     time.sleep(1)
-    output_clock_in = driver.find_element_by_xpath("//div[contains(@class, 'content-body')]//div[contains(@class, 'header')]//div[contains(@class, 'check-in-status')]")
+    output_clock_in = driver.find_element_by_xpath(data["TIMECARD"]["output_clock_in"])
     Logging(">> Clock-in: " + output_clock_in.text)
     output_clockin = output_clock_in.text
     if output_clockin == "-":
         output_clockin = None
         Logging("No Clock-in")
     else:
-        out_put_status = driver.find_element_by_xpath("//div[contains(@class, 'timeline-body-clock')]//div[contains(.,'Clock-In')]/../div[4]")
+        out_put_status = driver.find_element_by_xpath(data["TIMECARD"]["out_put_status"])
         time.sleep(5)
         Logging(">> Status: " + out_put_status.text)
         output_status = out_put_status.text
@@ -2500,7 +2505,7 @@ def timesheet_calendar_check():
         try:
             if today_clockin.is_displayed():
                 today_clockin.click()
-                clock_in_UI = driver.find_element_by_xpath("//div[contains(@class, 'content-body')]//div[contains(@class, 'header')]//div[contains(@class, 'check-in-status')]")
+                clock_in_UI = driver.find_element_by_xpath(data["TIMECARD"]["clock_in_UI"])
                 if clock_in_UI.text == output_clockin:
                     Logging ("Clock in time is correct")
                 else:
@@ -2518,14 +2523,14 @@ def timesheet_calendar_check():
     WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.XPATH, "//span[contains(.,'Break time')] ")))
     time.sleep(1) 
     
-    output_clock_out = driver.find_element_by_xpath("//div[contains(@class, 'content-body')]//div[contains(@class, 'header')]//div[contains(@class, 'check-out-status')]")
+    output_clock_out = driver.find_element_by_xpath(data["TIMECARD"]["output_clock_out"])
     Logging(">> Clock-out: " + output_clock_out.text)
     output_clockout = output_clock_out.text
     if output_clockout == "-":
         output_clockout = None
         Logging("No Clock-out")
     else:
-        out_put_status_clockout = driver.find_element_by_xpath("//div[contains(@class, 'timeline-body-clock')]//div[contains(.,'Clock-Out')]/../div[4]")
+        out_put_status_clockout = driver.find_element_by_xpath(data["TIMECARD"]["out_put_status_clockout"])
         time.sleep(5)
         Logging(">> Status: " + out_put_status_clockout.text)
         output_status_clockout = out_put_status_clockout.text
@@ -2539,7 +2544,7 @@ def timesheet_calendar_check():
         try:
             if today_clockout.is_displayed():
                 today_clockout.click()
-                clock_out_UI = driver.find_element_by_xpath("//div[contains(@class, 'content-body')]//div[contains(@class, 'header')]//div[contains(@class, 'check-out-status')]")
+                clock_out_UI = driver.find_element_by_xpath(data["TIMECARD"]["clock_out_UI"])
                 if clock_out_UI.text == output_clockout:
                     Logging ("Clock out time is correct")
                 else:
@@ -2608,25 +2613,25 @@ def edit_clockin():
         Logging("Edit clockin")
         time.sleep(5)
         #Click Edit
-        Edit = driver.find_element_by_xpath("//div[contains(@class, 'admin_status')]//div[contains(@class, 'timeline-item  ')]//div[contains(.,'Clock-In')]//div[contains(@class, 'd-flex ')]//span[1]//div[contains(@class, 'cursor-pointer')]").click()
+        Edit = driver.find_element_by_xpath(data["TIMECARD"]["Edit"]).click()
         time.sleep(5)
-        Time = driver.find_element_by_xpath("//button[starts-with(@id, 'btnHours')]").click()
+        Time = driver.find_element_by_xpath(data["TIMECARD"]["Time"]).click()
         time.sleep(5)
-        Hour = driver.find_element_by_xpath("//div[starts-with(@id, 'dropdown')]//div//button[contains(.,'08')]").click()
+        Hour = driver.find_element_by_xpath(data["TIMECARD"]["Hour"]).click()
 
-        Time1 = driver.find_element_by_xpath("//button[starts-with(@id, 'btnMin')]").click()
+        Time1 = driver.find_element_by_xpath(data["TIMECARD"]["Time1"]).click()
         time.sleep(3)
-        Minute = driver.find_element_by_xpath("//div[starts-with(@id, 'dropdown')]//button[starts-with(@id, 'btnMin')]//following-sibling::div//button[contains(.,'00')]").click()
+        Minute = driver.find_element_by_xpath(data["TIMECARD"]["Minute"]).click()
 
         #Click On-time
-        Status = driver.find_element_by_xpath("//span[contains(.,'On Time')]").click()
+        Status = driver.find_element_by_xpath(data["TIMECARD"]["Status"]).click()
 
         #Input Memo
-        Memo = driver.find_element_by_xpath("//div[contains(@class, 'modal-content')]//div[5]//textarea[contains(@name, 'memo')]").send_keys("test")
+        Memo = driver.find_element_by_xpath(data["TIMECARD"]["Memo"]).send_keys("test")
         #Logging("Input memo")
 
         #Save
-        Save = driver.find_element_by_xpath("//span[contains(.,'Save')]").click()
+        Save = driver.find_element_by_xpath(data["TIMECARD"]["Save"]).click()
         #Logging("Edit clockin successfully")    
         Logging(green('Edit clock in successfully', 'bright')) 
         #Logging(bcolors.OKGREEN + "Edit clock in successfully" + bcolors.ENDC)
@@ -2646,25 +2651,25 @@ def edit_clockout():
         nb_out=[]
         time.sleep(10)
         #Click Edit
-        Edit = driver.find_element_by_xpath("//div[contains(@class, 'admin_status')]//div[contains(@class, 'timeline-item  ')]//div[contains(.,'Clock-Out')]//div[contains(@class, 'd-flex ')]//span[1]//div[contains(@class, 'cursor-pointer')]").click()
+        Edit2 = driver.find_element_by_xpath(data["TIMECARD"]["Edit2"]).click()
         time.sleep(5)
-        Time = driver.find_element_by_xpath("//button[starts-with(@id, 'btnHours')]").click()
+        Time2 = driver.find_element_by_xpath(data["TIMECARD"]["Time2"]).click()
         time.sleep(5)
-        Hour = driver.find_element_by_xpath("//div[starts-with(@id, 'dropdown')]//div//button[contains(.,'17')]").click()
+        Hour2 = driver.find_element_by_xpath(data["TIMECARD"]["Hour2"]).click()
 
-        Time1 = driver.find_element_by_xpath("//button[starts-with(@id, 'btnMin')]").click()
+        Time12 = driver.find_element_by_xpath(data["TIMECARD"]["Time12"]).click()
         time.sleep(2)
-        Minute = driver.find_element_by_xpath("//div[starts-with(@id, 'dropdown')]//button[starts-with(@id, 'btnMin')]//following-sibling::div//button[contains(.,'00')]").click()
+        Minute2 = driver.find_element_by_xpath(data["TIMECARD"]["Minute2"]).click()
 
         #Click On-time
-        Status = driver.find_element_by_xpath("//span[contains(.,'On Time')]").click()
+        Status2 = driver.find_element_by_xpath(data["TIMECARD"]["Status2"]).click()
 
         #Input Memo
-        Memo = driver.find_element_by_xpath("//div[contains(@class, 'modal-content')]//div[5]//textarea[contains(@name, 'memo')]").send_keys("test")
+        Memo2 = driver.find_element_by_xpath(data["TIMECARD"]["Memo2"]).send_keys("test")
         #Logging("Input memo")
 
         #Save
-        Save = driver.find_element_by_xpath("//span[contains(.,'Save')]").click()
+        Save2 = driver.find_element_by_xpath(data["TIMECARD"]["Save2"]).click()
         #Logging("Edit clockout successfully")
         Logging(green('Edit clock out successfully', 'bright')) 
         #Logging(bcolors.OKGREEN + "Edit clock out successfully" + bcolors.ENDC)
@@ -2679,7 +2684,7 @@ def edit_clockout():
     #officetimeUI_timesheet
     Logging(" ")
     Logging("Change timesheet-officetime to decimal")
-    office_time = driver.find_element_by_xpath("//*[@id='app']//div[contains(@class, 'admin_status')]//div[contains(@class, 'info-card')]//div[contains(.,'Office time')]//div[2]/div")
+    office_time = driver.find_element_by_xpath(data["TIMECARD"]["office_time"])
     Logging("office time: " +  office_time.text)
 
     office_time1 = office_time.text
@@ -2691,7 +2696,7 @@ def edit_clockout():
 
     #workingtimeUI_timesheet
     Logging("Change timesheet-working time to decimal")
-    working_time = driver.find_element_by_xpath("//*[@id='app']//div[contains(@class, 'admin_status')]//div[contains(@class, 'info-card')]//div[contains(.,'Working time')]//div[2]/div")
+    working_time = driver.find_element_by_xpath(data["TIMECARD"]["working_time"])
     Logging("working time: " + working_time.text)
 
     working_time1 = working_time.text
@@ -2703,7 +2708,7 @@ def edit_clockout():
 
     #breaktimeUI_timesheet
     Logging("Change timesheet-break time to decimal")
-    break_time = driver.find_element_by_xpath("//*[@id='app']//div[contains(@class, 'admin_status')]//div[contains(@class, 'info-card')]//div[contains(.,'Break time')]//div[2]/div")
+    break_time = driver.find_element_by_xpath(data["TIMECARD"]["break_time"])
     Logging("break time: " + break_time.text)
 
     break_time1 = break_time.text
@@ -2715,7 +2720,7 @@ def edit_clockout():
 
     #OTUI_timesheet
     Logging("Change timesheet-OT time to decimal")
-    OT_time = driver.find_element_by_xpath("//*[@id='app']//div[contains(@class, 'admin_status')]//div[contains(@class, 'info-card')]/div[5]/div[2]/div[1]")
+    OT_time = driver.find_element_by_xpath(data["TIMECARD"]["OT_time"])
     Logging("OT time: " + OT_time.text)
 
     OT_time1 = OT_time.text
@@ -2743,7 +2748,7 @@ def report_2nd():
         #workingtimeUI_number
         Logging("Change working time to decimal")
         time.sleep(5)
-        working_time2nd = driver.find_element_by_xpath("//span[contains(.,'Working status')]//following-sibling::div//li[1]//span[contains(.,'Working time')]/../../div[2]")
+        working_time2nd = driver.find_element_by_xpath(data["TIMECARD"]["working_time2nd"])
         Logging("working time: " + working_time2nd.text)
         working_time2 = working_time2nd.text
         try:
@@ -2778,7 +2783,7 @@ def report_2nd():
         #workedtimeUI_number
         Logging("Change worked time to decimal")
         time.sleep(5)
-        worked_time2nd = driver.find_element_by_xpath("//span[contains(.,'Working status')]//following-sibling::div//li[2]//span[contains(.,'Worked time')]/../../div[2]")
+        worked_time2nd = driver.find_element_by_xpath(data["TIMECARD"]["worked_time2nd"])
         Logging("worked time: " + worked_time2nd.text)
         worked_time2 = worked_time2nd.text
         try:
@@ -2812,7 +2817,7 @@ def report_2nd():
         #breaktimeUI_number
         Logging("Change break time to decimal")
         time.sleep(5)
-        break_time2nd = driver.find_element_by_xpath("//span[contains(.,'Working status')]//following-sibling::div//li[3]//span[contains(.,'Break time')]/../../div[2]")
+        break_time2nd = driver.find_element_by_xpath(data["TIMECARD"]["break_time2nd"])
         Logging("break time: " + break_time2nd.text)
         break_time2 = break_time2nd.text
         try:
@@ -2921,7 +2926,7 @@ def daily_status2(status1,break_number1,working_number1,OT_number1):
         WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.XPATH, "//span[contains(.,'Name')] ")))
 
         driver.find_element_by_xpath("//div[contains(@class,'company-time-card-real-time')]/div/div[2]/div/div[1]").click()
-        search2 = driver.find_element_by_xpath("//input[contains(@class,'form-control')]")
+        search2 = driver.find_element_by_xpath(data["TIMECARD"]["search2"])
         search2.send_keys(data["name_keyword"][0])
         search2.send_keys(Keys.ENTER)
         time.sleep(5)
@@ -2929,41 +2934,41 @@ def daily_status2(status1,break_number1,working_number1,OT_number1):
         driver.find_element_by_xpath("//div[contains(@class,'company-time-card-real-time')]/div/div[2]/div/div[1]").click()
 
         time.sleep(5)
-        work_status2 = driver.find_element_by_xpath("//div[contains(@class,'label-rounded')]")
+        work_status2 = driver.find_element_by_xpath(data["TIMECARD"]["work_status2"])
         Logging(" work status: " + work_status2.text)
         status2 = work_status2.text
 
-        dailystatus_clockin2 = driver.find_element_by_xpath("//div[contains(@class,'ag-center-cols-viewport')]//*[@col-id='clock_in_title']/div[1]")
+        dailystatus_clockin2 = driver.find_element_by_xpath(data["TIMECARD"]["dailystatus_clockin2"])
         Logging(" clock-in: " + dailystatus_clockin2.text[0:5])
         x = dailystatus_clockin2.text[0:5]
 
-        dailystatus_clockout2 = driver.find_element_by_xpath("//div[contains(@class,'ag-center-cols-viewport')]//*[@col-id='clock_out_title']")
+        dailystatus_clockout2 = driver.find_element_by_xpath(data["TIMECARD"]["dailystatus_clockout2"])
         Logging("clock-out: " + dailystatus_clockout2.text[0:5])
         y = dailystatus_clockout2.text[0:5]
 
-        dailystatus_breaktime2 = driver.find_element_by_xpath("//div[contains(@class,'ag-center-cols-viewport')]//*[@col-id='break_time']")
+        dailystatus_breaktime2 = driver.find_element_by_xpath(data["TIMECARD"]["dailystatus_breaktime2"])
         Logging("break time before change to decimal: " + dailystatus_breaktime2.text)
         breaktime = dailystatus_breaktime2.text
         breaktime_hour = breaktime.split("H")[0]
         breaktime_number = int(breaktime_hour)
         Logging("break time after change to decimal: " + str(breaktime_number))
 
-        achievement2 = driver.find_element_by_xpath("//div[contains(@class,'ag-center-cols-viewport')]//*[@col-id='cumulative_work_time_percent']/div[1]/div")
+        achievement2 = driver.find_element_by_xpath(data["TIMECARD"]["achievement2"])
         Logging("Achievement: " + achievement2.text)
 
-        estimate2 = driver.find_element_by_xpath("//div[contains(@class,'ag-center-cols-viewport')]//*[@col-id='over_time_since']/div[1]/div")
+        estimate2 = driver.find_element_by_xpath(data["TIMECARD"]["estimate2"])
         Logging("Estimate: " + estimate2.text)   
 
-        workingtime = driver.find_element_by_xpath("//div[contains(@class,'ag-center-cols-viewport')]//*[@col-id='cumulative_work_time']/div[1]/div")
-        Logging("working time before change to decimal: " + workingtime.text[0:1])
-        workingtime_status = workingtime.text[0:1]
+        workingtime2 = driver.find_element_by_xpath(data["TIMECARD"]["workingtime2"])
+        Logging("working time before change to decimal: " + workingtime2.text[0:1])
+        workingtime_status = workingtime2.text[0:1]
         workingtime_status_hour = workingtime_status.split("H")[0]
         workingtime_status_number = int(workingtime_status_hour)
         Logging("working time after change to decimal: " + str(workingtime_status_number))
 
-        OT = driver.find_element_by_xpath("//div[contains(@class,'ag-center-cols-viewport')]//*[@col-id='cumulative_over_time_remain']/div[1]/div/div[1]")
-        Logging("OT time before change to decimal: " + OT.text[0:1])
-        OT1 = OT.text[0:1]
+        OvT = driver.find_element_by_xpath(data["TIMECARD"]["OvT"])
+        Logging("OT time before change to decimal: " + OvT.text[0:1])
+        OT1 = OvT.text[0:1]
         OT_hour = OT1.split("H")[0]
         OT_number = int(OT_hour)
         Logging(" OT time after change to decimal: " + str(OT_number))
@@ -2972,11 +2977,11 @@ def daily_status2(status1,break_number1,working_number1,OT_number1):
         time.sleep(5)
         driver.find_element_by_xpath("//span[contains(@class, 'text-truncate') and contains(., 'Timesheets')]").click()
         time.sleep(5)
-        clockin_UI = driver.find_element_by_xpath("//div[contains(@class,'check-in-status')]")
+        clockin_UI = driver.find_element_by_xpath(data["TIMECARD"]["clockin_UI"])
         Logging("Clock-in time: " + clockin_UI.text)  
         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["clockin_UI"]["pass"])
 
-        clockout_UI = driver.find_element_by_xpath("//div[contains(@class,'check-out-status')]")
+        clockout_UI = driver.find_element_by_xpath(data["TIMECARD"]["clockout_UI"])
         Logging("Clock-out time: " + clockout_UI.text)
         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["clockout_UI"]["pass"])
     except: 
@@ -3092,7 +3097,7 @@ def weekly_status2():
         WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.XPATH, "//span[contains(.,'Name')] ")))
 
         driver.find_element_by_xpath("//div[contains(@class,'company-status-setting')]/div/div[2]/div/div[1]").click()
-        ws_search2 = driver.find_element_by_xpath("//input[contains(@class,'form-control')]")
+        ws_search2 = driver.find_element_by_xpath(data["TIMECARD"]["ws_search2"])
         ws_search2.send_keys(data["name_keyword"][0])
         ws_search2.send_keys(Keys.ENTER)
         time.sleep(3)
@@ -3100,7 +3105,7 @@ def weekly_status2():
         driver.find_element_by_xpath("//div[contains(@class,'company-status-setting')]/div/div[2]/div/div[1]").click()
 
         time.sleep(3)
-        monday2 = driver.find_element_by_xpath("//*[@col-id='day_0']//div[contains(@class,'cursor-pointer')]/span")
+        monday2 = driver.find_element_by_xpath(data["TIMECARD"]["monday"])
         Logging("monday before change to decimal: " + monday2.text)
         monday_time2 = monday2.text
         try:
@@ -3125,7 +3130,7 @@ def weekly_status2():
             monday_time_decimal2 = hour_number_monday_time2
             Logging("monday after change to decimal: " + str(monday_time_decimal2))
 
-        tuesday2 = driver.find_element_by_xpath("//*[@col-id='day_1']//div[contains(@class,'cursor-pointer')]/span")
+        tuesday2 = driver.find_element_by_xpath(data["TIMECARD"]["tuesday"])
         Logging("tuesday before change to decimal: " + tuesday2.text)
         tuesday_time2 = tuesday2.text
         try:
@@ -3150,7 +3155,7 @@ def weekly_status2():
             tuesday_time_decimal2 = hour_number_tuesday_time2
             Logging("tuesday after change to decimal: " + str(tuesday_time_decimal2))
 
-        wednesday2 = driver.find_element_by_xpath("//*[@col-id='day_2']//div[contains(@class,'cursor-pointer')]/span")
+        wednesday2 = driver.find_element_by_xpath(data["TIMECARD"]["wednesday"])
         Logging("wednesday before change to decimal: " + wednesday2.text)
         wednesday_time2 = wednesday2.text
         try:
@@ -3175,7 +3180,7 @@ def weekly_status2():
             wednesday_time_decimal2 = hour_number_wednesday_time2
             Logging("wednesday after change to decimal: " + str(wednesday_time_decimal2))
 
-        thursday2 = driver.find_element_by_xpath("//*[@col-id='day_3']//div[contains(@class,'cursor-pointer')]/span")
+        thursday2 = driver.find_element_by_xpath(data["TIMECARD"]["thursday"])
         Logging("thursday before change to decimal: " + thursday2.text)
         thursday_time2 = thursday2.text
         try:
@@ -3201,7 +3206,7 @@ def weekly_status2():
             thursday_time_decimal2 = hour_number_thursday_time2
             Logging("thursday after change to decimal: " + str(thursday_time_decimal2))
 
-        friday2 = driver.find_element_by_xpath("//*[@col-id='day_4']//div[contains(@class,'cursor-pointer')]/span")
+        friday2 = driver.find_element_by_xpath(data["TIMECARD"]["friday"])
         Logging("friday before change to decimal: " + friday2.text)
         friday_time2 = friday2.text
         try:
@@ -3226,7 +3231,7 @@ def weekly_status2():
             friday_time_decimal2 = hour_number_friday_time2
             Logging("friday after change to decimal: " + str(friday_time_decimal2))
 
-        saturday2 = driver.find_element_by_xpath("//*[@col-id='day_5']//div[contains(@class,'cursor-pointer')]/span")
+        saturday2 = driver.find_element_by_xpath(data["TIMECARD"]["saturday"])
         Logging("saturday before change to decimal: " + saturday2.text)
         saturday_time2 = saturday2.text
         try:
@@ -3251,11 +3256,11 @@ def weekly_status2():
             saturday_time_decimal2 = hour_number_saturday_time2
             Logging("saturday after change to decimal: " + str(saturday_time_decimal2))
 
-        sunday2 = driver.find_element_by_xpath("//*[@col-id='day_6']//div[contains(@class,'cursor-pointer')]/span")
+        sunday2 = driver.find_element_by_xpath(data["TIMECARD"]["sunday2"])
         Logging("sunday: " + sunday2.text)
 
         Logging("")
-        total2 = driver.find_element_by_xpath("//span[contains(@class,'td-sum-of-time')]")
+        total2 = driver.find_element_by_xpath(data["TIMECARD"]["total2"])
         Logging("total before change to decimal: " + total2.text)
         total_time2 = total2.text
         try:
@@ -3311,18 +3316,18 @@ def weekly_status2():
         Logging("")
         #Clock in time
         time.sleep(5)
-        ws_clockin_UI = driver.find_element_by_xpath("//div[contains(@class,'check-in-status')]")
+        ws_clockin_UI = driver.find_element_by_xpath(data["TIMECARD"]["ws_clockin_UI"])
         Logging("Clock-in time: " + ws_clockin_UI.text)  
         
         #Clock out time
-        ws_clockout_UI = driver.find_element_by_xpath("//div[contains(@class,'check-out-status')]")
+        ws_clockout_UI = driver.find_element_by_xpath(data["TIMECARD"]["ws_clockout_UI"])
         Logging("Clock-out time: " + ws_clockout_UI.text)
 
         #officetimeUI_weekly status
         Logging(" ")
         Logging("Change weekly status-officetime to decimal")
         time.sleep(3)
-        ws_office_time = driver.find_element_by_xpath("//div[contains(@class, 'info-card')]//div[contains(.,'Office time')]//div[2]/div")
+        ws_office_time = driver.find_element_by_xpath(data["TIMECARD"]["ws_office_time"])
         Logging("office time: " +  ws_office_time.text)
 
         ws_office_time1 = ws_office_time.text
@@ -3333,7 +3338,7 @@ def weekly_status2():
 
         #breaktimeUI_weekly status
         Logging("Change weekly status-break time to decimal")
-        ws_break_time = driver.find_element_by_xpath("//div[contains(@class, 'info-card')]//div[contains(.,'Break time')]//div[2]/div")
+        ws_break_time = driver.find_element_by_xpath(data["TIMECARD"]["ws_break_time"])
         Logging("break time: " + ws_break_time.text)
 
         ws_break_time1 = ws_break_time.text
@@ -3344,7 +3349,7 @@ def weekly_status2():
 
         #workingtimeUI_weekly status
         Logging("Change weekly status-working time to decimal")
-        ws_working_time = driver.find_element_by_xpath("//div[contains(@class, 'info-card')]//div[contains(.,'Working time')]//div[2]/div")
+        ws_working_time = driver.find_element_by_xpath(data["TIMECARD"]["ws_working_time"])
         Logging("working time: " + ws_working_time.text)
 
         ws_working_time1 = ws_working_time.text
@@ -3355,7 +3360,7 @@ def weekly_status2():
 
         #OTUI_weekly status
         Logging("Change weekly status-OT time to decimal")
-        ws_OT_time = driver.find_element_by_xpath("//div[contains(@class, 'info-card')]/div[5]/div[2]/div[1]")
+        ws_OT_time = driver.find_element_by_xpath(data["TIMECARD"]["ws_OT_time"])
         Logging("OT time: " + ws_OT_time.text)
 
         ws_OT_time1 = ws_OT_time.text
@@ -3450,7 +3455,7 @@ def weekly_status2():
 def company_timecard_reports():
     try:
         time.sleep(5)
-        company_report_page = driver.find_element_by_xpath(" //a[contains(@href,'/nhr/hr/timecard/company/statistics')]")
+        company_report_page = driver.find_element_by_xpath(data["TIMECARD"]["company_report_page"])
         if company_report_page.is_displayed():
             company_report_page.click()
             WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.XPATH, "//span[contains(.,'Name')]")))
@@ -3461,7 +3466,7 @@ def company_timecard_reports():
             TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["access_company_report_page"]["pass"])
 
         driver.find_element_by_xpath("//div[contains(@class,'company-statistic-setting')]/div/div[2]/div/div[1]").click()
-        ws_search2 = driver.find_element_by_xpath("//input[contains(@class,'form-control')]")
+        ws_search2 = driver.find_element_by_xpath(data["TIMECARD"]["ws_search2"])
         ws_search2.send_keys(data["name_keyword"][0])
         ws_search2.send_keys(Keys.ENTER)
         time.sleep(5)
@@ -3471,11 +3476,11 @@ def company_timecard_reports():
         time.sleep(5)
         Logging("")
         #Logging("***Reports Default***")
-        #Logging(yellow('***Reports Default***', 'bold')) 
-        Logging(bcolors.WARNING + bcolors.BOLD + "***Reports Default***" + bcolors.ENDC)
+        Logging(yellow('***Reports Default***', 'bold')) 
+        #Logging(bcolors.WARNING + bcolors.BOLD + "***Reports Default***" + bcolors.ENDC)
 
         Logging("Change working day to decimal")
-        working_day = driver.find_element_by_xpath("//*[@col-id='weekday']//div[contains(@class,'ag-react-container')]//div//div")
+        working_day = driver.find_element_by_xpath(data["TIMECARD"]["working_day"])
         Logging("working day before change to decimal: " + working_day.text)
         working_day_time = working_day.text
         working_day_hour = working_day_time.split(" ")[0]
@@ -3483,23 +3488,23 @@ def company_timecard_reports():
         Logging("working day after change to decimal: " + str(working_day_number))
 
         Logging("Change worked day to decimal")
-        worked_day = driver.find_element_by_xpath("//*[@col-id='day_work']//div[contains(@class,'ag-react-container')]")
+        worked_day = driver.find_element_by_xpath(data["TIMECARD"]["worked_day"])
         Logging("worked daybefore change to decimal: " + worked_day.text)
         worked_day_time = worked_day.text
         worked_day_hour = worked_day_time.split(" ")[0]
         worked_day_number = int(worked_day_hour)
         Logging("worked day after change to decimal: " + str(worked_day_number))
 
-        avg_clock_in = driver.find_element_by_xpath("//*[@col-id='avg_clock_in']//div[contains(@class,'ag-react-container')]")
+        avg_clock_in = driver.find_element_by_xpath(data["TIMECARD"]["avg_clock_in"])
         Logging("avg clock in: " + avg_clock_in.text)
         
-        avg_clock_out = driver.find_element_by_xpath("//*[@col-id='avg_clock_out']//div[contains(@class,'ag-react-container')]")
+        avg_clock_out = driver.find_element_by_xpath(data["TIMECARD"]["avg_clock_out"])
         Logging("avg clock out: " + avg_clock_out.text)
         time.sleep(5)
 
         Logging("")
         Logging("Change Avg.Worked time per day to decimal")
-        avg_worked_time_per_day = driver.find_element_by_xpath("//*[@col-id='avg_daily_work']//div[contains(@class,'ag-react-container')]")
+        avg_worked_time_per_day = driver.find_element_by_xpath(data["TIMECARD"]["avg_worked_time_per_day"])
         Logging("Avg.Worked time per day before change to decimal: " + avg_worked_time_per_day.text)
         avg_worked_time_per_day_time = avg_worked_time_per_day.text
         try:
@@ -3529,7 +3534,7 @@ def company_timecard_reports():
 
         Logging("")
         Logging("Change Avg.Worked time per week to decimal")
-        avg_worked_time_per_week = driver.find_element_by_xpath("//*[@col-id='avg_weekly_work']//div[contains(@class,'ag-react-container')]//div//div")
+        avg_worked_time_per_week = driver.find_element_by_xpath(data["TIMECARD"]["avg_worked_time_per_week"])
         Logging("Avg.Worked time per week before change to decimal: " + avg_worked_time_per_week.text)
         avg_worked_time_per_week_time = avg_worked_time_per_week.text
         try:
@@ -3572,42 +3577,42 @@ def company_timecard_reports():
         time.sleep(5)
         Logging("")
         #Logging("***MONTHLY***")
-        #Logging(yellow('***MONTHLY***', ['bold', 'underlined'])) 
-        Logging(bcolors.WARNING + bcolors.BOLD + bcolors.UNDERLINE + "***MONTHLY***" + bcolors.ENDC)
+        Logging(yellow('***MONTHLY***', ['bold', 'underlined'])) 
+        #Logging(bcolors.WARNING + bcolors.BOLD + bcolors.UNDERLINE + "***MONTHLY***" + bcolors.ENDC)
         #Logging("'''Monthly Scheduled Working'''")
-        #Logging(yellow('***Monthly Scheduled Working***', 'bold')) 
-        Logging(bcolors.WARNING + bcolors.BOLD + bcolors.UNDERLINE + "***Monthly Scheduled Working***" + bcolors.ENDC)
+        Logging(yellow('***Monthly Scheduled Working***', 'bold')) 
+        #Logging(bcolors.WARNING + bcolors.BOLD + bcolors.UNDERLINE + "***Monthly Scheduled Working***" + bcolors.ENDC)
 
         #Monthly #Scheduled Working
-        scheduled_workingday = driver.find_element_by_xpath("//span[contains(.,'Scheduled working day')]/../..//div[contains(@class,'d-flex ')]/following-sibling::div")
+        scheduled_workingday = driver.find_element_by_xpath(data["TIMECARD"]["scheduled_workingday"])
         Logging("Scheduled working day before change to decimal: " + scheduled_workingday.text)
         working_day_time1 = scheduled_workingday.text
         working_day_hour1 = working_day_time1.split(" ")[0]
         working_day_number1 = int(working_day_hour1)
         Logging("Scheduled working day after change to decimal: " + str(working_day_number1))
 
-        scheduled_worked_day = driver.find_element_by_xpath("//span[contains(.,'Worked day')]/../..//div[contains(@class,'d-flex ')]/following-sibling::div")
+        scheduled_worked_day = driver.find_element_by_xpath(data["TIMECARD"]["scheduled_worked_day"])
         Logging("Scheduled worked day before change to decimal: " + scheduled_worked_day.text)
         worked_day_time1 = scheduled_worked_day.text
         worked_day_hour1 = worked_day_time1.split(" ")[0]
         worked_day_number1 = int(worked_day_hour1)
         Logging("Scheduled worked day after change to decimal: " + str(worked_day_number1))
 
-        holiday = driver.find_element_by_xpath("//li[3]//span[contains(.,'Holiday')]/../..//div[contains(@class,'d-flex ')]/following-sibling::div")
+        holiday = driver.find_element_by_xpath(data["TIMECARD"]["holi_day"])
         Logging("Holiday before change to decimal: " + holiday.text)
         holiday_time1 = holiday.text
         holiday_hour1 = holiday_time1.split(" ")[0]
         holiday_number1 = int(holiday_hour1)
         Logging("Holiday after change to decimal: " + str(holiday_number1))
 
-        day_off = driver.find_element_by_xpath("//li[4]//span[contains(.,'Day Off')]/../..//div[contains(@class,'d-flex ')]/following-sibling::div")
+        day_off = driver.find_element_by_xpath(data["TIMECARD"]["day_of_f"])
         Logging("Day off before change to decimal: " + day_off.text)
         day_off_time1 = day_off.text
         day_off_hour1 = day_off_time1.split(" ")[0]
         day_off_number1 = int(day_off_hour1)
         Logging("Day off after change to decimal: " + str(day_off_number1))
 
-        scheduled_working_vacation = driver.find_element_by_xpath("//li[5]//span[contains(.,'Vacation')]/../..//div[contains(@class,'d-flex ')]/following-sibling::div")
+        scheduled_working_vacation = driver.find_element_by_xpath(data["TIMECARD"]["scheduled_working_vacation"])
         Logging("Vacation before change to decimal: " + scheduled_working_vacation.text)
         scheduled_working_vacation_time1 = scheduled_working_vacation.text
         scheduled_working_vacation_hour1 = scheduled_working_vacation_time1.split(" ")[0]
@@ -3622,12 +3627,12 @@ def company_timecard_reports():
     try:
         Logging("")
         #Logging("'''Monthly Working status'''")
-        #Logging(yellow('***Monthly Working status***', 'bold')) 
-        Logging(bcolors.WARNING + bcolors.BOLD + "***Monthly Working status***" + bcolors.ENDC)
+        Logging(yellow('***Monthly Working status***', 'bold')) 
+        #Logging(bcolors.WARNING + bcolors.BOLD + "***Monthly Working status***" + bcolors.ENDC)
 
         Logging("Change Avg.Working time per day to decimal")
         #Monthly #Working status
-        avg_working_time_per_day = driver.find_element_by_xpath("//span[contains(.,'Avg.Working time per day')]/../..//div[contains(@class,'d-flex ')]/following-sibling::div")
+        avg_working_time_per_day = driver.find_element_by_xpath(data["TIMECARD"]["avg_working_time_per_day"])
         Logging("Avg.Working time per day before change to decimal: " + avg_working_time_per_day.text)
         avg_working_time_per_day_time = avg_working_time_per_day.text
         try:
@@ -3657,7 +3662,7 @@ def company_timecard_reports():
 
         Logging("")
         Logging("Change Avg.Working time per week to decimal")
-        avg_working_time_per_week = driver.find_element_by_xpath("//span[contains(.,'Avg.Working time per week')]/../..//div[contains(@class,'d-flex ')]/following-sibling::div")
+        avg_working_time_per_week = driver.find_element_by_xpath(data["TIMECARD"]["avg_working_time_per_week"])
         Logging("Avg.Working time per week beore change to decimal: " + avg_working_time_per_week.text)
         avg_working_time_per_week_time = avg_working_time_per_week.text
         try:
@@ -3695,66 +3700,66 @@ def company_timecard_reports():
     try:
         Logging("")
         #Logging("Events")
-        #Logging(yellow('***Monthly Events***', 'bold')) 
-        Logging(bcolors.WARNING + bcolors.BOLD + "***Monthly Events***" + bcolors.ENDC)
+        Logging(yellow('***Monthly Events***', 'bold')) 
+        #Logging(bcolors.WARNING + bcolors.BOLD + "***Monthly Events***" + bcolors.ENDC)
 
-        events_clockin = driver.find_element_by_xpath("//li[1]//span[contains(.,'Clock-In')]/../..//div[contains(@class,'d-flex ')]/following-sibling::div")
+        events_clockin = driver.find_element_by_xpath(data["TIMECARD"]["events_clockin"])
         Logging("Clock-In: " + events_clockin.text)
         events_clockin_day = events_clockin.text
         events_clockin_time = events_clockin_day.split(" ")[0]
         events_clockin_decimal = int(events_clockin_time)
         Logging("Clock-In after change to decimal: " + str(events_clockin_decimal))
 
-        tardiness = driver.find_element_by_xpath("//span[contains(.,'Tardiness')]/../..//div[contains(@class,'d-flex ')]/following-sibling::div")
+        tardiness = driver.find_element_by_xpath(data["TIMECARD"]["tardi_ness"])
         Logging("Tardiness: " + tardiness.text)
         tardiness_day = tardiness.text
         tardiness_time = tardiness_day.split(" ")[0]
         tardiness_decimal = int(tardiness_time)
         Logging("Tardiness after change to decimal: " + str(tardiness_decimal))
 
-        no_clockin = driver.find_element_by_xpath("//span[contains(.,'No Clock-In')]/../..//div[contains(@class,'d-flex ')]/following-sibling::div")
+        no_clockin = driver.find_element_by_xpath(data["TIMECARD"]["no_clockin"])
         Logging("No Clock-In: " + no_clockin.text)
         no_clockin_day = no_clockin.text
         no_clockin_time = no_clockin_day.split(" ")[0]
         no_clockin_decimal = int(no_clockin_time)
         Logging("No Clock-In after change to decimal: " + str(no_clockin_decimal))
 
-        events_clockout = driver.find_element_by_xpath("//li[4]//span[contains(.,'Clock-Out')]/../..//div[contains(@class,'d-flex ')]/following-sibling::div")
+        events_clockout = driver.find_element_by_xpath(data["TIMECARD"]["events_clockout"])
         Logging("Clock-Out: " + events_clockout.text)
         events_clockout_day = events_clockout.text
         events_clockout_time = events_clockout_day.split(" ")[0]
         events_clockout_decimal = int(events_clockout_time)
         Logging("Clock-Out after change to decimal: " + str(events_clockout_decimal))
 
-        leave_early = driver.find_element_by_xpath("//span[contains(.,'Leave Early')]/../..//div[contains(@class,'d-flex ')]/following-sibling::div")
+        leave_early = driver.find_element_by_xpath(data["TIMECARD"]["leave_ear_ly"])
         Logging("Leave Early: " + leave_early.text)
         leave_early_day = leave_early.text
         leave_early_time = leave_early_day.split(" ")[0]
         leave_early_decimal = int(leave_early_time)
         Logging("Leave Early after change to decimal: " + str(leave_early_decimal))
 
-        no_clockout = driver.find_element_by_xpath("//span[contains(.,'No Clock-Out')]/../..//div[contains(@class,'d-flex ')]/following-sibling::div")
+        no_clockout = driver.find_element_by_xpath(data["TIMECARD"]["no_clockout"])
         Logging("No Clock-Out: " + no_clockout.text)
         no_clockout_day = no_clockout.text
         no_clockout_time = no_clockout_day.split(" ")[0]
         no_clockout_decimal = int(no_clockout_time)
         Logging("No Clock-Out after change to decimal: " + str(no_clockout_decimal))
 
-        events_OT = driver.find_element_by_xpath("//li[7]//span[contains(.,'O/T')]/../..//div[contains(@class,'d-flex ')]/following-sibling::div")
+        events_OT = driver.find_element_by_xpath(data["TIMECARD"]["events_OT"])
         Logging("OT: " + events_OT.text)
         events_OT_day = events_OT.text
         events_OT_time = events_OT_day.split(" ")[0]
         events_OT_decimal = int(events_OT_time)
         Logging("OT after change to decimal: " + str(events_OT_decimal))
 
-        night_shift = driver.find_element_by_xpath("//li[8]//span[contains(.,'Night shift')]/../..//div[contains(@class,'d-flex ')]/following-sibling::div")
+        night_shift = driver.find_element_by_xpath(data["TIMECARD"]["night_shift"])
         Logging("Night shift: " + night_shift.text)
         night_shift_day = night_shift.text
         night_shift_time = night_shift_day.split(" ")[0]
         night_shift_decimal = int(night_shift_time)
         Logging("Night shift after change to decimal: " + str(night_shift_decimal))
 
-        vacation = driver.find_element_by_xpath("//li[9]//span[contains(.,'Vacation')]/../..//div[contains(@class,'d-flex ')]/following-sibling::div")
+        vacation = driver.find_element_by_xpath(data["TIMECARD"]["vacation"])
         Logging("Vacation: " + vacation.text)
         vacation_day = vacation.text
         vacation_time = vacation_day.split(" ")[0]
@@ -3769,19 +3774,19 @@ def company_timecard_reports():
     try:
         Logging("")
         #Logging("List")
-        #Logging(yellow('***LIST***', 'bold')) 
-        Logging(bcolors.WARNING + bcolors.BOLD + "***LIST***" + bcolors.ENDC)
+        Logging(yellow('***LIST***', 'bold')) 
+        #Logging(bcolors.WARNING + bcolors.BOLD + "***LIST***" + bcolors.ENDC)
 
         driver.find_element_by_xpath("//span[contains(.,'List')]").click()
         time.sleep(5)
-        list_clockin = driver.find_element_by_xpath("//div[@class='list-wrapper']/div[2]/div[2]//span[@data-lang-id='Clock-In']/../following-sibling::div")
+        list_clockin = driver.find_element_by_xpath(data["TIMECARD"]["list_clockin"])
         Logging("Clock-In: " + list_clockin.text)
         list_clockin_day = list_clockin.text
         list_clockin_time = list_clockin_day.split(" ")[0]
         list_clockin_decimal = int(list_clockin_time)
         Logging("Clock-In after change to decimal: " + str(list_clockin_decimal))
 
-        list_tardiness = driver.find_element_by_xpath("//span[contains(.,'Tardiness')]/../..//div[contains(@class,'d-flex ')]/following-sibling::div")
+        list_tardiness = driver.find_element_by_xpath(data["TIMECARD"]["list_tardiness"])
         Logging("Tardiness: " + list_tardiness.text)
         list_tardiness_day = list_tardiness.text
         list_tardiness_time = list_tardiness_day.split(" ")[0]
@@ -3789,14 +3794,14 @@ def company_timecard_reports():
         Logging("Tardiness after change to decimal: " + str(list_tardiness_decimal))
 
 
-        list_no_clockin = driver.find_element_by_xpath("//span[contains(.,'No Clock-In')]/../..//div[contains(@class,'d-flex ')]/following-sibling::div")
+        list_no_clockin = driver.find_element_by_xpath(data["TIMECARD"]["list_no_clockin"])
         Logging("No Clock-In: " + list_no_clockin.text)
         list_no_clockin_day = list_no_clockin.text
         list_no_clockin_time = list_no_clockin_day.split(" ")[0]
         list_no_clockin_decimal = int(list_no_clockin_time)
         Logging("No Clock-In after change to decimal: " + str(list_no_clockin_decimal))
 
-        list_clockout = driver.find_element_by_xpath("//div[@class='list-wrapper']/div[2]/div[2]//span[@data-lang-id='Clock-Out']/../following-sibling::div")
+        list_clockout = driver.find_element_by_xpath(data["TIMECARD"]["list_clockout"])
         Logging("Clock-Out: " + list_clockout.text)
         list_clockout_day = list_clockout.text
         list_clockout_time = list_clockout_day.split(" ")[0]
@@ -3804,35 +3809,35 @@ def company_timecard_reports():
         Logging("No Clock-Out after change to decimal: " + str(list_clockout_decimal))
 
 
-        list_leave_early = driver.find_element_by_xpath("//span[contains(.,'Leave Early')]/../..//div[contains(@class,'d-flex ')]/following-sibling::div")
+        list_leave_early = driver.find_element_by_xpath(data["TIMECARD"]["list_leave_early"])
         Logging("Leave Early: " + list_leave_early.text)
         list_leave_early_day = list_leave_early.text
         list_leave_early_time = list_leave_early_day.split(" ")[0]
         list_leave_early_decimal = int(list_leave_early_time)
         Logging("Leave Early after change to decimal: " + str(list_leave_early_decimal))
 
-        list_no_clockout = driver.find_element_by_xpath("//span[contains(.,'No Clock-Out')]/../..//div[contains(@class,'d-flex ')]/following-sibling::div")
+        list_no_clockout = driver.find_element_by_xpath(data["TIMECARD"]["list_no_clockout"])
         Logging("No Clock-Out: " + list_no_clockout.text)
         list_no_clockout_day = list_no_clockout.text
         list_no_clockout_time = list_no_clockout_day.split(" ")[0]
         list_no_clockout_decimal = int(list_no_clockout_time)
         Logging("No Clock-Out after change to decimal: " + str(list_no_clockout_decimal))
 
-        list_OT = driver.find_element_by_xpath("//span[contains(.,'O/T')]/../..//div[contains(@class,'d-flex ')]/following-sibling::div")
+        list_OT = driver.find_element_by_xpath(data["TIMECARD"]["list_OT"])
         Logging("OT: " + list_OT.text)
         list_OT_day = list_OT.text
         list_OT_time = list_OT_day.split(" ")[0]
         list_OT_decimal = int(list_OT_time)
         Logging("OT after change to decimal: " + str(list_OT_decimal))
 
-        list_night_shift = driver.find_element_by_xpath("//span[contains(.,'Night shift')]/../..//div[contains(@class,'d-flex ')]/following-sibling::div")
+        list_night_shift = driver.find_element_by_xpath(data["TIMECARD"]["list_night_shift"])
         Logging("Night shift: " + list_night_shift.text)
         list_night_shift_day = list_night_shift.text
         list_night_shift_time = list_night_shift_day.split(" ")[0]
         list_night_shift_decimal = int(list_night_shift_time)
         Logging("Night shift after change to decimal: " + str(list_night_shift_decimal))
 
-        list_vacation = driver.find_element_by_xpath("//span[contains(.,'Vacation')]/../..//div[contains(@class,'d-flex ')]/following-sibling::div")
+        list_vacation = driver.find_element_by_xpath(data["TIMECARD"]["list_vacation"])
         Logging("Vacation: " + list_vacation.text)
         list_vacation_day = list_vacation.text
         list_vacation_time = list_vacation_day.split(" ")[0]
@@ -3852,24 +3857,24 @@ def company_timecard_reports():
 
         Logging("")
         #Logging("Settlement")
-        #Logging(yellow('Settlement', 'bold')) 
-        Logging(bcolors.WARNING + bcolors.BOLD + "Settlement" + bcolors.ENDC)
+        Logging(yellow('Settlement', 'bold')) 
+        #Logging(bcolors.WARNING + bcolors.BOLD + "Settlement" + bcolors.ENDC)
 
-        settlement_holiday = driver.find_element_by_xpath("//div[contains(@data-lang-id,'tc_status_day_holiday')]//..//div//span")
+        settlement_holiday = driver.find_element_by_xpath(data["TIMECARD"]["settlement_holiday"])
         Logging("Holiday: " + settlement_holiday.text)
         settlement_holiday_day = settlement_holiday.text
         settlement_holiday_time = settlement_holiday_day.split(" ")[0]
         settlement_holiday_decimal = int(settlement_holiday_time)
         Logging("Holiday after change to decimal: " + str(settlement_holiday_decimal))
 
-        settlement_day_off = driver.find_element_by_xpath("//div[contains(@data-lang-id,'tc_work_type_dayoff')]//..//div//span")
+        settlement_day_off = driver.find_element_by_xpath(data["TIMECARD"]["settlement_day_off"])
         Logging("Day off: " + settlement_day_off.text)
         settlement_day_off_day = settlement_day_off.text
         settlement_day_off_time = settlement_day_off_day.split(" ")[0]
         settlement_day_off_decimal = int(settlement_day_off_time)
         Logging("Day off after change to decimal: " + str(settlement_day_off_decimal))
 
-        settlement_vacation = driver.find_element_by_xpath("//div[contains(@data-lang-id,'tc_status_vacations')]//..//div//span")
+        settlement_vacation = driver.find_element_by_xpath(data["TIMECARD"]["settlement_vacation"])
         Logging("Vacation: " + settlement_vacation.text)
         settlement_vacation_day = settlement_vacation.text
         settlement_vacation_time = settlement_vacation_day.split(" ")[0]
@@ -4069,14 +4074,14 @@ def timeline():
         driver.find_element_by_xpath("//div[contains(@class,'main-side-container-history')]/../../div[1]").click()
         time.sleep(5)
         try:
-            icon = driver.find_element_by_xpath("//*[@id='popover-tree']")
+            icon = driver.find_element_by_xpath(data["TIMECARD"]["icon"])
             if icon.is_displayed():
                 Logging("Able to open the organization box")
         except:
             #Logging("False")
             Logging(red('>>>Cant open organization box', 'bright')) 
         
-        tl_search2 = driver.find_element_by_xpath("//input[contains(@class,'form-control')]")
+        tl_search2 = driver.find_element_by_xpath(data["TIMECARD"]["ws_search2"])
         tl_search2.send_keys(data["name_keyword"][0])
         tl_search2.send_keys(Keys.ENTER)
 
@@ -4093,18 +4098,18 @@ def timeline():
         # except:
         #     Logging("Success to close the organization box")
 
-        filters_all = driver.find_element_by_xpath("//div[contains(@class,'select-wrapper')]/div")
+        filters_all = driver.find_element_by_xpath(data["TIMECARD"]["filters_all"])
         time.sleep(3)
         filters_all.click()
         time.sleep(3)
-        filters_input = driver.find_element_by_xpath("//input[starts-with(@id, 'react-select')]")
+        filters_input = driver.find_element_by_xpath(data["TIMECARD"]["filters_input"])
         filters_input.send_keys(Keys.ARROW_DOWN)
         filters_input.send_keys(Keys.ENTER)
         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["timeline_filter"]["pass"])
 
         time.sleep(3)
-        delete = driver.find_element_by_xpath("//div[contains(@class, 'timeline-item  ')]//div[contains(.,'Clock-In')]//div[contains(@class, 'd-flex ')]//span[2]//div[contains(@class, 'cursor-pointer')]").click()
-        delete1 = driver.find_element_by_xpath("//button//span[contains(.,'Delete')] ").click()
+        delete = driver.find_element_by_xpath(data["TIMECARD"]["delete"]).click()
+        delete1 = driver.find_element_by_xpath(data["TIMECARD"]["delete1"]).click()
         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["delete_login"]["pass"])
     except:
         #Logging("Can't delete login")
@@ -4112,16 +4117,16 @@ def timeline():
 
     try:
         time.sleep(3)
-        add_schedule = driver.find_element_by_xpath("//div[contains(@class, 'pos-relative')]//button//div[contains(@class, 'cursor-pointer')]").click()
+        add_schedule = driver.find_element_by_xpath(data["TIMECARD"]["add_schedule"])
         time.sleep(3)
-        add_schedu = driver.find_element_by_xpath("//span[contains(.,'Clock In/Out')] ").click()
+        add_schedu = driver.find_element_by_xpath(data["TIMECARD"]["add_schedu"]).click()
         time.sleep(3)
 
         Logging("")
-        time_select = driver.find_element_by_xpath("//button[starts-with(@id, 'btnHours')]").click()
+        time_select = driver.find_element_by_xpath(data["TIMECARD"]["time_select"]).click()
         time.sleep(5)
-        hour = driver.find_element_by_xpath("//div[starts-with(@id, 'dropdown')]//div//button[contains(.,'07')]").click()
-        save = driver.find_element_by_xpath("//span[contains(.,'Save')]").click()
+        hour = driver.find_element_by_xpath(data["TIMECARD"]["hour"]).click()
+        save = driver.find_element_by_xpath(data["TIMECARD"]["sa_ve"]).click()
         #Logging("Clock-in through timeline successfully")  
         Logging(green('>>>Clock-in through timeline successfully', 'bright'))   
         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["clockin_through_timeline"]["pass"])
@@ -4132,16 +4137,16 @@ def timeline():
 
     try:
         time.sleep(3)
-        add_schedule1 = driver.find_element_by_xpath("//div[contains(@class, 'pos-relative')]//button//div[contains(@class, 'cursor-pointer')]").click()
+        add_schedule1 = driver.find_element_by_xpath(data["TIMECARD"]["add_schedule1"])
         time.sleep(3)
-        add_schedu1 = driver.find_element_by_xpath("//span[contains(.,'Clock In/Out')] ").click()
+        add_schedu1 = driver.find_element_by_xpath(data["TIMECARD"]["add_schedu1"]).click()
         time.sleep(5)
-        time_select2 = driver.find_element_by_xpath("//button[starts-with(@id, 'btnHours')]").click()
+        time_select2 = driver.find_element_by_xpath(data["TIMECARD"]["time_select2"]).click()
         time.sleep(5)
-        hour2 = driver.find_element_by_xpath("//div[starts-with(@id, 'dropdown')]//div//button[contains(.,'16')]").click()
-        clock_out = driver.find_element_by_xpath("//div[contains(@class,'custom-control custom-radio')]//span[contains(.,'Clock-Out')]").click()
+        hour2 = driver.find_element_by_xpath(data["TIMECARD"]["hour2"]).click()
+        clock_out = driver.find_element_by_xpath(data["TIMECARD"]["clock_out"])
         time.sleep(5)
-        save2 = driver.find_element_by_xpath("//span[contains(.,'Save')]").click()
+        save2 = driver.find_element_by_xpath(data["TIMECARD"]["save2"]).click()
         #Logging("Clock-out through timeline successfully")
         Logging(green('>>>Clock-out through timeline successfully', 'bright')) 
         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["clockout_through_timeline"]["pass"])
@@ -4151,11 +4156,11 @@ def timeline():
         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["clockout_through_timeline"]["fail"])
     try:
         time.sleep(5)
-        clockin_time_a = driver.find_element_by_xpath("//div[contains(@class,'timeline-group')]//div[1]//nav//div[5]")
+        clockin_time_a = driver.find_element_by_xpath(data["TIMECARD"]["clockin_time_a"])
         Logging("Clockin: " + clockin_time_a.text)
         g = clockin_time_a.text
 
-        filters_all = driver.find_element_by_xpath("//div[contains(@class,'select-wrapper')]/div")
+        filters_all = driver.find_element_by_xpath(data["TIMECARD"]["filters_all"])
         time.sleep(3)
         filters_all.click()
         time.sleep(3)
@@ -4170,7 +4175,7 @@ def timeline():
         time.sleep(3)
 
 
-        clockout_time_a = driver.find_element_by_xpath("//div[contains(@class,'timeline-group')]//div[1]//nav//div[5]")
+        clockout_time_a = driver.find_element_by_xpath(data["TIMECARD"]["clockout_time_a"])
         Logging("Clockout: " + clockout_time_a.text)
         h = clockout_time_a.text
 
@@ -4178,9 +4183,9 @@ def timeline():
         Logging("")
         driver.find_element_by_xpath("//span[contains(@class, 'text-truncate') and contains(., 'Dashboard')]").click()
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, "//span[contains(@data-lang-id,'tc_dashboard_name')]")))
-        dashboard_clockin = driver.find_element_by_xpath("//div[contains(@class,'check-in-status')]").text
+        dashboard_clockin = driver.find_element_by_xpath(data["TIMECARD"]["dashboard_clockin"]).text
         Logging("Dashboard - Clockin: " + dashboard_clockin)
-        dashboard_clockout = driver.find_element_by_xpath("//div[contains(@class,'check-out-status')]").text
+        dashboard_clockout = driver.find_element_by_xpath(data["TIMECARD"]["dashboard_clockout"]).text
         Logging("Dashboard - Clockout: " + dashboard_clockout)
 
         Logging("")
@@ -4218,7 +4223,7 @@ def work_shift():
 
     time.sleep(5)
     driver.find_element_by_xpath("//div[contains(@class,'working-setting-content')]/../../div[1]").click()
-    wss_search2 = driver.find_element_by_xpath("//input[contains(@class,'form-control')]")
+    wss_search2 = driver.find_element_by_xpath(data["TIMECARD"]["ws_search2"])
     wss_search2.send_keys(data["name_keyword"][0])
     wss_search2.send_keys(Keys.ENTER)
     time.sleep(3)
@@ -4228,34 +4233,34 @@ def work_shift():
     Logging("")
     Logging("***Work Shift Default***")
     time.sleep(3)
-    working_method = driver.find_element_by_xpath("//div[contains(@class,'work-method-name')]")
+    working_method = driver.find_element_by_xpath(data["TIMECARD"]["working_method"])
     Logging("Work method: " + working_method.text)
 
-    star_date = driver.find_element_by_xpath("//*[@col-id='start_date']//div[contains(@class,'ag-react-container')]//div//div")
+    star_date = driver.find_element_by_xpath(data["TIMECARD"]["star_date"])
     Logging("Star date: " + star_date.text)
 
-    work_days = driver.find_element_by_xpath("//*[@col-id='weekday']//div[contains(@class,'ag-react-container')]//div//div")
+    work_days = driver.find_element_by_xpath(data["TIMECARD"]["work_days"])
     Logging("Work days: " + work_days.text)
     work_days_time = work_days.text
     work_days_hour = work_days_time.split(" ")[0]
     work_days_number = int(work_days_hour)
     Logging("Work days after change to decimal: " + str(work_days_number))
 
-    working_time_per_day = driver.find_element_by_xpath("//div[contains(@class,'work-hours')]/../div[1]")
+    working_time_per_day = driver.find_element_by_xpath(data["TIMECARD"]["working_time_per_day"])
     Logging("Working time per day: " + working_time_per_day.text)
     working_time_per_day_time = working_time_per_day.text
     working_time_per_day_hour = working_time_per_day_time.split(" ")[0]
     working_time_per_day_number = int(working_time_per_day_hour)
     Logging("Working time per day after change to decimal: " + str(working_time_per_day_number))
 
-    max_working_time = driver.find_element_by_xpath("//*[@col-id='max_overtime']//div[contains(@class,'ag-react-container')]//div//div")
+    max_working_time = driver.find_element_by_xpath(data["TIMECARD"]["max_working_time"])
     Logging("Max working time per day: " + max_working_time.text)
     max_working_time_time = max_working_time.text
     max_working_time_hour = max_working_time_time.split(" ")[0]
     max_working_time_number = int(max_working_time_hour)
     Logging("Max working time per day after change to decimal: " + str(max_working_time_number))
 
-    working_time_per_week = driver.find_element_by_xpath("//*[@col-id='base_work_week']//div[contains(@class,'ag-react-container')]")
+    working_time_per_week = driver.find_element_by_xpath(data["TIMECARD"]["working_time_per_week"])
     Logging("Working time per week: " + working_time_per_week.text)
     working_time_per_week_time = working_time_per_week.text
     working_time_per_week_hour = working_time_per_week_time.split(" ")[0]
@@ -4268,8 +4273,8 @@ def work_shift():
     driver.find_element_by_xpath("//button[contains(@type,'button') and contains(.,'Add')]").click()
     time.sleep(3)
     #Select work type
-    select_work_type = driver.find_element_by_xpath("//span[contains(.,'Work Type')]/../..//div[contains(@class,'singleValue')]").click()
-    select_work_type_input = driver.find_element_by_xpath("//span[contains(.,'Work Type')]/../..//div[contains(@class,'singleValue')]/..//input[starts-with(@id, 'react-select')]")
+    select_work_type = driver.find_element_by_xpath(data["TIMECARD"]["select_work_type"]).click()
+    select_work_type_input = driver.find_element_by_xpath(data["TIMECARD"]["select_work_type_input"])
     select_work_type_input.send_keys(Keys.ENTER)
 
     #Select work place
@@ -4302,23 +4307,23 @@ def work_place():
 
         driver.find_element_by_xpath("//div[contains(@class,'title-section')]//button[contains(@type,'button')]").click()
         #Input name
-        input_name = driver.find_element_by_xpath("//*[@id='name']/div/input")
+        input_name = driver.find_element_by_xpath(data["TIMECARD"]["input_name"])
         #input_name.clear()
         input_name.send_keys("test01.06")
         input_name.send_keys(Keys.ENTER)
         time.sleep(3)
 
         #Input location
-        select_location = driver.find_element_by_xpath("//*[@id='nation']/div").click()
-        select_location_input = driver.find_element_by_xpath("//span[contains(.,'Location')]/..//input[starts-with(@id, 'states-autocomplete')]")
+        select_location = driver.find_element_by_xpath(data["TIMECARD"]["select_location"]).click()
+        select_location_input = driver.find_element_by_xpath(data["TIMECARD"]["select_location_input"])
         select_location_input.send_keys(Keys.ARROW_DOWN)
         time.sleep(2)
         select_location_input.send_keys(Keys.ARROW_DOWN)
         select_location_input.send_keys(Keys.ENTER)
 
         #Input time zone
-        select_timezone = driver.find_element_by_xpath("//*[@id='timezone']/div").click()
-        select_timezone_input = driver.find_element_by_xpath("//span[contains(.,'Time Zone')]/..//input[starts-with(@id, 'states-autocomplete')]")
+        select_timezone = driver.find_element_by_xpath(data["TIMECARD"]["select_timezone"]).click()
+        select_timezone_input = driver.find_element_by_xpath(data["TIMECARD"]["select_timezone_input"])
         select_timezone_input.send_keys(Keys.ARROW_DOWN)
         time.sleep(2)
         select_timezone_input.send_keys(Keys.ARROW_DOWN)
@@ -4327,10 +4332,10 @@ def work_place():
         #Add
         time.sleep(3)
         driver.find_element_by_xpath("/html/body/div[4]/div").click()
-        add_button = driver.find_element_by_xpath("//span[contains(.,'Add')]/../../button").click()
+        add_button = driver.find_element_by_xpath(data["TIMECARD"]["add_button"]).click()
         Logging("")
         #Logging("Add work place successfully")
-        work_place_noti =  driver.find_element_by_xpath("//*[starts-with(@id,'noty_bar')]//div[contains(@class,'alert-body')]")
+        work_place_noti =  driver.find_element_by_xpath(data["TIMECARD"]["work_place_noti"])
         if work_place_noti.text == "Duplicated data exists":
             Logging("Duplicated data is available")
         elif work_place_noti.text == "Data inserted successfully.":
@@ -4346,7 +4351,7 @@ def work_place():
         driver.find_element_by_xpath("//div[contains(@class,'title-section')]//button[contains(@type,'button')]").click()
         time.sleep(3)
         driver.find_element_by_xpath("//div[contains(@class,'list-work-places')]//li[1]/a/div[1]").click()
-        work_place_data = driver.find_element_by_xpath("//div[contains(@class,'pos-absolute')]//div/ul/li[1]").text
+        work_place_data = driver.find_element_by_xpath(data["TIMECARD"]["work_place_data"]).text
         Logging("Work place before edit: " + work_place_data)
 
         #Add holiday
@@ -4367,9 +4372,9 @@ def work_place():
 
         #Save holiday
         Logging("")
-        holiday_save = driver.find_element_by_xpath("//button[starts-with(@id, 'btn-submit')]").click()
+        holiday_save = driver.find_element_by_xpath(data["TIMECARD"]["holiday_save"]).click()
         #Logging("Add new holiday successfully")
-        holiday_noti =  driver.find_element_by_xpath("//*[starts-with(@id,'noty_bar')]//div[contains(@class,'alert-body')]")
+        holiday_noti =  driver.find_element_by_xpath(data["TIMECARD"]["holiday_noti"])
         if holiday_noti.text == "There is duplicated data, please try again":
             Logging("Duplicated data is available")
         elif holiday_noti.text == "Data saved successfully.":
@@ -4382,23 +4387,23 @@ def work_place():
 
     try:
         time.sleep(5)
-        holiday_data_before = driver.find_element_by_xpath("//*[@col-id='name']//span/div/div/div").text
+        holiday_data_before = driver.find_element_by_xpath(data["TIMECARD"]["holiday_data_before"]).text
         Logging("Holiday name before edit: " + holiday_data_before)
 
 
         #After edit work place
         #Edit work place
         time.sleep(3)
-        work_place_edit = driver.find_element_by_xpath("//*[@id='app']//li[1]/span").click()
+        work_place_edit = driver.find_element_by_xpath(data["TIMECARD"]["work_place_edit"]).click()
         
         #Input name
         Logging("")
-        input_other_name = driver.find_element_by_xpath("//*[@id='app']//li[1]/input")
+        input_other_name = driver.find_element_by_xpath(data["TIMECARD"]["input_other_name"])
         input_other_name.clear()
         input_other_name.send_keys("hanh06")
         driver.find_element_by_xpath("//*[@id='app']//li[1]/span[1]").click()
         time.sleep(5)
-        input_other_name1 = driver.find_element_by_xpath("//div[contains(@class,'pos-absolute')]//div/ul/li[1]").text
+        input_other_name1 = driver.find_element_by_xpath(data["TIMECARD"]["input_other_name1"]).text
         Logging("Work place after edit: " + input_other_name1)
         time.sleep(3)
 
@@ -4435,7 +4440,7 @@ def work_place():
         Logging("")
         driver.find_element_by_xpath("//button[starts-with(@id, 'btn-submit')]").click()
         time.sleep(5)
-        holiday_data_after = driver.find_element_by_xpath("//*[@col-id='name']//span/div/div/div").text
+        holiday_data_after = driver.find_element_by_xpath(data["TIMECARD"]["holiday_data_after"]).text
         Logging("Holiday name after edit: " + holiday_data_after)
 
 
@@ -4486,10 +4491,10 @@ def work_place():
 
 def report_weekly():
     Logging(" ")
-    #Logging(yellow('***REPORTS - WEEKLY***', ['bold', 'underlined']))
-    Logging(bcolors.WARNING + bcolors.BOLD + bcolors.UNDERLINE + "***REPORTS - WEEKLY***" + bcolors.ENDC)
-    #Logging(yellow('***Device', 'bold'))
-    Logging(bcolors.WARNING + bcolors.BOLD + "***Device" + bcolors.ENDC)
+    Logging(yellow('***REPORTS - WEEKLY***', ['bold', 'underlined']))
+    #Logging(bcolors.WARNING + bcolors.BOLD + bcolors.UNDERLINE + "***REPORTS - WEEKLY***" + bcolors.ENDC)
+    Logging(yellow('***Device', 'bold'))
+    #Logging(bcolors.WARNING + bcolors.BOLD + "***Device" + bcolors.ENDC)
     time.sleep(4)
     try:
         driver.find_element_by_xpath("//span[contains(@class, 'text-truncate') and contains(., 'Dashboard')]").click()
@@ -4591,8 +4596,8 @@ def report_weekly():
 
     Logging(" ")
     #Logging("Average working hour per week")
-    #Logging(yellow('***Average working hour per week', 'bold'))
-    Logging(bcolors.WARNING + bcolors.BOLD + "***Average working hour per week" + bcolors.ENDC)
+    Logging(yellow('***Average working hour per week', 'bold'))
+    #Logging(bcolors.WARNING + bcolors.BOLD + "***Average working hour per week" + bcolors.ENDC)
 
     try:
         Logging("1st week")
@@ -5378,79 +5383,79 @@ def report_weekly():
         Logging(red('>>>Weekly Average - Check data failed', 'bright'))
 
 
-    # Logging(" ")
-    # Logging("Day of week average")
-    # try:
-    #     Logging("Monday")
-    #     mon = driver.find_element_by_xpath("//tbody[starts-with(@id, 'tbody-scroll-table')]//div[contains(.,'Day of week average')]//..//..//../tr[6]/td[2]//div[2]")
-    #     if mon.is_displayed():
-    #         #Logging("Weekly working time - Data is displayed")
-    #         Logging(green('>>>Data is displayed', 'bright'))
-    #         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["day_week_average"]["pass"])
-    # except:
-    #     # Logging("Data is not displayed")
-    #     Logging(red('>>>Data is not displayed', 'bright'))
-    #     TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["day_week_average"]["fail"])
+    Logging(" ")
+    Logging("Day of week average")
+    try:
+        Logging("Monday")
+        mon = driver.find_element_by_xpath("//tbody[starts-with(@id, 'tbody-scroll-table')]//div[contains(.,'Day of week average')]//..//..//../tr[6]/td[2]//div[2]")
+        if mon.is_displayed():
+            #Logging("Weekly working time - Data is displayed")
+            Logging(green('>>>Data is displayed', 'bright'))
+            TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["day_week_average"]["pass"])
+    except:
+        # Logging("Data is not displayed")
+        Logging(red('>>>Data is not displayed', 'bright'))
+        TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["day_week_average"]["fail"])
 
-    # try:
-    #     Logging("Tuesday")
-    #     tue = driver.find_element_by_xpath("//tbody[starts-with(@id, 'tbody-scroll-table')]//div[contains(.,'Day of week average')]//..//..//../tr[6]/td[3]//div[2]")
-    #     if tue.is_displayed():
-    #         #Logging("Weekly working time - Data is displayed")
-    #         Logging(green('>>>Data is displayed', 'bright'))
-    # except:
-    #     #Logging("Data is not displayed")
-    #     Logging(red('>>>Data is not displayed', 'bright'))
+    try:
+        Logging("Tuesday")
+        tue = driver.find_element_by_xpath("//tbody[starts-with(@id, 'tbody-scroll-table')]//div[contains(.,'Day of week average')]//..//..//../tr[6]/td[3]//div[2]")
+        if tue.is_displayed():
+            #Logging("Weekly working time - Data is displayed")
+            Logging(green('>>>Data is displayed', 'bright'))
+    except:
+        #Logging("Data is not displayed")
+        Logging(red('>>>Data is not displayed', 'bright'))
 
-    # try:
-    #     Logging("Wednesday")
-    #     wed = driver.find_element_by_xpath("//tbody[starts-with(@id, 'tbody-scroll-table')]//div[contains(.,'Day of week average')]//..//..//../tr[6]/td[4]//div[2]")
-    #     if wed.is_displayed():
-    #         #Logging("Weekly working time - Data is displayed")
-    #         Logging(green('>>>Data is displayed', 'bright'))
-    # except:
-    #     #Logging("Data is not displayed")
-    #     Logging(red('>>>Data is not displayed', 'bright'))
+    try:
+        Logging("Wednesday")
+        wed = driver.find_element_by_xpath("//tbody[starts-with(@id, 'tbody-scroll-table')]//div[contains(.,'Day of week average')]//..//..//../tr[6]/td[4]//div[2]")
+        if wed.is_displayed():
+            #Logging("Weekly working time - Data is displayed")
+            Logging(green('>>>Data is displayed', 'bright'))
+    except:
+        #Logging("Data is not displayed")
+        Logging(red('>>>Data is not displayed', 'bright'))
 
-    # try:
-    #     Logging("Thursday")
-    #     thur = driver.find_element_by_xpath("//tbody[starts-with(@id, 'tbody-scroll-table')]//div[contains(.,'Day of week average')]//..//..//../tr[6]/td[5]//div[2]")
-    #     if thur.is_displayed():
-    #         #Logging("Weekly working time - Data is displayed")
-    #         Logging(green('>>>Data is displayed', 'bright'))
-    # except:
-    #     #Logging("Data is not displayed")
-    #     Logging(red('>>>Data is not displayed', 'bright'))
+    try:
+        Logging("Thursday")
+        thur = driver.find_element_by_xpath("//tbody[starts-with(@id, 'tbody-scroll-table')]//div[contains(.,'Day of week average')]//..//..//../tr[6]/td[5]//div[2]")
+        if thur.is_displayed():
+            #Logging("Weekly working time - Data is displayed")
+            Logging(green('>>>Data is displayed', 'bright'))
+    except:
+        #Logging("Data is not displayed")
+        Logging(red('>>>Data is not displayed', 'bright'))
 
-    # try:
-    #     Logging("Friday")
-    #     fri = driver.find_element_by_xpath("//tbody[starts-with(@id, 'tbody-scroll-table')]//div[contains(.,'Day of week average')]//..//..//../tr[6]/td[6]//div[2]")
-    #     if fri.is_displayed():
-    #         #Logging("Weekly working time - Data is displayed")
-    #         Logging(green('>>>Data is displayed', 'bright'))
-    # except:
-    #     #Logging("Data is not displayed")
-    #     Logging(red('>>>Data is not displayed', 'bright'))
+    try:
+        Logging("Friday")
+        fri = driver.find_element_by_xpath("//tbody[starts-with(@id, 'tbody-scroll-table')]//div[contains(.,'Day of week average')]//..//..//../tr[6]/td[6]//div[2]")
+        if fri.is_displayed():
+            #Logging("Weekly working time - Data is displayed")
+            Logging(green('>>>Data is displayed', 'bright'))
+    except:
+        #Logging("Data is not displayed")
+        Logging(red('>>>Data is not displayed', 'bright'))
 
-    # try:
-    #     Logging("Saturday")
-    #     sat = driver.find_element_by_xpath("//tbody[starts-with(@id, 'tbody-scroll-table')]//div[contains(.,'Day of week average')]//..//..//../tr[6]/td[7]//div[2]")
-    #     if sat.is_displayed():
-    #         #Logging("Weekly working time - Data is displayed")
-    #         Logging(green('>>>Data is displayed', 'bright'))
-    # except:
-    #     #Logging("Data is not displayed")
-    #     Logging(red('>>>Data is not displayed', 'bright'))
+    try:
+        Logging("Saturday")
+        sat = driver.find_element_by_xpath("//tbody[starts-with(@id, 'tbody-scroll-table')]//div[contains(.,'Day of week average')]//..//..//../tr[6]/td[7]//div[2]")
+        if sat.is_displayed():
+            #Logging("Weekly working time - Data is displayed")
+            Logging(green('>>>Data is displayed', 'bright'))
+    except:
+        #Logging("Data is not displayed")
+        Logging(red('>>>Data is not displayed', 'bright'))
 
-    # try:
-    #     Logging("Sunday")
-    #     sun = driver.find_element_by_xpath("//tbody[starts-with(@id, 'tbody-scroll-table')]//div[contains(.,'Day of week average')]//..//..//../tr[6]/td[8]//div[2]")
-    #     if sun.is_displayed():
-    #         #Logging("Weekly working time - Data is displayed")
-    #         Logging(green('>>>Data is displayed', 'bright'))
-    # except:
-    #     #Logging("Data is not displayed")
-    #     Logging(red('>>>Data is not displayed', 'bright'))
+    try:
+        Logging("Sunday")
+        sun = driver.find_element_by_xpath("//tbody[starts-with(@id, 'tbody-scroll-table')]//div[contains(.,'Day of week average')]//..//..//../tr[6]/td[8]//div[2]")
+        if sun.is_displayed():
+            #Logging("Weekly working time - Data is displayed")
+            Logging(green('>>>Data is displayed', 'bright'))
+    except:
+        #Logging("Data is not displayed")
+        Logging(red('>>>Data is not displayed', 'bright'))
 
 
 def report_list():
@@ -8134,8 +8139,8 @@ def timecard():
     # output_clockin,output_clockout,break_time,working_time,clock_in_time,work_method_up,today_work_date, OT_time = check_time()
     # date_clock_in = timesheet_list(output_clockin,output_clockout,break_time,working_time, OT_time)
     # # #report_list1(output_clockin,output_clockout,break_time,working_time, OT_time, date_clock_in)
-    # # add_event2()
-    # # view_details()
+    # add_event2()
+    # view_details()
     # working_status()
     
     # # #day_list = find_date(today_work_date)
@@ -8143,7 +8148,7 @@ def timecard():
     # manager()
     # total_manager()
     # # # # work_correction()
-    # # # delete_punch()
+    # delete_punch()
 
 def time_card():
     # # # # Napproval_OT()
@@ -8199,6 +8204,6 @@ def time_card():
 
     # arbitrary_decision()
     
-    # # # # OT_post_midnight()
+    # # # # # OT_post_midnight()
 
     # # work_shift()
