@@ -1,5 +1,6 @@
 from calendar import timegm
 from distutils.log import Log
+import imp
 from logging import exception
 import re, sys, json#, testlink
 import time, random
@@ -24,6 +25,7 @@ import time
 import select
 from H_functions import driver, data, ValidateFailResultAndSystem,TesCase_LogResult, Logging#, TestlinkResult_Fail, TestlinkResult_Pass
 from simple_colors import *
+from framework_sample import *
 
 
 now = datetime.now()
@@ -1281,15 +1283,15 @@ def approval_OT():
     basic.location_once_scrolled_into_view
     basic.click()
     Logging("- Setting: Basic")
-    WebDriverWait(driver,10).until(EC.presence_of_element_located((By.XPATH, "//div[@class='card-body']//label/span[contains(@data-lang-id,'Use clock in/out pop-up.')]")))
+    WebDriverWait(driver,10).until(EC.presence_of_element_located((By.XPATH, data["TIMECARD"]["setting_wait"])))
     time.sleep(2)
-    driver.find_element_by_xpath("//div[@class='card-body']//label/span[contains(@data-lang-id,'Use clock in/out pop-up.')]").click()
+    driver.find_element_by_xpath(data["TIMECARD"]["setting_wait"]).click()
     time.sleep(2)
-    checkbox = driver.find_element_by_xpath("//div[@class='card-body']//label/span[contains(@data-lang-id,'Use clock in/out pop-up.')]/../../input")
+    checkbox = driver.find_element_by_xpath(data["TIMECARD"]["checkbox"])
     if checkbox.is_selected():
         Logging("- Turn on clock-in/out pop up")
         driver.refresh()
-        WebDriverWait(driver,10).until(EC.presence_of_element_located((By.XPATH, "//div[@class='card-body']//label/span[contains(@data-lang-id,'Use clock in/out pop-up.')]")))
+        WebDriverWait(driver,10).until(EC.presence_of_element_located((By.XPATH, data["TIMECARD"]["setting_wait"])))
         time.sleep(2)
         try:
             pop_up = driver.find_element_by_xpath(data["TIMECARD"]["pop_up"])
@@ -1301,7 +1303,7 @@ def approval_OT():
     else:
         Logging("- Turn off clock-in/out pop up")
         driver.refresh()
-        WebDriverWait(driver,10).until(EC.presence_of_element_located((By.XPATH, "//div[@class='card-body']//label/span[contains(@data-lang-id,'Use clock in/out pop-up.')]")))
+        WebDriverWait(driver,10).until(EC.presence_of_element_located((By.XPATH, data["TIMECARD"]["setting_wait"])))
         time.sleep(2)
         try:
             pop_up = driver.find_element_by_xpath(data["TIMECARD"]["pop_up"])
@@ -1467,26 +1469,26 @@ def manager():
     manager.location_once_scrolled_into_view
     manager.click()
     Logging("- Settings: Manager")
-    WebDriverWait(driver,10).until(EC.presence_of_element_located((By.XPATH, "//*[@class='basic_setting']//form//div[1]/div[2]/div[1]")))
+    WebDriverWait(driver,10).until(EC.presence_of_element_located((By.XPATH, data["TIMECARD"]["setting_manager"])))
     time.sleep(2)
-    driver.find_element_by_xpath("//div[@class='permission-setting-wrapper']//button[contains(.,'Add manager')]").click()
+    driver.find_element_by_xpath(data["TIMECARD"]["add_manager"]).click()
     time.sleep(3)
-    add_manager = driver.find_element_by_xpath("//*[@id='org-form-search']//input")
+    add_manager = driver.find_element_by_xpath(data["TIMECARD"]["dashboard_search"])
     add_manager.send_keys(data["name_keyword"][1])
     add_manager.send_keys(Keys.ENTER)
     time.sleep(2)
-    driver.find_element_by_xpath("//div[@class='org-search']//div[starts-with(@id,'tree')]/ul/li//span[contains(@role,'checkbox')]").click()
+    driver.find_element_by_xpath(data["TIMECARD"]["click_manager"]).click()
     time.sleep(2)
-    driver.find_element_by_xpath("//div[@class='card-body']//button[contains(.,'Add')]").click()
+    driver.find_element_by_xpath(data["TIMECARD"]["click_add_manager"]).click()
 
     try:
-        no_user = driver.find_element_by_xpath("//div[@class='card-body']/div/div[3]//div[contains(@class,'text-opacity') and contains(.,'No data was found.')]")
+        no_user = driver.find_element_by_xpath(data["TIMECARD"]["no_user"])
         if no_user.is_displayed():
             Logging("- Add user from ORG Fail") 
     except:
         Logging("- Add user from ORG successfully")
 
-    permission_list = int(len(driver.find_elements_by_xpath("//*[starts-with(@id,'right-sidebar')]//div[contains(text(),'Select department/user')]/following-sibling::div/div/div")))
+    permission_list = int(len(driver.find_element_by_xpath(data["TIMECARD"]["permission_list"])))
 
     list_permission = []
     i = 0
@@ -1501,24 +1503,24 @@ def manager():
     Logging("- Select permission")
 
     if str(x) == "Select Department/User":
-        search_dept = driver.find_element_by_xpath("//div[text()='Select department/user']//following::form[@id='org-form-search']//input[contains(@placeholder,'Search')]")
+        search_dept = driver.find_element_by_xpath(data["TIMECARD"]["search_dept"])
         search_dept.send_keys("Selenium")
         search_dept.send_keys(Keys.ENTER)
         time.sleep(3)
-        driver.find_element_by_xpath("//div[text()='Select department/user']//following::div//ul[starts-with(@id,'ft-id')]//span/span[2]").click()
-        driver.find_element_by_xpath("//div[text()='Select department/user']//following::button[contains(.,'Add')]").click()
+        driver.find_element_by_xpath(data["TIMECARD"]["select_department"]).click()
+        driver.find_element_by_xpath(data["TIMECARD"]["add_dept"]).click()
         time.sleep(2)
-        driver.find_element_by_xpath("//*[starts-with(@id,'right-sidebar')]//div[contains(.,'Manager Settings')]//button[contains(.,'Save')]").click()
+        driver.find_element_by_xpath(data["TIMECARD"]["save_dept"]).click()
         Logging("- Save")
         time.sleep(3)
         try:
-            error = driver.find_element_by_xpath("//*[starts-with(@id,'noty_bar')]//div[contains(text(),'Duplicate data exists.')]")
+            error = driver.find_element_by_xpath(data["TIMECARD"]["error"])
             if error.is_displayed():
                 Logging("=> Duplicate data exists")
-                driver.find_element_by_xpath("//*[starts-with(@id,'right-sidebar')][2]//div[contains(@class,'close-btn')]").click()
+                driver.find_element_by_xpath(data["TIMECARD"]["close_duplicate"]).click()
 
                 time.sleep(3)
-                search = driver.find_element_by_xpath("//div[@class='basic_setting']//div[contains(@class,'input-group')]//input")
+                search = driver.find_element_by_xpath(data["TIMECARD"]["search_duplicate"])
                 search.send_keys(data["name_keyword"][1])
                 search.send_keys(Keys.ENTER)
                 time.sleep(2)
@@ -1529,16 +1531,16 @@ def manager():
                 webdriver.ActionChains(driver).click_and_hold(slider).move_to_element(horizontal_bar).perform()
                 webdriver.ActionChains(driver).release().perform()
                 time.sleep(2)
-                driver.find_element_by_xpath("//span[contains(@ref,'eCellValue')]//div[contains(@class,'btn-view-detail')][2]").click()
+                driver.find_element_by_xpath(data["TIMECARD"]["detail_duplicate"]).click()
                 Logging("- Delete Dept. Manager")
                 time.sleep(2)
-                driver.find_element_by_xpath("//button/span[contains(@data-lang-id, 'tc_action_delete')]").click()
+                driver.find_element_by_xpath(data["TIMECARD"]["delete_dept"]).click()
                 Logging("- Click Delete button")
         except:
             Logging("=> Save manager successfully")
             TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["add_manager"]["pass"])
             time.sleep(3)
-            search = driver.find_element_by_xpath("//div[@class='basic_setting']//div[contains(@class,'input-group')]//input")
+            search = driver.find_element_by_xpath(data["TIMECARD"]["search_dept"])
             search.send_keys(data["name_keyword"][1])
             search.send_keys(Keys.ENTER)
             time.sleep(2)
@@ -1550,7 +1552,7 @@ def manager():
             webdriver.ActionChains(driver).release().perform()
             time.sleep(2)
 
-            driver.find_element_by_xpath("//span[contains(@ref,'eCellValue')]//div[contains(@class,'btn-view-detail')][1]").click()
+            driver.find_element_by_xpath(data["TIMECARD"]["view_detail"]).click()
             Logging("- View detail")
             time.sleep(2)
 
@@ -1561,24 +1563,24 @@ def manager():
             except:
                 Logging("=> Wrong permission")
 
-            driver.find_element_by_xpath("//*[starts-with(@id,'right-sidebar')][1]//div[contains(@class,'close-btn')]").click()
+            driver.find_element_by_xpath(data["TIMECARD"]["close_detail"]).click()
 
-            driver.find_element_by_xpath("//span[contains(@ref,'eCellValue')]//div[contains(@class,'btn-view-detail')][2]").click()
+            driver.find_element_by_xpath(data["TIMECARD"]["detail_duplicate"]).click()
             Logging("- Delete Dept. Manager")
             time.sleep(2)
-            driver.find_element_by_xpath("//button/span[contains(@data-lang-id, 'tc_action_delete')]").click()
+            driver.find_element_by_xpath(data["TIMECARD"]["delete_dept"]).click()
             Logging("- Click Delete button")
     else:
-        driver.find_element_by_xpath("//*[starts-with(@id,'right-sidebar')]//div[contains(.,'Manager Settings')]//button[contains(.,'Save')]").click()
+        driver.find_element_by_xpath(data["TIMECARD"]["save_dept"]).click()
         Logging("save")
         time.sleep(3)
         try:
-            error = driver.find_element_by_xpath("//*[starts-with(@id,'noty_bar')]//div[contains(text(),'Duplicate data exists.')]")
+            error = driver.find_element_by_xpath(data["TIMECARD"]["error"])
             if error.is_displayed():
                 Logging("=> Duplicate data exists")
-                driver.find_element_by_xpath("//*[starts-with(@id,'right-sidebar')][2]//div[contains(@class,'close-btn')]").click()
+                driver.find_element_by_xpath(data["TIMECARD"]["close_duplicate"]).click()
                 time.sleep(3)
-                search = driver.find_element_by_xpath("//div[@class='basic_setting']//div[contains(@class,'input-group')]//input")
+                search = driver.find_element_by_xpath(data["TIMECARD"]["search_duplicate"])
                 search.send_keys(data["name_keyword"][1])
                 search.send_keys(Keys.ENTER)
                 time.sleep(2)
@@ -1589,16 +1591,16 @@ def manager():
                 webdriver.ActionChains(driver).click_and_hold(slider).move_to_element(horizontal_bar).perform()
                 webdriver.ActionChains(driver).release().perform()
                 time.sleep(2)
-                driver.find_element_by_xpath("//span[contains(@ref,'eCellValue')]//div[contains(@class,'btn-view-detail')][2]").click()
+                driver.find_element_by_xpath(data["TIMECARD"]["detail_duplicate"]).click()
                 Logging("- Delete Dept. Manager")
                 time.sleep(2)
-                driver.find_element_by_xpath("//button/span[contains(@data-lang-id, 'tc_action_delete')]").click()
+                driver.find_element_by_xpath(data["TIMECARD"]["delete_dept"]).click()
                 Logging("- Click Delete button")
         except:
             Logging("=> Save manager successfully")
             TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["add_manager"]["pass"])
             time.sleep(3)
-            search = driver.find_element_by_xpath("//div[@class='basic_setting']//div[contains(@class,'input-group')]//input")
+            search = driver.find_element_by_xpath(data["TIMECARD"]["search_duplicate"])
             search.send_keys(data["name_keyword"][1])
             search.send_keys(Keys.ENTER)
             time.sleep(2)
@@ -1610,7 +1612,7 @@ def manager():
             webdriver.ActionChains(driver).release().perform()
             time.sleep(2)
 
-            driver.find_element_by_xpath("//span[contains(@ref,'eCellValue')]//div[contains(@class,'btn-view-detail')][1]").click()
+            driver.find_element_by_xpath(data["TIMECARD"]["view_detail"]).click()
             Logging("- View detail")
             time.sleep(2)
 
@@ -1621,17 +1623,17 @@ def manager():
             except:
                 Logging("=> Wrong permission")
 
-            driver.find_element_by_xpath("//*[starts-with(@id,'right-sidebar')][1]//div[contains(@class,'close-btn')]").click()
+            driver.find_element_by_xpath(data["TIMECARD"]["close_detail"]).click()
 
-            driver.find_element_by_xpath("//span[contains(@ref,'eCellValue')]//div[contains(@class,'btn-view-detail')][2]").click()
+            driver.find_element_by_xpath(data["TIMECARD"]["detail_duplicate"]).click()
             Logging("- Delete Dept. Manager")
             time.sleep(2)
-            driver.find_element_by_xpath("//button/span[contains(@data-lang-id, 'tc_action_delete')]").click()
+            driver.find_element_by_xpath(data["TIMECARD"]["delete_dept"]).click()
             Logging("- Click Delete button")
 
     time.sleep(2)
     try:
-        notice_success =  driver.find_element_by_xpath("//*[starts-with(@id,'noty_bar')]//div[contains(text(),'Delete success')]")
+        notice_success =  driver.find_element_by_xpath(data["TIMECARD"]["no_tice_success"])
         if notice_success.is_displayed():
             Logging("=> Delete Dept. Manager Successfully")
             TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["delete_manager"]["pass"])
@@ -1646,24 +1648,24 @@ def total_manager():
     manager.location_once_scrolled_into_view
     manager.click()
     Logging("- Settings: Manager")
-    WebDriverWait(driver,10).until(EC.presence_of_element_located((By.XPATH, "//*[@class='basic_setting']//form//div[1]/div[2]/div[1]")))
+    WebDriverWait(driver,10).until(EC.presence_of_element_located((By.XPATH, data["TIMECARD"]["setting_manager"])))
     time.sleep(2)
-    driver.find_element_by_xpath("//*[@id='app']//a[contains(@href,'/nhr/hr/timecard/admin/manager/admin')]/span").click()
+    driver.find_element_by_xpath(data["TIMECARD"]["total_manager"]).click()
     Logging("- Total manager")
     time.sleep(2)
 
-    search_total_manager = driver.find_element_by_xpath("//*[@id='org-form-search']//input[@placeholder='Search Name']")
+    search_total_manager = driver.find_element_by_xpath(data["TIMECARD"]["search_total_manager"])
     search_total_manager.send_keys(data["name_keyword"][1])
     search_total_manager.send_keys(Keys.ENTER)
 
     time.sleep(5)
-    name_manager = driver.find_element_by_xpath("//*[starts-with(@id,'ft-id')]//span/span[@class='fancytree-title']")
+    name_manager = driver.find_element_by_xpath(data["TIMECARD"]["exception_user_name"])
     name_manager.click()
-    driver.find_element_by_xpath("//*[@data-lang-id='tc_action_add']").click()
+    driver.find_element_by_xpath(data["TIMECARD"]["add_toltal_manager"]).click()
     time.sleep(3)
 
     try:
-        notice =  driver.find_element_by_xpath("//*[starts-with(@id,'noty_bar')]//div[contains(@class,'alert-body')]")
+        notice =  driver.find_element_by_xpath(data["TIMECARD"]["exc_user_no_ti"])
         if notice.text == "There is duplicated data, please try again":
             Logging("=> Duplicate data exists")
         elif notice.text == "Data saved successfully.":
@@ -1679,12 +1681,12 @@ def total_manager():
         add_name_manager.click()
         driver.find_element_by_xpath("//span[text()='Managers']//following::div//ul//li//div[contains(@class,'first-line') and contains(.,'" + str(name_manager.text) + "')]//following::div[2]").click()
         Logging("- Delete Timecard Manager")
-        driver.find_element_by_xpath("//button/span[contains(@data-lang-id, 'tc_action_delete')]").click()
+        driver.find_element_by_xpath(data["TIMECARD"]["delete_dept"]).click()
         Logging("- Click Delete button")
 
         time.sleep(2)
         try:
-            notice_success =  driver.find_element_by_xpath("//*[starts-with(@id,'noty_bar')]//div[contains(text(),'Data deleted successfully.')]")
+            notice_success =  driver.find_element_by_xpath(data["TIMECARD"]["notice_success"])
             if notice_success.is_displayed():
                 Logging("=> Delete Timecard Manager Successfully")
                 TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["delete_total_manager"]["pass"])
@@ -1695,10 +1697,10 @@ def total_manager():
         Logging("- User " + str(name_manager.text) + " don't display in custom ORG tree")
 
 def find_date(today_work_date):
-    driver.find_element_by_xpath("//*[starts-with(@id,'left-menu')]//span[contains(@data-lang-id,'tc_schedule_work_schedule')]").click()
+    driver.find_element_by_xpath(data["TIMECARD"]["work_schedule_page"]).click()
     print("- Work schedule")
     time.sleep(3)
-    calendar_date = int(len(driver.find_elements_by_xpath("//*[@class='work-schedule-container']//div[@class='row']/div")))
+    calendar_date = int(len(driver.find_element_by_xpath(data["TIMECARD"]["calendar_date"])))
 
     list_date = []
     i = 0
@@ -1784,23 +1786,23 @@ def find_date(today_work_date):
                 continue
 
 def work_schedule(day_list):
-    clockin_time = driver.find_element_by_xpath("//span[contains(.,'Clock-In Time')]/../following-sibling::div//div[starts-with(@id,'dropTimeWrapper')]//button[starts-with(@id,'btnHours')]")
+    clockin_time = driver.find_element_by_xpath(data["TIMECARD"]["clockin_time"])
     clockin_time_num = int(clockin_time.text)
     clockin_time.click()
 
-    clockout_time = driver.find_element_by_xpath("//span[contains(.,'Estimated Clock Out')]/../following-sibling::div/span")
+    clockout_time = driver.find_element_by_xpath(data["TIMECARD"]["clockout_time"])
     clockin_time_num = int(clockin_time.text[::1])
 
     clockin_time_update = clockin_time_num + 1
     driver.find_element_by_xpath("//span[contains(.,'Clock-In Time')]/../following-sibling::div//div[starts-with(@id,'dropTimeWrapper')]//button[starts-with(@id,'btnHours')]/following-sibling::div/button[contains(.,'" + str(clockin_time_update) + "')]").click()
 
-    clockin_time_up = driver.find_element_by_xpath("//span[contains(.,'Clock-In Time')]/../following-sibling::div//div[starts-with(@id,'dropTimeWrapper')]//button[starts-with(@id,'btnHours')]")
+    clockin_time_up = driver.find_element_by_xpath(data["TIMECARD"]["clockin_time"])
     if int(clockin_time_up.text) == clockin_time_update:
         Logging("- Change time clock in successfully")
     else:
         Logging("- Change time clock in fail")
 
-    clockout_time_up = driver.find_element_by_xpath("//span[contains(.,'Estimated Clock Out')]/../following-sibling::div/span")
+    clockout_time_up = driver.find_element_by_xpath(data["TIMECARD"]["clockout_time"])
     clockin_time_num_up = int(clockin_time.text[::1])
     if int(clockin_time_num) + 1 == int(clockin_time_num_up):
         Logging("- Change time successfully")
@@ -1808,7 +1810,7 @@ def work_schedule(day_list):
         Logging("- Change time fail")
 
     time.sleep(2)
-    driver.find_element_by_xpath("//span[contains(@data-lang-id,'vc_title_request')]").click()
+    driver.find_element_by_xpath(data["TIMECARD"]["request_work_schedule"]).click()
     Logging("- Request Work Schedule")
     time.sleep(3)
     
@@ -1819,24 +1821,24 @@ def work_schedule(day_list):
             Logging("- Request Work Schedule Successfully -> Approval is submitted successfully")
             TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["work_scheduless"]["pass"])
             time.sleep(2)
-            driver.find_element_by_xpath("//*[@id='timecard-tab']//li/a[contains(@href,'/nhr/hr/timecard/company/approval')]").click()
+            driver.find_element_by_xpath(data["TIMECARD"]["company_timecard_page"]).click()
             Logging("- Company timecard: Timecard")
-            WebDriverWait(driver,10).until(EC.presence_of_element_located((By.XPATH, "//div[@class='table-approval']//div[@ref='eBodyViewport']//div[contains(@col-id,'user_id')]")))
+            WebDriverWait(driver,10).until(EC.presence_of_element_located((By.XPATH, data["TIMECARD"]["company_timecard_wait"])))
             time.sleep(1)
 
-            driver.find_element_by_xpath("//*[@id='app']//div[@class='company-approval-content']//div[@class='pos-absolute']/div/div[1]/*[1]").click()
-            search_user = driver.find_element_by_xpath("//div[@class='company-approval-content']//span[@class='input-group-prepend']/following-sibling::input")
+            driver.find_element_by_xpath(data["TIMECARD"]["click_search"]).click()
+            search_user = driver.find_element_by_xpath(data["TIMECARD"]["search_user"])
             search_user.send_keys(data["name_keyword"][0])
             search_user.send_keys(Keys.ENTER)
             Logging("- Show ORG successfully")
             time.sleep(1)
 
-            driver.find_element_by_xpath("//*[starts-with(@id,'tree-container')]//ul//li[1]").click()
-            WebDriverWait(driver,10).until(EC.presence_of_element_located((By.XPATH, "//div[@class='table-approval']//div[@ref='eBodyViewport']//div[contains(@col-id,'user_id')]")))
+            driver.find_element_by_xpath(data["TIMECARD"]["click_org"]).click()
+            WebDriverWait(driver,10).until(EC.presence_of_element_located((By.XPATH, data["TIMECARD"]["company_timecard_wait"])))
             time.sleep(2)
-            driver.find_element_by_xpath("//*[@id='app']//div[@class='company-approval-content']//div[@class='pos-absolute']/div/div[1]/*[1]").click()
-            driver.find_element_by_xpath("//div[contains(@data-lang-id,'tc_title_type')]/following-sibling::div//div[2]//span/following-sibling::div").click()
-            type_approval = driver.find_element_by_xpath("//div[contains(@data-lang-id,'tc_title_type')]/following-sibling::div//div[contains(text(),'All')]/following-sibling::div//input")
+            driver.find_element_by_xpath(data["TIMECARD"]["click_search"]).click()
+            driver.find_element_by_xpath(data["TIMECARD"]["click_data"]).click()
+            type_approval = driver.find_element_by_xpath(data["TIMECARD"]["type_approval"])
             type_approval.send_keys(Keys.ARROW_DOWN)
             type_approval.send_keys(Keys.ARROW_DOWN)
             type_approval.send_keys(Keys.ARROW_DOWN)
@@ -1844,15 +1846,15 @@ def work_schedule(day_list):
             Logging("- Select Type approval")
             time.sleep(1)
 
-            driver.find_element_by_xpath("//div[contains(@data-lang-id,'vc_title_period')]/following-sibling::div//div[2]//span/following-sibling::div").click()
-            period_approval = driver.find_element_by_xpath("//div[contains(@data-lang-id,'vc_title_period')]/following-sibling::div//div[contains(text(),'All-Time')]/following-sibling::div//input")
+            driver.find_element_by_xpath(data["TIMECARD"]["select_type_approval"]).click()
+            period_approval = driver.find_element_by_xpath(data["TIMECARD"]["period_approval"])
             period_approval.send_keys(Keys.ARROW_DOWN)
             period_approval.send_keys(Keys.ENTER)
             Logging("- Select Period approval")
             time.sleep(1)
 
             #view detail
-            wp_status_approve = driver.find_element_by_xpath("//form//div[2]/div/div/div[1]/*[@col-id='type_name']")
+            wp_status_approve = driver.find_element_by_xpath(data["TIMECARD"]["type_first_row"])
             #Logging (status_approve.text)
             if wp_status_approve.is_displayed():
                 Logging (wp_status_approve.text)
@@ -2034,16 +2036,16 @@ def work_correction():
 
 def delete_punch():
     
-    driver.find_element_by_xpath("//span[contains(@class, 'text-truncate') and contains(., 'Timeline')]").click()
-    WebDriverWait(driver, 40).until(EC.presence_of_element_located((By.XPATH, "//span[contains(.,'Filters')] ")))
+    driver.find_element_by_xpath(data["TIMECARD"]["timeline_page"]).click()
+    WebDriverWait(driver, 40).until(EC.presence_of_element_located((By.XPATH, data["TIMECARD"]["timeline_wait"])))
     time.sleep(2)
 
-    filters_input_dashboard_del = driver.find_element_by_xpath("//input[starts-with(@id, 'react-select')]")
+    filters_input_dashboard_del = driver.find_element_by_xpath(data["TIMECARD"]["filters_input"])
     filters_input_dashboard_del.send_keys(Keys.ARROW_DOWN)
     filters_input_dashboard_del.send_keys(Keys.ENTER)
     time.sleep(3)
-    driver.find_element_by_xpath("//div[contains(@class, 'timeline-item  ')]//div[contains(.,'Clock-In')]//div[contains(@class, 'd-flex ')]//span[2]//div[contains(@class, 'cursor-pointer')]").click()
-    driver.find_element_by_xpath("//button//span[contains(.,'Delete')] ").click()
+    driver.find_element_by_xpath(data["TIMECARD"]["delete"]).click()
+    driver.find_element_by_xpath(data["TIMECARD"]["delete1"]).click()
     Logging("Delete punch-in successfully")
     driver.refresh()
 
@@ -2057,8 +2059,8 @@ def weekly_status():
         #Logging(Yellow("***Weekly Status - Default***"))
 
         time.sleep(5)
-        driver.find_element_by_xpath("//span[contains(@class, 'text-truncate') and contains(., 'Weekly Status')]").click()
-        WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.XPATH, "//span[contains(.,'Name')] ")))
+        driver.find_element_by_xpath(data["TIMECARD"]["weekly_status_page"]).click()
+        WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.XPATH, data["TIMECARD"]["weekly_status_wait"])))
         Logging("Access page successfully")
         #Logging(bcolors.OKGREEN + "Access page successfully" + bcolors.ENDC)
         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["access_weekly_status_page"]["pass"])
@@ -2068,14 +2070,13 @@ def weekly_status():
         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["access_weekly_status_page"]["fail"])
 
     try:
-        Logging("1223")
-        driver.find_element_by_xpath("//div[contains(@class,'company-status-setting')]/div/div[2]/div/div[1]").click()
+        driver.find_element_by_xpath(data["TIMECARD"]["open_search_box"]).click()
         ws_search = driver.find_element_by_xpath(data["TIMECARD"]["ws_search"])
         ws_search.send_keys(data["name_keyword"][0])
         ws_search.send_keys(Keys.ENTER)
         time.sleep(5)
-        driver.find_element_by_xpath("//div[contains(@class,'visible')]//li").click()
-        driver.find_element_by_xpath("//div[contains(@class,'company-status-setting')]/div/div[2]/div/div[1]").click()
+        driver.find_element_by_xpath(data["TIMECARD"]["click_first_choice"]).click()
+        driver.find_element_by_xpath(data["TIMECARD"]["open_search_box"]).click()
         time.sleep(3)
 
         avg_clockin = driver.find_element_by_xpath(data["TIMECARD"]["avg_clockin"])
@@ -2260,12 +2261,12 @@ def daily_status():
         #Logging(bcolors.WARNING + bcolors.BOLD + "***Daily Status - Default***" + bcolors.ENDC)
 
         time.sleep(5)
-        driver.find_element_by_xpath("//span[contains(@class, 'text-truncate') and contains(., 'Daily Status')]").click()
-        WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.XPATH, "//span[contains(.,'Name')] ")))
+        driver.find_element_by_xpath(data["TIMECARD"]["daily_status_page"]).click()
+        WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.XPATH, data["TIMECARD"]["weekly_status_wait"])))
         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["access_daily_status_page"]["pass"])
         try:
             Logging("***Download Excel File***")
-            driver.find_element_by_xpath("//div[contains(@class,'han-content-wrapper')]//div[4]//button[contains(@class,'outline-white')]").click()
+            driver.find_element_by_xpath(data["TIMECARD"]["click_download"]).click()
             time.sleep(10)
             if '2022' in driver.page_source:
                 #Logging ("Download file succcessfully")
@@ -2290,13 +2291,13 @@ def daily_status():
 
     try:
         Logging("")
-        driver.find_element_by_xpath("//div[contains(@class,'company-time-card-real-time')]/div/div[2]/div/div[1]").click()
+        driver.find_element_by_xpath(data["TIMECARD"]["open_searchbox"]).click()
         search = driver.find_element_by_xpath(data["TIMECARD"]["search"])
         search.send_keys(data["name_keyword"][0])
         search.send_keys(Keys.ENTER)
         time.sleep(5)
-        driver.find_element_by_xpath("//div[contains(@class,'visible')]//li").click()
-        driver.find_element_by_xpath("//div[contains(@class,'company-time-card-real-time')]/div/div[2]/div/div[1]").click()
+        driver.find_element_by_xpath(data["TIMECARD"]["click_first_choice"]).click()
+        driver.find_element_by_xpath(data["TIMECARD"]["open_searchbox"]).click()
 
         time.sleep(5)
         work_status = driver.find_element_by_xpath(data["TIMECARD"]["work_status"])
@@ -2329,8 +2330,8 @@ def report():
     try:
         time.sleep(3)
         rp =[]
-        driver.find_element_by_xpath("//a[contains(@href,'/nhr/hr/timecard/user/statistics')]").click()
-        WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.XPATH, "//span[contains(.,'Working status')] ")))
+        driver.find_element_by_xpath(data["TIMECARD"]["report_page"]).click()
+        WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.XPATH, data["TIMECARD"]["report_wait"])))
         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["access_daily_status_page"]["pass"])
     except:
         Logging (">>>Access page fail")
@@ -2455,18 +2456,18 @@ def report():
 
 def clockin():
     try:
-        night_work = driver.find_element_by_xpath("//span[contains(.,'Confirm Nightwork')]")
+        night_work = driver.find_element_by_xpath(data["TIMECARD"]["midnight_popup"])
         if night_work.is_displayed():
-            driver.find_element_by_xpath("//span[contains(.,'Confirm Nightwork')]/..//button").click()
+            driver.find_element_by_xpath(data["TIMECARD"]["midnight_popup_close"]).click()
             time.sleep(3)
     except:
         Logging(" ")
 
     try:
-        driver.find_element_by_xpath("//*[@id='0']").click()
-        driver.find_element_by_xpath("//span[contains(.,'Clock-In')]").click()
+        driver.find_element_by_xpath(data["TIMECARD"]["avatar"]).click()
+        driver.find_element_by_xpath(data["TIMECARD"]["clock_in"]).click()
         time.sleep(3)
-        driver.find_element_by_xpath("//div[contains(@class,'modal-content')]//button[contains(@type,'button')]/span").click()
+        driver.find_element_by_xpath(data["TIMECARD"]["clock_in_close"]).click()
         time.sleep(3)
         Logging(" ")
         #Logging("clock in successfully")
@@ -2481,8 +2482,8 @@ def clockin():
         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["clockin_through_avatar"]["fail"])
 
 def timesheet_calendar_check():
-    driver.find_element_by_xpath("//span[contains(@class, 'text-truncate') and contains(., 'Timesheets')]").click()
-    WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.XPATH, "//span[contains(.,'Break time')] ")))
+    driver.find_element_by_xpath(data["TIMECARD"]["timesheet_page"]).click()
+    WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.XPATH, data["TIMECARD"]["timesheet_wait"])))
     time.sleep(1)
     output_clock_in = driver.find_element_by_xpath(data["TIMECARD"]["output_clock_in"])
     Logging(">> Clock-in: " + output_clock_in.text)
@@ -2519,8 +2520,8 @@ def timesheet_calendar_check():
     # time.sleep(5)
     # Logging(">> Status: " + out_put_status.text)
     # output_status = out_put_status.text
-    driver.find_element_by_xpath("//span[contains(@class, 'text-truncate') and contains(., 'Timesheets')]").click()
-    WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.XPATH, "//span[contains(.,'Break time')] ")))
+    driver.find_element_by_xpath(data["TIMECARD"]["timesheet_page"]).click()
+    WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.XPATH, data["TIMECARD"]["timesheet_wait"])))
     time.sleep(1) 
     
     output_clock_out = driver.find_element_by_xpath(data["TIMECARD"]["output_clock_out"])
@@ -2606,7 +2607,7 @@ def clockout():
 def edit_clockin():
     try:
         time.sleep(5)
-        driver.find_element_by_xpath("//span[contains(@class, 'text-truncate') and contains(., 'Timesheets')]").click()
+        driver.find_element_by_xpath(data["TIMECARD"]["timesheet_page"]).click()
         WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.XPATH, "//span[contains(.,'Break time')] ")))
 
         Logging(" ")
