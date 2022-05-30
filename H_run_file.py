@@ -54,7 +54,7 @@ def MyExecution(domain_name):
 def My_Execution(domain_name):
     H_functions.access_hr(domain_name)
     HR_timecard_H.timecard()
-    HR_timecard_H.time_card()
+    #HR_timecard_H.time_card()
     #HR_timecard_OT.timecard_OT()
     #HR_timecard_OT.timecard_report()
 
@@ -62,4 +62,3 @@ def My_Execution(domain_name):
 #My_Execution("http:/gw.hanbirolinux.tk/nhr/login")
 My_Execution("http:/global3.hanbiro.com/nhr/login")
 
-# this is a test 123
