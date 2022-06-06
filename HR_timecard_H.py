@@ -47,7 +47,7 @@ def input_reason_late():
             Commands.InputElement(data["TIMECARD"]["input_reason_late"], data["TIMECARD"]["reason_late"])
             Logging("- Input reason late")
             #add_data_in_excel(param_excel["checkin"],"f","Input reason late")
-            driver.find_element_by_xpath(data["TIMECARD"]["save"]).click()
+            Commands.ClickElement(data["TIMECARD"]["save"])
             Logging("- Save reason late")
             #add_data_in_excel(param_excel["checkout"],"p","Save reason late")
             time_clock_in()
@@ -92,11 +92,11 @@ def nightwork():
         midnight_popup = driver.find_element_by_xpath(data["TIMECARD"]["input_other_name"])
         if midnight_popup.is_displayed():
             Logging("Nightwork popup is display")
-            click_confirm = driver.find_element_by_xpath(data["TIMECARD"]["click_confirm"]).click()
-            click_apply_OT = driver.find_element_by_xpath(data["TIMECARD"]["click_apply_OT"]).click()
+            click_confirm = Commands.ClickElement(data["TIMECARD"]["click_confirm"]) 
+            click_apply_OT = Commands.ClickElement(data["TIMECARD"]["click_apply_OT"]) 
             # input_memo_OT = driver.find_element_by_xpath(data["TIMECARD"]["input_memo_OT"])
             # input_memo_OT.send_keys("This is a test")
-            Commands.InputElement(data["TIMECARD"]["input_memo_OT"], "This is a test")
+            input_memo_OT = Commands.InputElement(data["TIMECARD"]["input_memo_OT"], "This is a test")
             time.sleep(3)
             scroll_apply_OT = driver.find_element_by_xpath(data["TIMECARD"]["scroll_apply_OT"])
             scroll_apply_OT.location_once_scrolled_into_view
@@ -107,12 +107,12 @@ def nightwork():
             # referrer_data = driver.find_element_by_xpath("//div[contains(@class, 'referer-wrapper')]//li/div/div[1]").text
             # Logging ("Referrer: " + referrer_data)
             # time.sleep(3)
-            apply_OT_confirm = driver.find_element_by_xpath(data["TIMECARD"]["apply_OT_confirm"]).click()
+            apply_OT_confirm = Commands.ClickElement(data["TIMECARD"]["apply_OT_confirm"]) 
             Logging("Apply OT successfully - Approval is submitted successfully")
             TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["post_OT"]["pass"])
             time.sleep(3)
             #Approval page
-            approval_page = driver.find_element_by_xpath(data["TIMECARD"]["approval_page"]).click()            
+            approval_page = Commands.ClickElement(data["TIMECARD"]["approval_page"])             
             status_approve = driver.find_element_by_xpath(data["TIMECARD"]["status_approve"])
             #Logging (status_approve.text)
             if status_approve.is_displayed():
@@ -155,7 +155,7 @@ def nightwork():
 def time_clock_in():
     try:
         time.sleep(5)
-        driver.find_element_by_xpath(data["TIMECARD"]["my_timesheets"]).click()
+        Commands.ClickElement(data["TIMECARD"]["my_timesheets"]) 
         Logging("- Select My timecard: Timesheets")
         format_time = driver.find_element_by_xpath(data["TIMECARD"]["format_time"])
         clock_time = format_time.text[0:2]
@@ -164,25 +164,25 @@ def time_clock_in():
         item_clock.location_once_scrolled_into_view
         time.sleep(2)
 
-        driver.find_element_by_xpath(data["TIMECARD"]["edit_clockin_time"]).click()
+        Commands.ClickElement(data["TIMECARD"]["edit_clockin_time"]) 
         Logging("- Edit Clock-in time")
         Waits.WaitElementLoaded(10, data["TIMECARD"]["pop_up_edit"])
         time.sleep(3)
 
-        driver.find_element_by_xpath(data["TIMECARD"]["btn_hour"]).click()
+        Commands.ClickElement(data["TIMECARD"]["btn_hour"]) 
         time.sleep(2)
         hours_time = driver.find_element_by_xpath("//*[starts-with(@id,'btnHours')]//following-sibling::div/button[contains(.,'" + clock_time + "')]")
         hours_time.click()
         Logging("- Select hours clock-in")
-        driver.find_element_by_xpath(data["TIMECARD"]["btn_min"]).click()
+        Commands.ClickElement(data["TIMECARD"]["btn_min"]) 
         time.sleep(2)
         minute_time = driver.find_element_by_xpath(data["TIMECARD"]["minutes"])
         minute_time.click()
         Logging("- Select minutes clock-in")
         time.sleep(2)
-        driver.find_element_by_xpath(data["TIMECARD"]["on_time"]).click()
+        Commands.ClickElement(data["TIMECARD"]["on_time"]) 
         Logging("- Choose On time")
-        driver.find_element_by_xpath(data["TIMECARD"]["save_edit"]).click()
+        Commands.ClickElement(data["TIMECARD"]["save_edit"]) 
         Logging("=> Save edit time clock-in")
     except:
         Logging("Pass")
@@ -313,7 +313,7 @@ def input_reason_leave_early():
             Commands.InputElement(data["TIMECARD"]["input_reason_leave_early"], data["TIMECARD"]["reason_leave_early"])
             Logging("- Input reason")
             time.sleep(2)
-            driver.find_element_by_xpath(data["TIMECARD"]["save"]).click()
+            Commands.ClickElement(data["TIMECARD"]["save"]) 
             Logging("- Save reason")
             time.sleep(3)
             time_clock_out()
@@ -334,7 +334,7 @@ def clock_out():
                 input_reason_leave_early()
             except:
                 Logging("- Clock-out already")
-                driver.find_element_by_xpath(data["TIMECARD"]["my_timesheets"]).click()
+                Commands.ClickElement(data["TIMECARD"]["my_timesheets"]) 
                 Logging("- Select My timecard: Timesheets")
         else:
             Logging("=> Clock-out already")
@@ -346,11 +346,11 @@ def clock_out():
         Logging("- Click show pop up")
         time.sleep(5)
         try:
-            WebDriverWait(driver,10).until(EC.presence_of_element_located((By.XPATH, data["TIMECARD"]["OT_popup"])))
-            driver.find_element_by_xpath(data["TIMECARD"]["OT_clockout"]).click()
+            Waits.WaitElementLoaded(10, data["TIMECARD"]["OT_popup"])
+            Commands.ClickElement(data["TIMECARD"]["OT_clockout"]) 
             Logging("- Clock-out")
             time.sleep(2)
-            driver.find_element_by_xpath(data["TIMECARD"]["yes_but"][0]).click()
+            Commands.ClickElement(data["TIMECARD"]["yes_but"][0]) 
         except:
             pop_up = driver.find_element_by_xpath(data["TIMECARD"]["pop_up"])
             if pop_up.is_displayed():
@@ -362,14 +362,14 @@ def clock_out():
                     input_reason_leave_early()
                 except:
                     Logging("- Clock-out already")
-                    driver.find_element_by_xpath(data["TIMECARD"]["my_timesheets"]).click()
+                    Commands.ClickElement(data["TIMECARD"]["my_timesheets"]) 
                     Logging("- Select My timecard: Timesheets")
             else:
                 Logging("=> Clock-out already")
 
 def time_clock_out():
     time.sleep(5)
-    driver.find_element_by_xpath(data["TIMECARD"]["my_timesheets"]).click()
+    Commands.ClickElement(data["TIMECARD"]["my_timesheets"]) 
     Logging("- Select My timecard: Timesheets")
     format_time = driver.find_element_by_xpath(data["TIMECARD"]["format_time"])
     clock_time = format_time.text[0:2]
@@ -387,25 +387,25 @@ def time_clock_out():
     item_clock.location_once_scrolled_into_view
     time.sleep(2)
 
-    driver.find_element_by_xpath(data["TIMECARD"]["edit_clockout_time"]).click()
+    Commands.ClickElement(data["TIMECARD"]["edit_clockout_time"]) 
     Logging("- Edit Clock-out time")
-    WebDriverWait(driver,10).until(EC.presence_of_element_located((By.XPATH, data["TIMECARD"]["pop_up_edit"])))
+    Waits.WaitElementLoaded(10, data["TIMECARD"]["pop_up_edit"])
     time.sleep(3)
 
-    driver.find_element_by_xpath(data["TIMECARD"]["btn_hour"]).click()
+    Commands.ClickElement(data["TIMECARD"]["btn_hour"]) 
     time.sleep(2)
     hours_time = driver.find_element_by_xpath("//*[starts-with(@id,'btnHours')]//following-sibling::div/button[contains(.,'" + str(clock_out_time_update) + "')]")
     hours_time.click()
     Logging("- Select hours clock-out")
-    driver.find_element_by_xpath(data["TIMECARD"]["btn_min"]).click()
+    Commands.ClickElement(data["TIMECARD"]["btn_min"]) 
     time.sleep(2)
     minute_time = driver.find_element_by_xpath(data["TIMECARD"]["minutes"])
     minute_time.click()
     Logging("- Select minutes clock-out")
     time.sleep(2)
-    driver.find_element_by_xpath(data["TIMECARD"]["on_time"]).click()
+    Commands.ClickElement(data["TIMECARD"]["on_time"]) 
     Logging("- Choose On time")
-    driver.find_element_by_xpath(data["TIMECARD"]["save_edit"]).click()
+    Commands.ClickElement(data["TIMECARD"]["save_edit"]) 
     Logging("=> Save edit time clock-out")
 
 def check_time():
@@ -457,10 +457,10 @@ def timesheet_list(output_clockin,output_clockout,break_time,working_time, OT_ti
     #Logging(date_clockin.text)
     date_clock_in = date_clockin.text
     Logging(date_clock_in)
-    timesheet_list = driver.find_element_by_xpath(data["TIMECARD"]["timesheet_list"]).click()
+    timesheet_list = Commands.ClickElement(data["TIMECARD"]["timesheet_list"]) 
     Logging("- My Timesheets: List")
 
-    WebDriverWait(driver,20).until(EC.presence_of_element_located((By.XPATH, data["TIMECARD"]["timesheet_list_wwait"])))
+    Waits.WaitElementLoaded(20, data["TIMECARD"]["timesheet_list_wwait"])
     time.sleep(3)
 
     i = 0
@@ -523,7 +523,7 @@ def timesheet_list(output_clockin,output_clockout,break_time,working_time, OT_ti
             continue
 
 
-    # WebDriverWait(driver,10).until(EC.presence_of_element_located((By.XPATH, "//span[contains(@data-lang-id,'Working time')]")))
+    # Waits.WaitElementLoaded(10, "//span[contains(@data-lang-id,'Working time')]")
     # time.sleep(4)
     # today = driver.find_element_by_xpath("//*[@class='admin_status']//div[contains(@class,'list-table-wrapper')]//form//div[contains(@ref,'eCenterContainer')]//div[contains(@col-id,'date')]/div[contains(.,'" + date_clock_in + "')]/../..")
     # time.sleep(4)
@@ -583,8 +583,8 @@ def report_list1(output_clockin,output_clockout,break_time,working_time, OT_time
     # date_clockin = driver.find_element_by_xpath("//*[@class='admin_status']//div[contains(@class,'daily-wrapper')]/div/div/div/div[2]/div/div[2]/div/div/span")
     # #Logging(date_clockin.text)
     # date_clock_in = date_clockin.text
-    report_page = driver.find_element_by_xpath(data["TIMECARD"]["report_page"]).click()
-    report_list = driver.find_element_by_xpath(data["TIMECARD"]["report_list"]).click()
+    report_page = Commands.ClickElement(data["TIMECARD"]["report_page"]) 
+    report_list = Commands.ClickElement(data["TIMECARD"]["report_list"]) 
     Waits.WaitElementLoaded(30, data["TIMECARD"]["list_wait"])
     Logging("- Reports: List")
     time.sleep(3)
@@ -614,9 +614,9 @@ def add_event2():
     basic.location_once_scrolled_into_view
     basic.click()
     Logging("- Setting: Basic")
-    WebDriverWait(driver,10).until(EC.presence_of_element_located((By.XPATH, data["TIMECARD"]["setting_wait"])))
+    Waits.WaitElementLoaded(10, data["TIMECARD"]["setting_wait"])
     time.sleep(2)
-    driver.find_element_by_xpath(data["TIMECARD"]["setting_approval"]).click()
+    Commands.ClickElement(data["TIMECARD"]["setting_approval"]) 
     Logging("- Setting: Basic_Approval")
     time.sleep(3)
     work_correction_scroll = driver.find_element_by_xpath(data["TIMECARD"]["work_correction_scroll"])
@@ -647,31 +647,32 @@ def add_event2():
             EV_approver = driver.find_element_by_xpath(data["TIMECARD"]["EV_approver"])
             if EV_approver.text == "No data was found.":
                 Logging("- Don't have approval line")
-                driver.find_element_by_xpath(data["TIMECARD"]["EV_add_approver"]).click()
-                WebDriverWait(driver,10).until(EC.presence_of_element_located((By.XPATH, data["TIMECARD"]["wait_OT"])))
+                Commands.ClickElement(data["TIMECARD"]["EV_add_approver"]) 
+                Waits.WaitElementLoaded(10, data["TIMECARD"]["wait_OT"])
                 time.sleep(2)
-                EV_approval_line = driver.find_element_by_xpath(data["TIMECARD"]["approval_line"])
-                EV_approval_line.send_keys(data["user_name"])
+                # EV_approval_line = driver.find_element_by_xpath(data["TIMECARD"]["approval_line"])
+                # EV_approval_line.send_keys(data["user_name"])
+                EV_approval_line = Commands.InputElement(data["TIMECARD"]["approval_line"], data["user_name"][1])
                 EV_approval_line.send_keys(Keys.ENTER)
                 time.sleep(3)
-                driver.find_element_by_xpath(data["TIMECARD"]["select_user"]).click()
-                driver.find_element_by_xpath(data["TIMECARD"]["plus_button"]).click()
-                driver.find_element_by_xpath(data["TIMECARD"]["save_approver"]).click()
+                Commands.ClickElement(data["TIMECARD"]["select_user"]) 
+                Commands.ClickElement(data["TIMECARD"]["plus_button"]) 
+                Commands.ClickElement(data["TIMECARD"]["save_approver"]) 
                 Logging("- Save approval line")
-                # EV_approver_list = WebDriverWait(driver,10).until(EC.presence_of_element_located((By.XPATH,  data["TIMECARD"]["approver_list"] + data["name_keyword"][1] + "')]")))
+                # EV_approver_list = Waits.WaitElementLoaded(10,  data["TIMECARD"]["approver_list"] + data["name_keyword"][1] + "')]")
                 approver_after_save = driver.find_element_by_xpath(data["TIMECARD"]["approver_after_save"])
                 if approver_after_save != "No data was found.":
                     Logging("- Save approvers list Successfully")
                     driver.refresh()
                     time.sleep(5)
-                    driver.find_element_by_xpath(data["TIMECARD"]["timesheet_page"]).click()
+                    Commands.ClickElement(data["TIMECARD"]["timesheet_page"]) 
                     Waits.WaitElementLoaded(30, data["TIMECARD"]["timesheet_wait"])
-                    driver.find_element_by_xpath(data["TIMECARD"]["calendar"]).click()
+                    Commands.ClickElement(data["TIMECARD"]["calendar"]) 
                     Logging("- Select Timesheets: Calendar")
-                    WebDriverWait(driver,10).until(EC.presence_of_element_located((By.XPATH, data["TIMECARD"]["wait_calendar"])))
+                    Waits.WaitElementLoaded(10, data["TIMECARD"]["wait_calendar"])
                     time.sleep(3)
-                    driver.find_element_by_xpath(data["TIMECARD"]["add_event"]).click()
-                    driver.find_element_by_xpath(data["TIMECARD"]["event"]).click()
+                    Commands.ClickElement(data["TIMECARD"]["add_event"]) 
+                    Commands.ClickElement(data["TIMECARD"]["event"]) 
                     time.sleep(2)
 
                     #Choose Event
@@ -699,17 +700,17 @@ def add_event2():
                     Logging("- Input memo")
 
                     #Save
-                    driver.find_element_by_xpath(data["TIMECARD"]["save_event"]).click()
+                    Commands.ClickElement(data["TIMECARD"]["save_event"]) 
                     Logging("- Save")
                     time.sleep(2)
                     try:
-                        noty_success = WebDriverWait(driver,10).until(EC.presence_of_element_located((By.XPATH, data["TIMECARD"]["pre_OT_noty"])))
+                        noty_success = Waits.WaitElementLoaded(10, data["TIMECARD"]["pre_OT_noty"])
                         noty_event_list = [data["TIMECARD"]["noty_event"][0], data["TIMECARD"]["noty_event"][1]]
                         if noty_success.text in noty_event_list:
                             Logging("- Save event Successfully - Approval is submitted successfully")
                             TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["add_event"]["pass"])
                             #Approval page
-                            approval_page = driver.find_element_by_xpath(data["TIMECARD"]["approval_page"]).click()
+                            approval_page = Commands.ClickElement(data["TIMECARD"]["approval_page"]) 
                             
                             time.sleep(3)
                             event_status_approve = driver.find_element_by_xpath(data["TIMECARD"]["event_status_approve"])
@@ -718,7 +719,7 @@ def add_event2():
                                 # Logging(status_approve.text)
                                 if event_status_approve.text == "Event":
                                     Logging ("- Event approval is displayed in approval list")
-                                    open_approve_status_list = driver.find_element_by_xpath(data["TIMECARD"]["open_approve_status_list"]).click()
+                                    open_approve_status_list = Commands.ClickElement(data["TIMECARD"]["open_approve_status_list"]) 
                                     #Logging("Open successfully")
                                     time.sleep(5)
                                     #Click random (Reject, Approve)
@@ -744,7 +745,7 @@ def add_event2():
                                     time.sleep(5)
                                     #Logging ("Scroll successfully")
                                     #Click view details
-                                    driver.find_element_by_xpath(data["TIMECARD"]["click_detail"]).click()
+                                    Commands.ClickElement(data["TIMECARD"]["click_detail"]) 
                                     time.sleep(5)
                                     #Print status
                                     status_approve_event = driver.find_element_by_xpath(data["TIMECARD"]["status_approve_event"]).text
@@ -770,14 +771,14 @@ def add_event2():
                     Logging("- Save approvers list Fail")
             else:
                 Logging("- Approval line has already")
-                driver.find_element_by_xpath(data["TIMECARD"]["timesheet_page"]).click()
+                Commands.ClickElement(data["TIMECARD"]["timesheet_page"]) 
                 Waits.WaitElementLoaded(30, data["TIMECARD"]["timesheet_wait"])
-                driver.find_element_by_xpath(data["TIMECARD"]["calendar"]).click()
+                Commands.ClickElement(data["TIMECARD"]["calendar"]) 
                 Logging("- Select Timesheets: Calendar")
-                WebDriverWait(driver,10).until(EC.presence_of_element_located((By.XPATH, data["TIMECARD"]["wait_calendar"])))
+                Waits.WaitElementLoaded(10, data["TIMECARD"]["wait_calendar"])
                 time.sleep(3)
-                driver.find_element_by_xpath(data["TIMECARD"]["add_event"]).click()
-                driver.find_element_by_xpath(data["TIMECARD"]["event"]).click()
+                Commands.ClickElement(data["TIMECARD"]["add_event"]) 
+                Commands.ClickElement(data["TIMECARD"]["event"]) 
                 time.sleep(2)
 
                 #Choose Event
@@ -805,17 +806,17 @@ def add_event2():
                 Logging("- Input memo")
 
                 #Save
-                driver.find_element_by_xpath(data["TIMECARD"]["save_event"]).click()
+                Commands.ClickElement(data["TIMECARD"]["save_event"]) 
                 Logging("- Save")
                 time.sleep(2)
                 try:
-                    noty_success = WebDriverWait(driver,10).until(EC.presence_of_element_located((By.XPATH, data["TIMECARD"]["pre_OT_noty"])))
+                    noty_success = Waits.WaitElementLoaded(10, data["TIMECARD"]["pre_OT_noty"])
                     noty_event_list = [data["TIMECARD"]["noty_event"][0], data["TIMECARD"]["noty_event"][1]]
                     if noty_success.text in noty_event_list:
                         Logging("- Save event Successfully - Approval is submitted successfully")
                         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["add_event"]["pass"])
                         #Approval page
-                        approval_page = driver.find_element_by_xpath(data["TIMECARD"]["ap_proval_page"]).click()
+                        approval_page = Commands.ClickElement(data["TIMECARD"]["ap_proval_page"]) 
                         
                         time.sleep(3)
                         event_status_approve = driver.find_element_by_xpath(data["TIMECARD"]["event_status_approve"])
@@ -824,7 +825,7 @@ def add_event2():
                             # Logging(status_approve.text)
                             if event_status_approve.text == "Event":
                                 Logging ("- Event approval is displayed in approval list")
-                                open_approve_status_list = driver.find_element_by_xpath(data["TIMECARD"]["open_approve_status_list"]).click()
+                                open_approve_status_list = Commands.ClickElement(data["TIMECARD"]["open_approve_status_list"]) 
                                 #Logging("Open successfully")
                                 time.sleep(5)
                                 #Click random (Reject, Approve)
@@ -850,7 +851,7 @@ def add_event2():
                                 time.sleep(5)
                                 #Logging ("Scroll successfully")
                                 #Click view details
-                                driver.find_element_by_xpath("//div[1]/*[@col-id='id']//div[contains(@class, 'btn-view-detail')]").click()
+                                Commands.ClickElement("//div[1]/*[@col-id='id']//div[contains(@class, 'btn-view-detail')]") 
                                 time.sleep(5)
                                 #Print status
                                 status_approve_event = driver.find_element_by_xpath(data["TIMECARD"]["status_approve_event"]).text
@@ -863,7 +864,7 @@ def add_event2():
                                     TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["approve_status"]["pass"])
                                     #approval_OT()
                                 #Click view details
-                                driver.find_element_by_xpath(data["TIMECARD"]["click_detail"]).click()
+                                Commands.ClickElement(data["TIMECARD"]["click_detail"]) 
                                 time.sleep(5)
                             else:
                                     Logging ("Event approval is not displayed in approval list")
@@ -881,15 +882,15 @@ def add_event2():
         Logging("- Approval type: Automatic approval")
         driver.refresh()
         time.sleep(5)
-        driver.find_element_by_xpath(data["TIMECARD"]["timesheet_page"]).click()
+        Commands.ClickElement(data["TIMECARD"]["timesheet_page"]) 
         Waits.WaitElementLoaded(30, data["TIMECARD"]["timesheet_wait"])
         time.sleep(3)
-        driver.find_element_by_xpath(data["TIMECARD"]["calendar"]).click()
+        Commands.ClickElement(data["TIMECARD"]["calendar"]) 
         Logging("- Select Timesheets: Calendar")
-        WebDriverWait(driver,10).until(EC.presence_of_element_located((By.XPATH, data["TIMECARD"]["wait_calendar"])))
+        Waits.WaitElementLoaded(10, data["TIMECARD"]["wait_calendar"])
         time.sleep(3)
-        driver.find_element_by_xpath(data["TIMECARD"]["add_event"]).click()
-        driver.find_element_by_xpath(data["TIMECARD"]["event"]).click()
+        Commands.ClickElement(data["TIMECARD"]["add_event"]) 
+        Commands.ClickElement(data["TIMECARD"]["event"]) 
         time.sleep(2)
 
         #Choose Event
@@ -917,13 +918,13 @@ def add_event2():
         Logging("- Input memo")
 
         #Save
-        driver.find_element_by_xpath(data["TIMECARD"]["save_event"]).click()
+        Commands.ClickElement(data["TIMECARD"]["save_event"]) 
         Logging("- Save event successfully - Event approval is submitted successfully")
         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["add_event"]["pass"])
         
         time.sleep(2)
         #Approval page
-        approval_page = driver.find_element_by_xpath(data["TIMECARD"]["approval_page"]).click()
+        approval_page = Commands.ClickElement(data["TIMECARD"]["approval_page"]) 
         
         ev_status_approve = driver.find_element_by_xpath(data["TIMECARD"]["event_status_approve"])
         #Logging (status_approve.text)
@@ -939,7 +940,7 @@ def add_event2():
                 webdriver.ActionChains(driver).release().perform()
                 #Logging ("Scroll successfully")
                 #Click view details
-                driver.find_element_by_xpath(data["TIMECARD"]["click_detail"]).click()
+                Commands.ClickElement(data["TIMECARD"]["click_detail"]) 
                 time.sleep(5)
                 #Print status column
                 event_status_app = driver.find_element_by_xpath(data["TIMECARD"]["status_approve_event"])
@@ -959,14 +960,14 @@ def add_event2():
         Logging("- Approval type: Head Dept.")
         driver.refresh()
         time.sleep(5)
-        driver.find_element_by_xpath(data["TIMECARD"]["timesheet_page"]).click()
+        Commands.ClickElement(data["TIMECARD"]["timesheet_page"]) 
         Waits.WaitElementLoaded(30, data["TIMECARD"]["timesheet_wait"])
-        driver.find_element_by_xpath(data["TIMECARD"]["calendar"]).click()
+        Commands.ClickElement(data["TIMECARD"]["calendar"]) 
         Logging("- Select Timesheets: Calendar")
-        WebDriverWait(driver,10).until(EC.presence_of_element_located((By.XPATH, data["TIMECARD"]["wait_calendar"])))
+        Waits.WaitElementLoaded(10, data["TIMECARD"]["wait_calendar"])
         time.sleep(3)
-        driver.find_element_by_xpath(data["TIMECARD"]["add_event"]).click()
-        driver.find_element_by_xpath(data["TIMECARD"]["event"]).click()
+        Commands.ClickElement(data["TIMECARD"]["add_event"]) 
+        Commands.ClickElement(data["TIMECARD"]["event"]) 
         time.sleep(2)
 
         #Choose Event
@@ -994,14 +995,14 @@ def add_event2():
         Logging("- Input memo")
 
         #Save
-        driver.find_element_by_xpath(data["TIMECARD"]["save_event"]).click()
+        Commands.ClickElement(data["TIMECARD"]["save_event"]) 
         Logging("- Save event successfully - Event approval is submitted successfully")
         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["add_event"]["pass"])
 
         time.sleep(2) 
         
         #Approval page
-        approval_page = driver.find_element_by_xpath(data["TIMECARD"]["approval_page"]).click()
+        approval_page = Commands.ClickElement(data["TIMECARD"]["approval_page"]) 
         
         ev_status_approve = driver.find_element_by_xpath(data["TIMECARD"]["event_status_approve"])
         #Logging (status_approve.text)
@@ -1016,7 +1017,7 @@ def add_event2():
                 webdriver.ActionChains(driver).release().perform()
                 time.sleep(5)
                 #Click view details
-                driver.find_element_by_xpath(data["TIMECARD"]["click_detail"]).click()
+                Commands.ClickElement(data["TIMECARD"]["click_detail"]) 
                 time.sleep(5)
             else:
                 Logging ("- Event approval is not displayed in approval list")
@@ -1026,14 +1027,14 @@ def add_event2():
         Logging("- Approval type: Timecard Manager")
         driver.refresh()
         time.sleep(5)
-        driver.find_element_by_xpath(data["TIMECARD"]["timesheet_page"]).click()
+        Commands.ClickElement(data["TIMECARD"]["timesheet_page"]) 
         Waits.WaitElementLoaded(30, data["TIMECARD"]["timesheet_wait"])
-        driver.find_element_by_xpath(data["TIMECARD"]["calendar"]).click()
+        Commands.ClickElement(data["TIMECARD"]["calendar"]) 
         Logging("- Select Timesheets: Calendar")
-        WebDriverWait(driver,10).until(EC.presence_of_element_located((By.XPATH, data["TIMECARD"]["wait_calendar"])))
+        Waits.WaitElementLoaded(10, data["TIMECARD"]["wait_calendar"])
         time.sleep(3)
-        driver.find_element_by_xpath(data["TIMECARD"]["add_event"]).click()
-        driver.find_element_by_xpath(data["TIMECARD"]["event"]).click()
+        Commands.ClickElement(data["TIMECARD"]["add_event"]) 
+        Commands.ClickElement(data["TIMECARD"]["event"]) 
         time.sleep(2)
 
         #Choose Event
@@ -1061,13 +1062,13 @@ def add_event2():
         Logging("- Input memo")
 
         #Save
-        driver.find_element_by_xpath(data["TIMECARD"]["save_event"]).click()
+        Commands.ClickElement(data["TIMECARD"]["save_event"]) 
         Logging("- Save event successfully - Event approval is submitted successfully")
         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["add_event"]["pass"])
         time.sleep(3)
 
         #Approval page
-        approval_page = driver.find_element_by_xpath(data["TIMECARD"]["input_othapproval_pageer_name"]).click()
+        approval_page = Commands.ClickElement(data["TIMECARD"]["input_othapproval_pageer_name"]) 
 
         ev_status_approve = driver.find_element_by_xpath(data["TIMECARD"]["event_status_approve"])
         #Logging (status_approve.text)
@@ -1082,7 +1083,7 @@ def add_event2():
                 webdriver.ActionChains(driver).release().perform()
                 time.sleep(5)
                 #Click view details
-                driver.find_element_by_xpath(data["TIMECARD"]["click_detail"]).click()
+                Commands.ClickElement(data["TIMECARD"]["click_detail"]) 
                 time.sleep(5)
             else:
                 Logging ("- Event approval is not displayed in approval list")
@@ -1092,14 +1093,14 @@ def add_event2():
         Logging("- Approval type: Dept. Manager")
         driver.refresh()
         time.sleep(5)
-        driver.find_element_by_xpath(data["TIMECARD"]["timesheet_page"]).click()
+        Commands.ClickElement(data["TIMECARD"]["timesheet_page"]) 
         Waits.WaitElementLoaded(30, data["TIMECARD"]["timesheet_wait"])
-        driver.find_element_by_xpath(data["TIMECARD"]["calendar"]).click()
+        Commands.ClickElement(data["TIMECARD"]["calendar"]) 
         Logging("- Select Timesheets: Calendar")
-        WebDriverWait(driver,10).until(EC.presence_of_element_located((By.XPATH, data["TIMECARD"]["wait_calendar"])))
+        Waits.WaitElementLoaded(10, data["TIMECARD"]["wait_calendar"])
         time.sleep(3)
-        driver.find_element_by_xpath(data["TIMECARD"]["add_event"]).click()
-        driver.find_element_by_xpath(data["TIMECARD"]["event"]).click()
+        Commands.ClickElement(data["TIMECARD"]["add_event"]) 
+        Commands.ClickElement(data["TIMECARD"]["event"]) 
         time.sleep(2)
 
         #Choose Event
@@ -1127,13 +1128,13 @@ def add_event2():
         Logging("- Input memo")
 
         #Save
-        driver.find_element_by_xpath(data["TIMECARD"]["save_event"]).click()
+        Commands.ClickElement(data["TIMECARD"]["save_event"]) 
         Logging("- Save event successfully - Event approval is submitted successfully")
         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["add_event"]["pass"])
         time.sleep(2)
 
         #Approval page
-        approval_page = driver.find_element_by_xpath(data["TIMECARD"]["approval_page"]).click()
+        approval_page = Commands.ClickElement(data["TIMECARD"]["approval_page"]) 
         
         ev_status_approve = driver.find_element_by_xpath(data["TIMECARD"]["event_status_approve"])
         #Logging (status_approve.text)
@@ -1148,7 +1149,7 @@ def add_event2():
                 webdriver.ActionChains(driver).release().perform()
                 time.sleep(5)
                 #Click view details
-                driver.find_element_by_xpath(data["TIMECARD"]["click_detail"]).click()
+                Commands.ClickElement(data["TIMECARD"]["click_detail"]) 
                 time.sleep(5)
             else:
                 Logging ("- Event approval is not displayed in approval list")
@@ -1166,7 +1167,7 @@ def view_details():
     # time.sleep(5)
     # #Logging ("Scroll successfully")
     # #Click view details
-    # driver.find_element_by_xpath("//div[1]/*[@col-id='id']//div[contains(@class, 'btn-view-detail')]").click()
+    # Commands.ClickElement("//div[1]/*[@col-id='id']//div[contains(@class, 'btn-view-detail')]") 
     # time.sleep(5)
     #View details data
     try:
@@ -1219,7 +1220,7 @@ def view_details():
 
 def working_status():
     time.sleep(5)
-    driver.find_element_by_xpath(data["TIMECARD"]["add_working_status"]).click()
+    Commands.ClickElement(data["TIMECARD"]["add_working_status"]) 
     Logging("- Add working status")
     Waits.WaitElementLoaded(20, data["TIMECARD"]["working_status"])
     try:
@@ -1250,7 +1251,7 @@ def add_working_status():
     status.click()
     Logging("- Select status")
 
-    driver.find_element_by_xpath(data["TIMECARD"]["dropdown_time"]).click()
+    Commands.ClickElement(data["TIMECARD"]["dropdown_time"]) 
     time.sleep(3)
     status_time_list = (int(len(driver.find_elements_by_xpath(data["TIMECARD"]["status_time_list"]))))
 
@@ -1268,13 +1269,13 @@ def add_working_status():
     time.sleep(3)
 
     if str(m) != "Select date and time":
-        driver.find_element_by_xpath(data["TIMECARD"]["save_working_status"]).click()
+        Commands.ClickElement(data["TIMECARD"]["save_working_status"]) 
         Logging("- Save working status")
     else:
-        driver.find_element_by_xpath(data["TIMECARD"]["choose_time"]).click()
-        driver.find_element_by_xpath(data["TIMECARD"]["select_time"]).click()
+        Commands.ClickElement(data["TIMECARD"]["choose_time"]) 
+        Commands.ClickElement(data["TIMECARD"]["select_time"]) 
         Logging("- Select time of working status")
-        driver.find_element_by_xpath(data["TIMECARD"]["save_working_status"]).click()
+        Commands.ClickElement(data["TIMECARD"]["save_working_status"]) 
         Logging("- Save working status")
 
 
@@ -1284,15 +1285,15 @@ def approval_OT():
     basic.location_once_scrolled_into_view
     basic.click()
     Logging("- Setting: Basic")
-    WebDriverWait(driver,10).until(EC.presence_of_element_located((By.XPATH, data["TIMECARD"]["setting_wait"])))
+    Waits.WaitElementLoaded(10, data["TIMECARD"]["setting_wait"])
     time.sleep(2)
-    driver.find_element_by_xpath(data["TIMECARD"]["setting_wait"]).click()
+    Commands.ClickElement(data["TIMECARD"]["setting_wait"]) 
     time.sleep(2)
     checkbox = driver.find_element_by_xpath(data["TIMECARD"]["checkbox"])
     if checkbox.is_selected():
         Logging("- Turn on clock-in/out pop up")
         driver.refresh()
-        WebDriverWait(driver,10).until(EC.presence_of_element_located((By.XPATH, data["TIMECARD"]["setting_wait"])))
+        Waits.WaitElementLoaded(10, data["TIMECARD"]["setting_wait"])
         time.sleep(2)
         try:
             pop_up = driver.find_element_by_xpath(data["TIMECARD"]["pop_up"])
@@ -1304,7 +1305,7 @@ def approval_OT():
     else:
         Logging("- Turn off clock-in/out pop up")
         driver.refresh()
-        WebDriverWait(driver,10).until(EC.presence_of_element_located((By.XPATH, data["TIMECARD"]["setting_wait"])))
+        Waits.WaitElementLoaded(10, data["TIMECARD"]["setting_wait"])
         time.sleep(2)
         try:
             pop_up = driver.find_element_by_xpath(data["TIMECARD"]["pop_up"])
@@ -1314,10 +1315,10 @@ def approval_OT():
             Logging("=> Turn off clock-in/out pop up successfully")
 
     time.sleep(2)
-    driver.find_element_by_xpath(data["TIMECARD"]["setting_approval"]).click()
+    Commands.ClickElement(data["TIMECARD"]["setting_approval"]) 
     Logging("- Setting: Basic_Approval")
     time.sleep(3)
-    OT = WebDriverWait(driver,10).until(EC.presence_of_element_located((By.XPATH, data["TIMECARD"]["OT_scroll"])))
+    OT = Waits.WaitElementLoaded(10, data["TIMECARD"]["OT_scroll"])
     OT.location_once_scrolled_into_view
     time.sleep(2)
     OT_list = int(len(driver.find_elements_by_xpath(data["TIMECARD"]["OT_list"])))
@@ -1344,18 +1345,19 @@ def approval_OT():
             approver = driver.find_element_by_xpath(data["TIMECARD"]["approver"])
             if approver.text == "No data was found.":
                 Logging("- Don't have approval line")
-                driver.find_element_by_xpath(data["TIMECARD"]["add_approver"]).click()
-                WebDriverWait(driver,10).until(EC.presence_of_element_located((By.XPATH, data["TIMECARD"]["wait_OT"])))
+                Commands.ClickElement(data["TIMECARD"]["add_approver"]) 
+                Waits.WaitElementLoaded(10, data["TIMECARD"]["wait_OT"])
                 time.sleep(2)
-                approval_line = driver.find_element_by_xpath(data["TIMECARD"]["approval_line"])
-                approval_line.send_keys(data["name_keyword"][1])
+                # approval_line = driver.find_element_by_xpath(data["TIMECARD"]["approval_line"])
+                # approval_line.send_keys(data["name_keyword"][1])
+                approval_line = Commands.InputElement(data["TIMECARD"]["approval_line"], data["name_keyword"][1])
                 approval_line.send_keys(Keys.ENTER)
                 time.sleep(3)
-                driver.find_element_by_xpath(data["TIMECARD"]["select_user"]).click()
-                driver.find_element_by_xpath(data["TIMECARD"]["plus_button"]).click()
-                driver.find_element_by_xpath(data["TIMECARD"]["save_approver"]).click()
+                Commands.ClickElement(data["TIMECARD"]["select_user"]) 
+                Commands.ClickElement(data["TIMECARD"]["plus_button"]) 
+                Commands.ClickElement(data["TIMECARD"]["save_approver"]) 
                 Logging("- Save approval line")
-                approver_list = WebDriverWait(driver,10).until(EC.presence_of_element_located((By.XPATH,  data["TIMECARD"]["approver_list"] + data["name_keyword"][1] + "')]")))
+                approver_list = Waits.WaitElementLoaded(10, data["TIMECARD"]["approver_list"] + data["name_keyword"][1] + "')]")
                 if approver_list.is_displayed():
                     Logging("- Save approvers list Successfully")
                 else:
@@ -1365,17 +1367,17 @@ def approval_OT():
         except:
             Logging()
          
-    driver.find_element_by_xpath(data["TIMECARD"]["my_timesheets"]).click()
+    Commands.ClickElement(data["TIMECARD"]["my_timesheets"]) 
     time.sleep(1)
-    driver.find_element_by_xpath(data["TIMECARD"]["calendar"]).click()
-    WebDriverWait(driver,10).until(EC.presence_of_element_located((By.XPATH, data["TIMECARD"]["wait_calendar"])))
+    Commands.ClickElement(data["TIMECARD"]["calendar"]) 
+    Waits.WaitElementLoaded(10, data["TIMECARD"]["wait_calendar"])
     time.sleep(3)
-    driver.find_element_by_xpath(data["TIMECARD"]["add_event"]).click()
+    Commands.ClickElement(data["TIMECARD"]["add_event"]) 
     time.sleep(1)
-    driver.find_element_by_xpath(data["TIMECARD"]["add_OT"]).click()
+    Commands.ClickElement(data["TIMECARD"]["add_OT"]) 
     time.sleep(3)
 
-    driver.find_element_by_xpath(data["TIMECARD"]["filter"]).click()
+    Commands.ClickElement(data["TIMECARD"]["filter"]) 
     filters_OT_list = int(len(driver.find_elements_by_xpath(data["TIMECARD"]["filters_OT_list"])))
 
     list_filters_OT = []
@@ -1391,13 +1393,13 @@ def approval_OT():
     Logging("- Select filters time OT")
     time.sleep(2)
 
-    memo_approval_line = driver.find_element_by_xpath(data["TIMECARD"]["memo_approval_line"])
-    memo_approval_line.send_keys("I would like to OT " + str(m) + " after work. Date: " + date)
-
-    driver.find_element_by_xpath(data["TIMECARD"]["save_approval_line"]).click()
+    # memo_approval_line = driver.find_element_by_xpath(data["TIMECARD"]["memo_approval_line"])
+    # memo_approval_line.send_keys("I would like to OT " + str(m) + " after work. Date: " + date)
+    memo_approval_line = Commands.InputElement(data["TIMECARD"]["memo_approval_line"], "I would like to OT " + str(m) + " after work. Date: " + date)
+    Commands.ClickElement(data["TIMECARD"]["save_approval_line"]) 
     Logging("- Apply Pre OT")
     try:
-        noty_success = WebDriverWait(driver,10).until(EC.presence_of_element_located((By.XPATH, data["TIMECARD"]["pre_OT_noty"])))
+        noty_success = Waits.WaitElementLoaded(10, data["TIMECARD"]["pre_OT_noty"])
         time.sleep(3)
         noty_list = [data["TIMECARD"]["pre_OT_noty_success"][0], data["TIMECARD"]["pre_OT_noty_success"][1]]
         if noty_success.text in noty_list:
@@ -1407,9 +1409,9 @@ def approval_OT():
             Logging("- Apply Pre OT has already")
             #add_data_in_excel(param_excel["pre_OT"],"p","Apply Pre OT has already")
             time.sleep(3)
-            driver.find_element_by_xpath("//div[@class='modal-header ']//button").click()
+            Commands.ClickElement(data["TIMECARD"]["exit_button"]) 
             time.sleep(2)
-            WebDriverWait(driver,10).until(EC.presence_of_element_located((By.XPATH, data["TIMECARD"]["exit"]))).click()
+            Waits.WaitElementLoaded(10, data["TIMECARD"]["exit"]).click()
         else:
             Logging("- Apply Pre OT Fail")
             #add_data_in_excel(param_excel["pre_OT"],"f","Apply Pre OT Fail")
@@ -1418,45 +1420,45 @@ def approval_OT():
         #add_data_in_excel(param_excel["pre_OT"],"f","Apply Pre OT Fail")
 
     time.sleep(5)
-    driver.find_element_by_xpath(data["TIMECARD"]["approval"]).click()
+    Commands.ClickElement(data["TIMECARD"]["approval"]) 
     Logging("- My Timecard: Approval")
-    WebDriverWait(driver,10).until(EC.presence_of_element_located((By.XPATH, data["TIMECARD"]["approval_list"])))
+    Waits.WaitElementLoaded(10, data["TIMECARD"]["approval_list"])
     pre_OT = driver.find_element_by_xpath(data["TIMECARD"]["pre_OT"])
     if pre_OT.text == "Over Time (Pre)":
         Logging("- Approval list: Pre OT")
-        driver.find_element_by_xpath(data["TIMECARD"]["detail"]).click()
+        Commands.ClickElement(data["TIMECARD"]["detail"]) 
         Logging("- View detail approval")
         time.sleep(2) 
         if str(x) == "Automatic approval":
             status_pre_OT = driver.find_element_by_xpath(data["TIMECARD"]["status_pre_OT"])
             if status_pre_OT.text == "Approved":
                 Logging("- Pre OT has been approved automatically")
-                driver.find_element_by_xpath(data["TIMECARD"]["turn_off_view"]).click()
+                Commands.ClickElement(data["TIMECARD"]["turn_off_view"]) 
                 time.sleep(2)
             else:
                 Logging("- Pre OT hasn't been approved automatically")
                 Logging("=> Fail")
-                driver.find_element_by_xpath(data["TIMECARD"]["turn_off_view"]).click()
+                Commands.ClickElement(data["TIMECARD"]["turn_off_view"]) 
                 time.sleep(2)
         else:
             status_pre_OT = driver.find_element_by_xpath(data["TIMECARD"]["status_pre_OT"])
             time.sleep(2)
             if status_pre_OT.text == "Approved":
                 Logging("- Pre OT has been Approved")
-                driver.find_element_by_xpath(data["TIMECARD"]["turn_off_view"]).click()
+                Commands.ClickElement(data["TIMECARD"]["turn_off_view"]) 
                 time.sleep(2)
             elif status_pre_OT == "Cancelled":
                 Logging("- Pre OT has been Cancelled")
-                driver.find_element_by_xpath(data["TIMECARD"]["turn_off_view"]).click()
+                Commands.ClickElement(data["TIMECARD"]["turn_off_view"]) 
                 time.sleep(2)
             else:
                 status_pre_OT.click()
                 Logging("- Cancel Pre OT")
                 time.sleep(2)
-                driver.find_element_by_xpath(data["TIMECARD"]["yes_but"][1]).click()
+                Commands.ClickElement(data["TIMECARD"]["yes_but"][1]) 
                 time.sleep(5)
-                driver.find_element_by_xpath(data["TIMECARD"]["reload"]).click()
-                status_update = WebDriverWait(driver,10).until(EC.presence_of_element_located((By.XPATH, data["TIMECARD"]["status_update"])))
+                Commands.ClickElement(data["TIMECARD"]["reload"]) 
+                status_update = Waits.WaitElementLoaded(10, data["TIMECARD"]["status_update"])
                 time.sleep(5)
                 if status_update.text == "Cancelled":
                     Logging("- Cancel Pre OT successfully")
@@ -1470,17 +1472,18 @@ def manager():
     manager.location_once_scrolled_into_view
     manager.click()
     Logging("- Settings: Manager")
-    WebDriverWait(driver,10).until(EC.presence_of_element_located((By.XPATH, data["TIMECARD"]["setting_manager"])))
+    Waits.WaitElementLoaded(10, data["TIMECARD"]["setting_manager"])
     time.sleep(2)
-    driver.find_element_by_xpath(data["TIMECARD"]["add_manager"]).click()
+    Commands.ClickElement(data["TIMECARD"]["add_manager"]) 
     time.sleep(3)
-    add_manager = driver.find_element_by_xpath(data["TIMECARD"]["dashboard_search"])
-    add_manager.send_keys(data["name_keyword"][1])
+    # add_manager = driver.find_element_by_xpath(data["TIMECARD"]["dashboard_search"])
+    # add_manager.send_keys(data["name_keyword"][1])
+    add_manager = Commands.InputElement(data["TIMECARD"]["dashboard_search"], data["name_keyword"][1])
     add_manager.send_keys(Keys.ENTER)
     time.sleep(2)
-    driver.find_element_by_xpath(data["TIMECARD"]["click_manager"]).click()
+    Commands.ClickElement(data["TIMECARD"]["click_manager"]) 
     time.sleep(2)
-    driver.find_element_by_xpath(data["TIMECARD"]["click_add_manager"]).click()
+    Commands.ClickElement(data["TIMECARD"]["click_add_manager"]) 
 
     try:
         no_user = driver.find_element_by_xpath(data["TIMECARD"]["no_user"])
@@ -1504,25 +1507,27 @@ def manager():
     Logging("- Select permission")
 
     if str(x) == "Select Department/User":
-        search_dept = driver.find_element_by_xpath(data["TIMECARD"]["search_dept"])
-        search_dept.send_keys("Selenium")
+        # search_dept = driver.find_element_by_xpath(data["TIMECARD"]["search_dept"])
+        # search_dept.send_keys("Selenium")
+        search_dept = Commands.InputElement(data["TIMECARD"]["search_dept"], "Selenium")
         search_dept.send_keys(Keys.ENTER)
         time.sleep(3)
-        driver.find_element_by_xpath(data["TIMECARD"]["select_department"]).click()
-        driver.find_element_by_xpath(data["TIMECARD"]["add_dept"]).click()
+        Commands.ClickElement(data["TIMECARD"]["select_department"]) 
+        Commands.ClickElementh(data["TIMECARD"]["add_dept"]) 
         time.sleep(2)
-        driver.find_element_by_xpath(data["TIMECARD"]["save_dept"]).click()
+        Commands.ClickElement(data["TIMECARD"]["save_dept"]) 
         Logging("- Save")
         time.sleep(3)
         try:
             error = driver.find_element_by_xpath(data["TIMECARD"]["error"])
             if error.is_displayed():
                 Logging("=> Duplicate data exists")
-                driver.find_element_by_xpath(data["TIMECARD"]["close_duplicate"]).click()
+                Commands.ClickElement(data["TIMECARD"]["close_duplicate"]) 
 
                 time.sleep(3)
-                search = driver.find_element_by_xpath(data["TIMECARD"]["search_duplicate"])
-                search.send_keys(data["name_keyword"][1])
+                # search = driver.find_element_by_xpath(data["TIMECARD"]["search_duplicate"])
+                # search.send_keys(data["name_keyword"][1])
+                search = Commands.InputElement(data["TIMECARD"]["search_duplicate"], data["name_keyword"][1])
                 search.send_keys(Keys.ENTER)
                 time.sleep(2)
 
@@ -1532,17 +1537,18 @@ def manager():
                 webdriver.ActionChains(driver).click_and_hold(slider).move_to_element(horizontal_bar).perform()
                 webdriver.ActionChains(driver).release().perform()
                 time.sleep(2)
-                driver.find_element_by_xpath(data["TIMECARD"]["detail_duplicate"]).click()
+                Commands.ClickElement(data["TIMECARD"]["detail_duplicate"]) 
                 Logging("- Delete Dept. Manager")
                 time.sleep(2)
-                driver.find_element_by_xpath(data["TIMECARD"]["delete_dept"]).click()
+                Commands.ClickElement(data["TIMECARD"]["delete_dept"]) 
                 Logging("- Click Delete button")
         except:
             Logging("=> Save manager successfully")
             TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["add_manager"]["pass"])
             time.sleep(3)
-            search = driver.find_element_by_xpath(data["TIMECARD"]["search_dept"])
-            search.send_keys(data["name_keyword"][1])
+            # search = driver.find_element_by_xpath(data["TIMECARD"]["search_dept"])
+            # search.send_keys(data["name_keyword"][1])
+            search = Commands.InputElement(data["TIMECARD"]["search_dept"], data["name_keyword"][1])
             search.send_keys(Keys.ENTER)
             time.sleep(2)
 
@@ -1553,7 +1559,7 @@ def manager():
             webdriver.ActionChains(driver).release().perform()
             time.sleep(2)
 
-            driver.find_element_by_xpath(data["TIMECARD"]["view_detail"]).click()
+            Commands.ClickElement(data["TIMECARD"]["view_detail"]) 
             Logging("- View detail")
             time.sleep(2)
 
@@ -1564,25 +1570,26 @@ def manager():
             except:
                 Logging("=> Wrong permission")
 
-            driver.find_element_by_xpath(data["TIMECARD"]["close_detail"]).click()
+            Commands.ClickElement(data["TIMECARD"]["close_detail"]) 
 
-            driver.find_element_by_xpath(data["TIMECARD"]["detail_duplicate"]).click()
+            Commands.ClickElement(data["TIMECARD"]["detail_duplicate"]) 
             Logging("- Delete Dept. Manager")
             time.sleep(2)
-            driver.find_element_by_xpath(data["TIMECARD"]["delete_dept"]).click()
+            Commands.ClickElement(data["TIMECARD"]["delete_dept"]) 
             Logging("- Click Delete button")
     else:
-        driver.find_element_by_xpath(data["TIMECARD"]["save_dept"]).click()
+        Commands.ClickElement(data["TIMECARD"]["save_dept"]) 
         Logging("save")
         time.sleep(3)
         try:
             error = driver.find_element_by_xpath(data["TIMECARD"]["error"])
             if error.is_displayed():
                 Logging("=> Duplicate data exists")
-                driver.find_element_by_xpath(data["TIMECARD"]["close_duplicate"]).click()
+                Commands.ClickElement(data["TIMECARD"]["close_duplicate"]) 
                 time.sleep(3)
-                search = driver.find_element_by_xpath(data["TIMECARD"]["search_duplicate"])
-                search.send_keys(data["name_keyword"][1])
+                # search = driver.find_element_by_xpath(data["TIMECARD"]["search_duplicate"])
+                # search.send_keys(data["name_keyword"][1])
+                search = Commands.InputElement(data["TIMECARD"]["search_duplicate"], data["name_keyword"][1])
                 search.send_keys(Keys.ENTER)
                 time.sleep(2)
 
@@ -1592,17 +1599,18 @@ def manager():
                 webdriver.ActionChains(driver).click_and_hold(slider).move_to_element(horizontal_bar).perform()
                 webdriver.ActionChains(driver).release().perform()
                 time.sleep(2)
-                driver.find_element_by_xpath(data["TIMECARD"]["detail_duplicate"]).click()
+                Commands.ClickElement(data["TIMECARD"]["detail_duplicate"]) 
                 Logging("- Delete Dept. Manager")
                 time.sleep(2)
-                driver.find_element_by_xpath(data["TIMECARD"]["delete_dept"]).click()
+                Commands.ClickElement(data["TIMECARD"]["delete_dept"]) 
                 Logging("- Click Delete button")
         except:
             Logging("=> Save manager successfully")
             TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["add_manager"]["pass"])
             time.sleep(3)
-            search = driver.find_element_by_xpath(data["TIMECARD"]["search_duplicate"])
-            search.send_keys(data["name_keyword"][1])
+            # search = driver.find_element_by_xpath(data["TIMECARD"]["search_duplicate"])
+            # search.send_keys(data["name_keyword"][1])
+            search = Commands.InputElement(data["TIMECARD"]["search_duplicate"], data["name_keyword"][1])
             search.send_keys(Keys.ENTER)
             time.sleep(2)
 
@@ -1613,7 +1621,7 @@ def manager():
             webdriver.ActionChains(driver).release().perform()
             time.sleep(2)
 
-            driver.find_element_by_xpath(data["TIMECARD"]["view_detail"]).click()
+            Commands.ClickElement(data["TIMECARD"]["view_detail"]) 
             Logging("- View detail")
             time.sleep(2)
 
@@ -1624,12 +1632,12 @@ def manager():
             except:
                 Logging("=> Wrong permission")
 
-            driver.find_element_by_xpath(data["TIMECARD"]["close_detail"]).click()
+            Commands.ClickElement(data["TIMECARD"]["close_detail"]) 
 
-            driver.find_element_by_xpath(data["TIMECARD"]["detail_duplicate"]).click()
+            Commands.ClickElement(data["TIMECARD"]["detail_duplicate"]) 
             Logging("- Delete Dept. Manager")
             time.sleep(2)
-            driver.find_element_by_xpath(data["TIMECARD"]["delete_dept"]).click()
+            Commands.ClickElement(data["TIMECARD"]["delete_dept"]) 
             Logging("- Click Delete button")
 
     time.sleep(2)
@@ -1649,20 +1657,21 @@ def total_manager():
     manager.location_once_scrolled_into_view
     manager.click()
     Logging("- Settings: Manager")
-    WebDriverWait(driver,10).until(EC.presence_of_element_located((By.XPATH, data["TIMECARD"]["setting_manager"])))
+    Waits.WaitElementLoaded(10, data["TIMECARD"]["setting_manager"])
     time.sleep(2)
-    driver.find_element_by_xpath(data["TIMECARD"]["total_manager"]).click()
+    Commands.ClickElement(data["TIMECARD"]["total_manager"]) 
     Logging("- Total manager")
     time.sleep(2)
 
-    search_total_manager = driver.find_element_by_xpath(data["TIMECARD"]["search_total_manager"])
-    search_total_manager.send_keys(data["name_keyword"][1])
+    # search_total_manager = driver.find_element_by_xpath(data["TIMECARD"]["search_total_manager"])
+    # search_total_manager.send_keys(data["name_keyword"][1])
+    search_total_manager = Commands.InputElement(data["TIMECARD"]["search_total_manager"], data["name_keyword"][1])
     search_total_manager.send_keys(Keys.ENTER)
 
     time.sleep(5)
     name_manager = driver.find_element_by_xpath(data["TIMECARD"]["exception_user_name"])
     name_manager.click()
-    driver.find_element_by_xpath(data["TIMECARD"]["add_toltal_manager"]).click()
+    Commands.ClickElement(data["TIMECARD"]["add_toltal_manager"]) 
     time.sleep(3)
 
     try:
@@ -1680,9 +1689,9 @@ def total_manager():
     if add_name_manager.is_displayed():
         Logging("- User " + str(name_manager.text) + " display in custom ORG tree")
         add_name_manager.click()
-        driver.find_element_by_xpath("//span[text()='Managers']//following::div//ul//li//div[contains(@class,'first-line') and contains(.,'" + str(name_manager.text) + "')]//following::div[2]").click()
+        Commands.ClickElement("//span[text()='Managers']//following::div//ul//li//div[contains(@class,'first-line') and contains(.,'" + str(name_manager.text) + "')]//following::div[2]") 
         Logging("- Delete Timecard Manager")
-        driver.find_element_by_xpath(data["TIMECARD"]["delete_dept"]).click()
+        Commands.ClickElement(data["TIMECARD"]["delete_dept"]) 
         Logging("- Click Delete button")
 
         time.sleep(2)
@@ -1698,7 +1707,7 @@ def total_manager():
         Logging("- User " + str(name_manager.text) + " don't display in custom ORG tree")
 
 def find_date(today_work_date):
-    driver.find_element_by_xpath(data["TIMECARD"]["work_schedule_page"]).click()
+    Commands.ClickElement(data["TIMECARD"]["work_schedule_page"]) 
     print("- Work schedule")
     time.sleep(3)
     calendar_date = int(len(driver.find_element_by_xpath(data["TIMECARD"]["calendar_date"])))
@@ -1763,7 +1772,7 @@ def find_date(today_work_date):
 
     else:
         print("- No more date to selected in this month")
-        driver.find_element_by_xpath("//*[@id='app']//div[@class='work-schedule-wrapper']//div[contains(@class,'month-navigation')]//*[contains(@class,'feather-chevron-right')]").click()
+        Commands.ClickElement(data["TIMECARD"]["view_next_month"]) 
         print("- View next month")
         time.sleep(2)
         calendar_date = int(len(driver.find_elements_by_xpath("//*[@class='work-schedule-container']//div[@class='row']/div")))
@@ -1795,7 +1804,7 @@ def work_schedule(day_list):
     clockin_time_num = int(clockin_time.text[::1])
 
     clockin_time_update = clockin_time_num + 1
-    driver.find_element_by_xpath("//span[contains(.,'Clock-In Time')]/../following-sibling::div//div[starts-with(@id,'dropTimeWrapper')]//button[starts-with(@id,'btnHours')]/following-sibling::div/button[contains(.,'" + str(clockin_time_update) + "')]").click()
+    Commands.ClickElement("//span[contains(.,'Clock-In Time')]/../following-sibling::div//div[starts-with(@id,'dropTimeWrapper')]//button[starts-with(@id,'btnHours')]/following-sibling::div/button[contains(.,'" + str(clockin_time_update) + "')]") 
 
     clockin_time_up = driver.find_element_by_xpath(data["TIMECARD"]["clockin_time"])
     if int(clockin_time_up.text) == clockin_time_update:
@@ -1811,34 +1820,35 @@ def work_schedule(day_list):
         Logging("- Change time fail")
 
     time.sleep(2)
-    driver.find_element_by_xpath(data["TIMECARD"]["request_work_schedule"]).click()
+    Commands.ClickElementh(data["TIMECARD"]["request_work_schedule"]) 
     Logging("- Request Work Schedule")
     time.sleep(3)
     
     try:
-        noty_success = WebDriverWait(driver,10).until(EC.presence_of_element_located((By.XPATH, data["TIMECARD"]["pre_OT_noty"])))
+        noty_success = Waits.WaitElementLoaded(10, data["TIMECARD"]["pre_OT_noty"])
         noty_event_list = [data["TIMECARD"]["noty_event"][0], data["TIMECARD"]["noty_event"][1]]
         if noty_success.text in noty_event_list:
             Logging("- Request Work Schedule Successfully -> Approval is submitted successfully")
             TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["work_scheduless"]["pass"])
             time.sleep(2)
-            driver.find_element_by_xpath(data["TIMECARD"]["company_timecard_page"]).click()
+            Commands.ClickElement(data["TIMECARD"]["company_timecard_page"]) 
             Logging("- Company timecard: Timecard")
-            WebDriverWait(driver,10).until(EC.presence_of_element_located((By.XPATH, data["TIMECARD"]["company_timecard_wait"])))
+            Waits.WaitElementLoaded(10, data["TIMECARD"]["company_timecard_wait"])
             time.sleep(1)
 
-            driver.find_element_by_xpath(data["TIMECARD"]["click_search"]).click()
-            search_user = driver.find_element_by_xpath(data["TIMECARD"]["search_user"])
-            search_user.send_keys(data["name_keyword"][0])
+            Commands.ClickElement(data["TIMECARD"]["click_search"]) 
+            # search_user = driver.find_element_by_xpath(data["TIMECARD"]["search_user"])
+            # search_user.send_keys(data["name_keyword"][0])
+            search_user = Commands.InputElement(data["TIMECARD"]["search_user"], data["name_keyword"][0])
             search_user.send_keys(Keys.ENTER)
             Logging("- Show ORG successfully")
             time.sleep(1)
 
-            driver.find_element_by_xpath(data["TIMECARD"]["click_org"]).click()
-            WebDriverWait(driver,10).until(EC.presence_of_element_located((By.XPATH, data["TIMECARD"]["company_timecard_wait"])))
+            Commands.ClickElement(data["TIMECARD"]["click_org"]) 
+            Waits.WaitElementLoaded(10, data["TIMECARD"]["company_timecard_wait"])
             time.sleep(2)
-            driver.find_element_by_xpath(data["TIMECARD"]["click_search"]).click()
-            driver.find_element_by_xpath(data["TIMECARD"]["click_data"]).click()
+            Commands.ClickElement(data["TIMECARD"]["click_search"]) 
+            Commands.ClickElement(data["TIMECARD"]["click_data"]) 
             type_approval = driver.find_element_by_xpath(data["TIMECARD"]["type_approval"])
             type_approval.send_keys(Keys.ARROW_DOWN)
             type_approval.send_keys(Keys.ARROW_DOWN)
@@ -1847,7 +1857,7 @@ def work_schedule(day_list):
             Logging("- Select Type approval")
             time.sleep(1)
 
-            driver.find_element_by_xpath(data["TIMECARD"]["select_type_approval"]).click()
+            Commands.ClickElement(data["TIMECARD"]["select_type_approval"]) 
             period_approval = driver.find_element_by_xpath(data["TIMECARD"]["period_approval"])
             period_approval.send_keys(Keys.ARROW_DOWN)
             period_approval.send_keys(Keys.ENTER)
@@ -1874,170 +1884,11 @@ def work_schedule(day_list):
         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["work_scheduless"]["fail"])
 
 
-def work_correction():
-    #Logout
-    time.sleep(4)
-    driver.find_element_by_xpath("//div[contains(@data-tooltip, 'Logout')]").click()
-    #Log in to user acc
-    WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.NAME, "gw_id")))
-    userID = driver.find_element_by_name("gw_id")
-    #userID.send_keys("luu")
-    userID.send_keys("automationtest2")
-    Logging("- Input user ID")
-    #add_data_in_excel(param_excel["checkin"],"p","Input reason late")
-    password = driver.find_element_by_name("gw_pass")
-    #password.send_keys("matkhau1!")
-    password.send_keys(data["user_password"])
-    Logging("- Input user password")
-    driver.find_element_by_xpath(data["TIMECARD"]["sign_in"]).click()
-    Logging("- Click button Sign in")
-    Waits.WaitElementLoaded(10, data["TIMECARD"]["notify"][0])
-    Logging("=> Log in successfully")
-    time.sleep(2)
-    driver.refresh()
-
-    #Clock-in
-    try:
-        tardiness = driver.find_element_by_xpath(data["TIMECARD"]["tardiness"])
-        if tardiness.is_displayed():
-            Commands.InputElement(data["TIMECARD"]["input_reason_late"], data["TIMECARD"]["reason_late"])
-            Logging("- Input reason late")
-            #add_data_in_excel(param_excel["checkin"],"f","Input reason late")
-            driver.find_element_by_xpath(data["TIMECARD"]["save"]).click()
-            Logging("- Save reason late")
-            #add_data_in_excel(param_excel["checkout"],"p","Save reason late")
-            time_clock_in()
-    except:
-        Logging("- Clock-in on time")
-
-    try:
-        #pop up clock-in display
-        pop_up = driver.find_element_by_xpath(data["TIMECARD"]["pop_up"])
-        time.sleep(1)
-        if pop_up.is_displayed():
-            try:
-                clock_in_but = driver.find_element_by_xpath(data["TIMECARD"]["clock_in_but"])
-                clock_in_but.click()
-                Logging("- Clock-in")
-                time.sleep(5)
-                input_reason_late()
-            except:
-                Logging("- Clock-in already")
-            
-    except:
-        #pop up clock-in don't display
-        pop_up_hid = driver.find_element_by_xpath(data["TIMECARD"]["pop_up_hid"])
-        pop_up_hid.click()
-        Logging("- Click show pop up")
-        time.sleep(2)
-        pop_up = driver.find_element_by_xpath(data["TIMECARD"]["pop_up"])
-        if pop_up.is_displayed():
-            try:
-                clock_in_but = driver.find_element_by_xpath(data["TIMECARD"]["clock_in_but"])
-                clock_in_but.click()
-                Logging("- Clock-in")
-                time.sleep(5)
-                input_reason_late()
-            except:
-                Logging("- Clock-in already")
-
-
-    #Request work correction
-    try:
-        driver.find_element_by_xpath("//span[contains(@class, 'text-truncate') and contains(., 'Timesheets')]").click()
-        Waits.WaitElementLoaded(30, "//span[contains(.,'Break time')] ")
-    except:
-        Logging("")
-
-    clockout_scroll = driver.find_element_by_xpath("//div[contains(@class, 'timeline-item  ')]//div[contains(.,'Clock-In')]//div[contains(@class, 'd-flex ')]//span[contains(.,'Request for correction')]")
-    clockout_scroll.location_once_scrolled_into_view
-    time.sleep(2)
-    try:
-        work_correction_status = driver.find_element_by_xpath("//div[contains(@class, 'timeline-item  ')]//div[contains(.,'Clock-In')]//div[contains(@class, 'd-flex ')]//span[contains(.,'Request for correction')]")
-        if work_correction_status.is_displayed():
-            driver.find_element_by_xpath("//div[contains(@class, 'timeline-item  ')]//div[contains(.,'Clock-In')]//div[contains(@class, 'd-flex ')]//span[contains(.,'Request for correction')]").click()
-            time.sleep(3)
-            driver.find_element_by_xpath("//div[contains(@data-lang-id, 'tc_title_status')]/..//button").click()
-            driver.find_element_by_xpath("//span[contains(@data-lang-id, 'On Time')]").click()
-            time_work_correction = driver.find_element_by_xpath("//button[starts-with(@id, 'btnHours')]").click()
-            time.sleep(5)
-            hour_work_correction = driver.find_element_by_xpath("//div[starts-with(@id, 'dropdown')]//div//button[contains(.,'08')]").click()
-            time_work_correction1 = driver.find_element_by_xpath("//button[starts-with(@id, 'btnMin')]").click()
-            time.sleep(3)
-            minute_work_correction = driver.find_element_by_xpath("//div[starts-with(@id, 'dropdown')]//button[starts-with(@id, 'btnMin')]//following-sibling::div//button[contains(.,'00')]").click()
-            #Save
-            driver.find_element_by_xpath("//span[contains(@data-lang-id, 'tc_action_save')]").click()
-            Logging("Request work correction succesfully -> Approval is submitted successfullu")
-            TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["work_correction"]["pass"])
-            time.sleep(3)
-            #Log in to admin acc
-            driver.find_element_by_xpath("//div[contains(@data-tooltip, 'Logout')]").click()
-            WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.NAME, "gw_id")))
-            userID = driver.find_element_by_name("gw_id")
-            #userID.send_keys("luu")
-            userID.send_keys(data["name_keyword"][0])
-            print("- Input user ID")
-            #add_data_in_excel(param_excel["checkin"],"p","Input reason late")
-            password = driver.find_element_by_name("gw_pass")
-            #password.send_keys("matkhau1!")
-            password.send_keys(data["user_password"])
-            print("- Input user password")
-            driver.find_element_by_xpath(data["TIMECARD"]["sign_in"]).click()
-            print("- Click button Sign in")
-            Waits.WaitElementLoaded(10, data["TIMECARD"]["notify"][0])
-            print("=> Log in successfully")
-            #add_data_in_excel(param_excel["checkin"],"p","Log in successfully")
-            time.sleep(2)
-            driver.refresh()
-            time.sleep(5)
-            #Approval page
-            approval_page = driver.find_element_by_xpath("//li//a[contains(@href,'/nhr/hr/timecard/user/approval')]//span[contains(@data-lang-id, 'tc_approval_approval')]").click()
-            
-            wc_status_approve = driver.find_element_by_xpath("//form//div[2]/div/div/div[1]/*[@col-id='type_name']")
-            #Logging (status_approve.text)
-            if wc_status_approve.is_displayed():
-                #Logging (wc_status_approve.text)
-                if wc_status_approve.text == "Clock in/out":
-                    Logging ("- Work corection approval is displayed in approval list")
-                    #Scroll to detail
-                    slider = driver.find_element_by_xpath("//div[@ref='eBodyHorizontalScrollViewport']")
-                    horizontal_bar = driver.find_element_by_xpath("//div[@ref='eHorizontalRightSpacer']")
-                    webdriver.ActionChains(driver).click_and_hold(slider).move_to_element(horizontal_bar).perform()
-                    webdriver.ActionChains(driver).release().perform()
-                    #Logging ("Scroll successfully")
-                    #Click view details
-                    driver.find_element_by_xpath("//div[1]/*[@col-id='id']//div[contains(@class, 'btn-view-detail')]").click()
-                    time.sleep(5)
-                    #Print status column
-                    work_corection_status_app = driver.find_element_by_xpath("//div[contains(@class, 'avatar-wrapper')]/..//div[contains(@class, 'approval-status')]")
-                    ab = work_corection_status_app.text
-                    time.sleep(3)
-                    if ab == "Pending":
-                        Logging ("- Status is not changed => Approve failed")
-                        TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["approve_status_work"]["fail"])
-                    elif ab != "Pending":
-                        Logging ("- Status is changed => Approve successfully")
-                        TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["approve_status_work"]["pass"])
-                else:
-                    Logging ("- Work corection approval is not displayed in approval list")
-            else: 
-                Logging ("- Work corection approval is submitted failed")
-        else:
-            Logging("- Request work correction failed")
-            TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["work_correction"]["fail"])
-    except:
-        Logging("- Request work correction failed")
-        TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["work_correction"]["fail"])
-
-
-
-
-
 
 
 def delete_punch():
     
-    driver.find_element_by_xpath(data["TIMECARD"]["timeline_page"]).click()
+    Commands.ClickElement(data["TIMECARD"]["timeline_page"]) 
     Waits.WaitElementLoaded(40, data["TIMECARD"]["timeline_wait"])
     time.sleep(2)
 
@@ -2045,8 +1896,8 @@ def delete_punch():
     filters_input_dashboard_del.send_keys(Keys.ARROW_DOWN)
     filters_input_dashboard_del.send_keys(Keys.ENTER)
     time.sleep(3)
-    driver.find_element_by_xpath(data["TIMECARD"]["delete"]).click()
-    driver.find_element_by_xpath(data["TIMECARD"]["delete1"]).click()
+    Commands.ClickElement(data["TIMECARD"]["delete"]) 
+    Commands.ClickElement(data["TIMECARD"]["delete1"]) 
     Logging("Delete punch-in successfully")
     driver.refresh()
 
@@ -2070,8 +1921,9 @@ def weekly_status():
 
     try:
         Commands.ClickElement(data["TIMECARD"]["open_search_box"])
-        ws_search = driver.find_element_by_xpath(data["TIMECARD"]["ws_search"])
-        ws_search.send_keys(data["name_keyword"][0])
+        # ws_search = driver.find_element_by_xpath(data["TIMECARD"]["ws_search"])
+        # ws_search.send_keys(data["name_keyword"][0])
+        ws_search = Commands.InputElement(data["TIMECARD"]["ws_search"], data["name_keyword"][0])
         ws_search.send_keys(Keys.ENTER)
         time.sleep(5)
         Commands.ClickElement(data["TIMECARD"]["click_first_choice"]) 
@@ -2281,8 +2133,9 @@ def daily_status():
     try:
         Logging("")
         Commands.ClickElement(data["TIMECARD"]["open_searchbox"]) 
-        search = driver.find_element_by_xpath(data["TIMECARD"]["search"])
-        search.send_keys(data["name_keyword"][0])
+        # search = driver.find_element_by_xpath(data["TIMECARD"]["search"])
+        # search.send_keys(data["name_keyword"][0])
+        search = Commands.InputElement(data["TIMECARD"]["search"], data["name_keyword"][0])
         search.send_keys(Keys.ENTER)
         time.sleep(5)
         Commands.ClickElement(data["TIMECARD"]["click_first_choice"]) 
@@ -2479,7 +2332,7 @@ def timesheet_calendar_check():
         Logging(">> Status: " + out_put_status.text)
         output_status = out_put_status.text
         Commands.ClickElement(data["TIMECARD"]["calendar"]) 
-        WebDriverWait(driver,10).until(EC.presence_of_element_located((By.XPATH, data["TIMECARD"]["wait_calendar"])))
+        Waits.WaitElementLoaded(10, data["TIMECARD"]["wait_calendar"])
         time.sleep(5)
         #Find today's clockin
         today_clockin = driver.find_element_by_xpath("//span[contains(.,'" + output_status + " " + output_clockin + "')]")
@@ -2518,7 +2371,7 @@ def timesheet_calendar_check():
         Logging(">> Status: " + out_put_status_clockout.text)
         output_status_clockout = out_put_status_clockout.text
         Commands.ClickElement(data["TIMECARD"]["calendar"]) 
-        WebDriverWait(driver,10).until(EC.presence_of_element_located((By.XPATH, data["TIMECARD"]["wait_calendar"])))
+        Waits.WaitElementLoaded(10, data["TIMECARD"]["wait_calendar"])
         time.sleep(5)
         #Find today's clockin
         today_clockout = driver.find_element_by_xpath("//span[contains(.,'" + output_status_clockout + " " + output_clockout + "')]")
@@ -2543,7 +2396,7 @@ def timesheet_calendar_check():
     # output_status_clockout = out_put_status_clockout.text
     # time.sleep(1)
     # driver.find_element_by_xpath(data["TIMECARD"]["calendar"]).click()
-    # WebDriverWait(driver,10).until(EC.presence_of_element_located((By.XPATH, data["TIMECARD"]["wait_calendar"])))
+    # Waits.WaitElementLoaded(10, data["TIMECARD"]["wait_calendar"])
     # time.sleep(5)
     # #Find today's clockin
     # today_clockin = driver.find_element_by_xpath("//span[contains(.,'" + output_status + " " + output_clockin + "')]")
@@ -2892,8 +2745,9 @@ def daily_status2(status1,break_number1,working_number1,OT_number1):
         Waits.WaitElementLoaded(30, data["TIMECARD"]["weekly_status_wait"])
 
         Commands.ClickElement(data["TIMECARD"]["open_searchbox"]) 
-        search2 = driver.find_element_by_xpath(data["TIMECARD"]["search2"])
-        search2.send_keys(data["name_keyword"][0])
+        # search2 = driver.find_element_by_xpath(data["TIMECARD"]["search2"])
+        # search2.send_keys(data["name_keyword"][0])
+        search2 = Commands.InputElement(data["TIMECARD"]["search2"], data["name_keyword"][0])
         search2.send_keys(Keys.ENTER)
         time.sleep(5)
         Commands.ClickElement(data["TIMECARD"]["click_first_choice"]) 
@@ -3049,8 +2903,9 @@ def weekly_status2():
         Waits.WaitElementLoaded(30, data["TIMECARD"]["weekly_status_wait"])
 
         Commands.ClickElement(data["TIMECARD"]["open_search_box"]) 
-        ws_search2 = driver.find_element_by_xpath(data["TIMECARD"]["ws_search2"])
-        ws_search2.send_keys(data["name_keyword"][0])
+        # ws_search2 = driver.find_element_by_xpath(data["TIMECARD"]["ws_search2"])
+        # ws_search2.send_keys(data["name_keyword"][0])
+        ws_search2 = Commands.InputElement(data["TIMECARD"]["ws_search2"], data["name_keyword"][0])
         ws_search2.send_keys(Keys.ENTER)
         time.sleep(3)
         Commands.ClickElement(data["TIMECARD"]["click_first_choice"]) 
@@ -3405,8 +3260,9 @@ def company_timecard_reports():
         Waits.WaitElementLoaded(30, data["TIMECARD"]["weekly_status_wait"])
 
         Commands.ClickElement(data["TIMECARD"]["company_setting"]) 
-        ws_search2 = driver.find_element_by_xpath(data["TIMECARD"]["ws_search2"])
-        ws_search2.send_keys(data["name_keyword"][0])
+        # ws_search2 = driver.find_element_by_xpath(data["TIMECARD"]["ws_search2"])
+        # ws_search2.send_keys(data["name_keyword"][0])
+        ws_search2 = Commands.InputElement(data["TIMECARD"]["ws_search2"], data["name_keyword"][0])
         ws_search2.send_keys(Keys.ENTER)
         time.sleep(5)
         Commands.ClickElement(data["TIMECARD"]["click_first_choice"]) 
@@ -3781,7 +3637,7 @@ def company_timecard_reports():
     try:
         Commands.ClickElement(data["TIMECARD"]["dashboard_page"]) 
         Waits.WaitElementLoaded(10, data["TIMECARD"]["dashboard_wait"])
-        settlement = WebDriverWait(driver,10).until(EC.presence_of_element_located((By.XPATH, data["TIMECARD"]["dashboard_settlement"])))
+        settlement = Waits.WaitElementLoaded(10, data["TIMECARD"]["dashboard_settlement"])
         settlement.location_once_scrolled_into_view
 
         Logging("")
@@ -4010,8 +3866,9 @@ def timeline():
             #Logging("False")
             PrintRed(">>>Cant open organization box") 
         
-        tl_search2 = driver.find_element_by_xpath(data["TIMECARD"]["ws_search2"])
-        tl_search2.send_keys(data["name_keyword"][0])
+        # tl_search2 = driver.find_element_by_xpath(data["TIMECARD"]["ws_search2"])
+        # tl_search2.send_keys(data["name_keyword"][0])
+        tl_search2 = Commands.InputElement(data["TIMECARD"]["ws_search2"], data["name_keyword"][0])
         tl_search2.send_keys(Keys.ENTER)
 
         time.sleep(5)
@@ -4145,87 +4002,6 @@ def timeline():
         #PrintRed(">>>Data is not displayed")
 
 
-def work_shift():
-    time.sleep(5)
-    Commands.ClickElement(data["TIMECARD"]["work_shifts"]) 
-    TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["access_workshift_page"]["pass"])
-
-    time.sleep(5)
-    Commands.ClickElement(data["TIMECARD"]["work_shift_search"]) 
-    wss_search2 = driver.find_element_by_xpath(data["TIMECARD"]["ws_search2"])
-    wss_search2.send_keys(data["name_keyword"][0])
-    wss_search2.send_keys(Keys.ENTER)
-    time.sleep(3)
-    Commands.ClickElement(data["TIMECARD"]["click_first_choice"]) 
-    Commands.ClickElement(data["TIMECARD"]["work_shift_search"]) 
-
-    Logging("")
-    Logging("***Work Shift Default***")
-    time.sleep(3)
-    working_method = driver.find_element_by_xpath(data["TIMECARD"]["working_method"])
-    Logging("Work method: " + working_method.text)
-
-    star_date = driver.find_element_by_xpath(data["TIMECARD"]["star_date"])
-    Logging("Star date: " + star_date.text)
-
-    work_days = driver.find_element_by_xpath(data["TIMECARD"]["work_days"])
-    Logging("Work days: " + work_days.text)
-    work_days_time = work_days.text
-    work_days_hour = work_days_time.split(" ")[0]
-    work_days_number = int(work_days_hour)
-    Logging("Work days after change to decimal: " + str(work_days_number))
-
-    working_time_per_day = driver.find_element_by_xpath(data["TIMECARD"]["working_time_per_day"])
-    Logging("Working time per day: " + working_time_per_day.text)
-    working_time_per_day_time = working_time_per_day.text
-    working_time_per_day_hour = working_time_per_day_time.split(" ")[0]
-    working_time_per_day_number = int(working_time_per_day_hour)
-    Logging("Working time per day after change to decimal: " + str(working_time_per_day_number))
-
-    max_working_time = driver.find_element_by_xpath(data["TIMECARD"]["max_working_time"])
-    Logging("Max working time per day: " + max_working_time.text)
-    max_working_time_time = max_working_time.text
-    max_working_time_hour = max_working_time_time.split(" ")[0]
-    max_working_time_number = int(max_working_time_hour)
-    Logging("Max working time per day after change to decimal: " + str(max_working_time_number))
-
-    working_time_per_week = driver.find_element_by_xpath(data["TIMECARD"]["working_time_per_week"])
-    Logging("Working time per week: " + working_time_per_week.text)
-    working_time_per_week_time = working_time_per_week.text
-    working_time_per_week_hour = working_time_per_week_time.split(" ")[0]
-    working_time_per_week_number = int(working_time_per_week_hour)
-    Logging("Working time per week after change to decimal: " + str(working_time_per_week_number))
-
-    time.sleep(3)
-    driver.find_element_by_xpath("//*[@col-id='id']//div[contains(@class,'cursor-pointer')]").click()
-    time.sleep(3)
-    driver.find_element_by_xpath("//button[contains(@type,'button') and contains(.,'Add')]").click()
-    time.sleep(3)
-    #Select work type
-    select_work_type = driver.find_element_by_xpath(data["TIMECARD"]["select_work_type"]).click()
-    select_work_type_input = driver.find_element_by_xpath(data["TIMECARD"]["select_work_type_input"])
-    select_work_type_input.send_keys(Keys.ENTER)
-
-    #Select work place
-    select_work_type = driver.find_element_by_xpath("//span[contains(.,'Work Place')]/../..//div[contains(@class,'placeholder')]").click()
-    select_work_type_input = driver.find_element_by_xpath("//span[contains(.,'Work Place')]/../..//div[contains(@class,'placeholder')]/..//input[starts-with(@id, 'react-select')]")
-    select_work_type_input.send_keys(Keys.ENTER)
-
-    #Select end date
-    select_end_date = driver.find_element_by_xpath("//span[contains(.,'Use')]").click()
-
-    #Select work type2
-    select_work_type2 = driver.find_element_by_xpath("//div[contains(@class,'select-wrapper')]//div[contains(@class,'placeholder')]").click()
-    select_work_type_input2 = driver.find_element_by_xpath("//div[contains(@class,'placeholder')]/..//input")
-    select_work_type_input2.send_keys(Keys.ENTER)
-    time.sleep(2)
-
-    #Save
-    #driver.find_element_by_xpath("//button[contains(@form,'form-add-shift-id')]").click()
-    # Logging("Setup new work type successfully")
-    # TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["work_type"]["pass"])
-
-
 def work_place():
     try:
         time.sleep(7)
@@ -4236,9 +4012,10 @@ def work_place():
 
         Commands.ClickElement(data["TIMECARD"]["open_work_place_box"]) 
         #Input name
-        input_name = driver.find_element_by_xpath(data["TIMECARD"]["input_name"])
-        #input_name.clear()
-        input_name.send_keys("test01.06")
+        # input_name = driver.find_element_by_xpath(data["TIMECARD"]["input_name"])
+        # #input_name.clear()
+        # input_name.send_keys("test01.06")
+        input_name = Commands.InputElement(data["TIMECARD"]["input_name"], "test01.06")
         input_name.send_keys(Keys.ENTER)
         time.sleep(3)
 
@@ -4427,7 +4204,7 @@ def report_weekly():
         Commands.ClickElement(data["TIMECARD"]["dashboard_page"]) 
         Waits.WaitElementLoaded(10, data["TIMECARD"]["dashboard_wait"])
         #Device - Default
-        device_scroll = WebDriverWait(driver,30).until(EC.presence_of_element_located((By.XPATH, data["TIMECARD"]["dashboard_settlement"])))
+        device_scroll = Waits.WaitElementLoaded(30, data["TIMECARD"]["dashboard_settlement"])
         device_scroll.location_once_scrolled_into_view
         time.sleep(3)
 
@@ -5842,8 +5619,9 @@ def dashboard():
         # except:
         #     Logging("False")
         
-        tl_search2 = driver.find_element_by_xpath(data["TIMECARD"]["ws_search2"])
-        tl_search2.send_keys(data["name_keyword"][0])
+        # tl_search2 = driver.find_element_by_xpath(data["TIMECARD"]["ws_search2"])
+        # tl_search2.send_keys(data["name_keyword"][0])
+        tl_search2 = Commands.InputElement(data["TIMECARD"]["ws_search2"], data["name_keyword"][0])
         tl_search2.send_keys(Keys.ENTER)
         time.sleep(5)
         Commands.ClickElement(data["TIMECARD"]["search_users"]) 
@@ -5951,8 +5729,9 @@ def dashboard():
         Logging("")
         Logging("***Staff working status - Before change work status***")
         Commands.ClickElement(data["TIMECARD"]["searchname2"]) 
-        searchname = driver.find_element_by_xpath(data["TIMECARD"]["searchname"])
-        searchname.send_keys(data["name_keyword"][0])
+        # searchname = driver.find_element_by_xpath(data["TIMECARD"]["searchname"])
+        # searchname.send_keys(data["name_keyword"][0])
+        searchname = Commands.InputElement(data["TIMECARD"]["searchname"], data["name_keyword"][0])
         searchname.send_keys(Keys.ENTER)
         
         time.sleep(5)
@@ -6199,8 +5978,9 @@ def dashboard():
         Commands.ClickElement(data["TIMECARD"]["weekly_status_page"]) 
         time.sleep(10)
         Commands.ClickElement(data["TIMECARD"]["open_search_box"]) 
-        ws_search3 = driver.find_element_by_xpath(data["TIMECARD"]["ws_search3"])
-        ws_search3.send_keys(data["name_keyword"][0])
+        # ws_search3 = driver.find_element_by_xpath(data["TIMECARD"]["ws_search3"])
+        # ws_search3.send_keys(data["name_keyword"][0])
+        ws_search3 = Commands.InputElement(data["TIMECARD"]["ws_search3"], data["name_keyword"][0])
         ws_search3.send_keys(Keys.ENTER)
         time.sleep(5)
         Commands.ClickElement(data["TIMECARD"]["click_first_choice"]) 
@@ -6447,7 +6227,7 @@ def dashboard():
         Commands.ClickElement(data["TIMECARD"]["dashboard_page"]) 
         Waits.WaitElementLoaded(10, data["TIMECARD"]["dashboard_wait"])
         Logging("***Device - Default")
-        device_scroll = WebDriverWait(driver,30).until(EC.presence_of_element_located((By.XPATH, data["TIMECARD"]["dashboard_settlement"])))
+        device_scroll = Waits.WaitElementLoaded(30, data["TIMECARD"]["dashboard_settlement"])
         device_scroll.location_once_scrolled_into_view
         time.sleep(3)
 
@@ -7307,8 +7087,9 @@ def dashboard():
         except:
             Logging("Can't open the organization box")
         
-        tl_search2 = driver.find_element_by_xpath(data["TIMECARD"]["tl_search2"])
-        tl_search2.send_keys(data["name_keyword"][0])
+        # tl_search2 = driver.find_element_by_xpath(data["TIMECARD"]["tl_search2"])
+        # tl_search2.send_keys(data["name_keyword"][0])
+        tl_search2 = Commands.InputElement(data["TIMECARD"]["tl_search2"], data["name_keyword"][0])
         tl_search2.send_keys(Keys.ENTER)
         time.sleep(5)
         Commands.ClickElements(data["TIMECARD"]["search_users"])
@@ -7337,8 +7118,9 @@ def dashboard():
         Commands.ClickElements(data["TIMECARD"]["add_schedu"])
         #Select user
         Commands.ClickElements(data["TIMECARD"]["user"])
-        dashboard_search = driver.find_element_by_xpath(data["TIMECARD"]["dashboard_search"])
-        dashboard_search.send_keys(data["name_keyword"][0])
+        # dashboard_search = driver.find_element_by_xpath(data["TIMECARD"]["dashboard_search"])
+        # dashboard_search.send_keys(data["name_keyword"][0])
+        dashboard_search = Commands.InputElement(data["TIMECARD"]["dashboard_search"], data["name_keyword"][0])
         dashboard_search.send_keys(Keys.ENTER)
         time.sleep(2)
         Commands.ClickElements(data["TIMECARD"]["fancy_tree"])
@@ -7702,17 +7484,18 @@ def basic_gps():
     Logging("***ADD GPS***")
     Commands.ClickElements(data["TIMECARD"]["add_gps"])
     time.sleep(3)
-    input_name_gps = driver.find_element_by_xpath(data["TIMECARD"]["input_name_gps"])
-    input_name_gps.send_keys("hanhtest")
-
+    # input_name_gps = driver.find_element_by_xpath(data["TIMECARD"]["input_name_gps"])
+    # input_name_gps.send_keys("hanhtest")
+    input_name_gps = Commands.InputElement(data["TIMECARD"]["input_name_gps"], "hanhtest")
     select_work_place = driver.find_element_by_xpath(data["TIMECARD"]["select_work_place"])
     select_work_place.click()
     time.sleep(3)
     #select_work_place.send_keys(Keys.ARROW_DOWN)
     select_work_place.send_keys(Keys.ENTER)
 
-    input_address = driver.find_element_by_xpath(data["TIMECARD"]["input_address"])
-    input_address.send_keys("400 Nguyễn Thị Thập")
+    # input_address = driver.find_element_by_xpath(data["TIMECARD"]["input_address"])
+    # input_address.send_keys("400 Nguyễn Thị Thập")
+    input_address = Commands.InputElement(data["TIMECARD"]["input_address"], "400 Nguyễn Thị Thập")
     time.sleep(3)
     input_address.send_keys(Keys.ENTER)
     time.sleep(3)
@@ -7801,8 +7584,9 @@ def basic_gps():
     #Research field
     Logging(" ")
     try:
-        search_field = driver.find_element_by_xpath(data["TIMECARD"]["search_field"])
-        search_field.send_keys("test edit")
+        # search_field = driver.find_element_by_xpath(data["TIMECARD"]["search_field"])
+        # search_field.send_keys("test edit")
+        search_field = Commands.InputElement(data["TIMECARD"]["search_field"], "test edit")
         time.sleep(3)
         search_field.send_keys(Keys.ENTER)
         time.sleep(3)
@@ -7850,8 +7634,9 @@ def exception_users():
     exception_users = Commands.ClickElements(data["TIMECARD"]["exception_users"])
     Waits.WaitElementLoaded(10, data["TIMECARD"]["exception_users_wait"])
     time.sleep(2)
-    input_exc_user = driver.find_element_by_xpath(data["TIMECARD"]["input_exc_user"])
-    input_exc_user.send_keys(data["name_keyword"][0])
+    # input_exc_user = driver.find_element_by_xpath(data["TIMECARD"]["input_exc_user"])
+    # input_exc_user.send_keys(data["name_keyword"][0])
+    input_exc_user = Commands.InputElement(data["TIMECARD"]["input_exc_user"], data["name_keyword"][0])
     time.sleep(2)
     input_exc_user.send_keys(Keys.ENTER)
     time.sleep(3)
@@ -7894,8 +7679,9 @@ def outside_users():
     Logging(" ")
     Logging("*** ADD OUTSIDE ATTENDANCE AVAILABLE USERS")
 
-    input_out_user = driver.find_element_by_xpath(data["TIMECARD"]["input_out_user"])
-    input_out_user.send_keys(data["name_keyword"][0])
+    # input_out_user = driver.find_element_by_xpath(data["TIMECARD"]["input_out_user"])
+    # input_out_user.send_keys(data["name_keyword"][0])
+    input_out_user = Commands.InputElement(data["TIMECARD"]["input_out_user"], data["name_keyword"][0])
     time.sleep(2)
     input_out_user.send_keys(Keys.ENTER)
     time.sleep(3)
@@ -7944,8 +7730,9 @@ def arbitrary_decision():
 
     arbitrary_user_select = Commands.ClickElements(data["TIMECARD"]["arbitrary_user_select"])
     time.sleep(2)
-    input_arbitrary_user = driver.find_element_by_xpath(data["TIMECARD"]["input_arbitrary_user"])
-    input_arbitrary_user.send_keys(data["name_keyword"][0])
+    # input_arbitrary_user = driver.find_element_by_xpath(data["TIMECARD"]["input_arbitrary_user"])
+    # input_arbitrary_user.send_keys(data["name_keyword"][0])
+    input_arbitrary_user = Commands.InputElement(data["TIMECARD"]["input_arbitrary_user"], data["name_keyword"][0])
     time.sleep(2)
     input_arbitrary_user.send_keys(Keys.ENTER)
     time.sleep(3)
@@ -7983,72 +7770,7 @@ def arbitrary_decision():
         Logging("- User " + str(arbitrary_user_name.text) + " isn't display in available users list")
 
 
-def OT_post_midnight():
-    time.sleep(5)
-    # midnight_popup = driver.find_element_by_xpath("//span[contains(.,'Confirm Nightwork')]")
-    # if midnight_popup.is_displayed():
-    #     Logging("Nightwork popup is display")
-    #     click_confirm = driver.find_element_by_xpath("//span[contains(.,'Yes, confirm it!')]").click()
-    # else:
-    #     Logging("No nightwork")
 
-    try:
-        midnight_popup = driver.find_element_by_xpath("//span[contains(.,'Confirm Nightwork')]")
-        if midnight_popup.is_displayed():
-            Logging("Nightwork popup is display")
-            click_confirm = driver.find_element_by_xpath("//span[contains(@data-lang-id, 'Yes, confirm it!')]").click()
-            click_apply_OT = driver.find_element_by_xpath("//span[contains(@data-lang-id, 'tc_action_apply_ot')]").click()
-            input_memo_OT = driver.find_element_by_xpath("//textarea[contains(@class, 'form-control')]")
-            input_memo_OT.send_keys("This is a test")
-            time.sleep(3)
-            scroll_apply_OT = driver.find_element_by_xpath("//span[contains(@data-lang-id, 'tc_action_apply')]")
-            scroll_apply_OT.location_once_scrolled_into_view
-            time.sleep(2)
-            #Export data
-            approver_data = driver.find_element_by_xpath("//div[contains(@class, 'approver-wrapper ')]//li/div/div[1]").text
-            Logging ("Approver: " + approver_data)
-            referrer_data = driver.find_element_by_xpath("//div[contains(@class, 'referer-wrapper')]//li/div/div[1]").text
-            Logging ("Referrer: " + referrer_data)
-            time.sleep(3)
-            apply_OT_confirm = driver.find_element_by_xpath("//span[contains(@data-lang-id, 'tc_action_apply')]/..").click()
-            Logging("Apply OT successfully - Approval is submitted successfully")
-            time.sleep(3)
-            #Approval page
-            approval_page = driver.find_element_by_xpath("//li//a[contains(@href,'/nhr/hr/timecard/user/approval')]//span[contains(@data-lang-id, 'tc_approval_approval')]").click()
-            
-            status_approve = driver.find_element_by_xpath("//form//div[2]/div/div/div[1]/*[@col-id='type_name']")
-            #Logging (status_approve.text)
-            if status_approve.is_displayed():
-                Logging (status_approve.text)
-                if status_approve.text == "Over Time":
-                    Logging ("Approval is displayed in approval list")
-                    #Reject approve
-                    driver.find_element_by_xpath("//div[contains(@class, 'select-approval-status')]//div").click()
-                    driver.find_element_by_xpath("//div[contains(@data-lang-id, 'tc_action_reject')]").click()
-                    time.sleep(3)
-                    #Scroll to detail
-                    slider = driver.find_element_by_xpath("//div[@ref='eBodyHorizontalScrollViewport']")
-                    horizontal_bar = driver.find_element_by_xpath("//div[@ref='eHorizontalRightSpacer']")
-                    webdriver.ActionChains(driver).click_and_hold(slider).move_to_element(horizontal_bar).perform()
-                    webdriver.ActionChains(driver).release().perform()
-                    #Logging ("Scroll successfully")
-                    #Click view details
-                    driver.find_element_by_xpath("//div[1]/*[@col-id='id']//div[contains(@class, 'btn-view-detail')]").click()
-
-                    #Print status column
-                    postOT_event_status = driver.find_element_by_xpath("//div[contains(@class, 'avatar-wrapper')]/..//div[contains(@class, 'approval-status')]").text
-                    if postOT_event_status.text == "Pending":
-                        Logging ("Status is not changed => Approve failed")
-                    elif postOT_event_status.text == "Reject":
-                        Logging ("Status is changed => Approve successfully")
-                else:
-                    Logging ("Approval is not displayed in approval list")
-            else: 
-                Logging ("Approval is submitted failed")
-        else:
-            Logging("Apply OT failed - Approval is submitted failed")
-    except:
-            Logging("No nightwork")
     
 
 
