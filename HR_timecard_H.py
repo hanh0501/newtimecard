@@ -622,7 +622,8 @@ def add_event2():
     work_correction_scroll = driver.find_element_by_xpath(data["TIMECARD"]["work_correction_scroll"])
     work_correction_scroll.location_once_scrolled_into_view
     time.sleep(2)
-    EV_list = int(len(driver.find_elements_by_xpath(data["TIMECARD"]["EV_list"])))
+    EV_list = Functions.GetListLength(data["TIMECARD"]["EV_list"])
+
     approval_EV_list = []
     i = 0
     for i in range(EV_list):
@@ -723,7 +724,7 @@ def add_event2():
                                     #Logging("Open successfully")
                                     time.sleep(5)
                                     #Click random (Reject, Approve)
-                                    approve_status_list = (int(len(driver.find_element_by_xpath(data["TIMECARD"]["approve_status_list"]))))
+                                    approve_status_list = Functions.GetListLength(data["TIMECARD"]["approve_status_list"])
                                     list_approve_status = []
                                     i=0
                                     for i in range(approve_status_list):
@@ -829,7 +830,7 @@ def add_event2():
                                 #Logging("Open successfully")
                                 time.sleep(5)
                                 #Click random (Reject, Approve)
-                                approve_status_list = (int(len(driver.find_element_by_xpath(data["TIMECARD"]["approve_status_list"]))))
+                                approve_status_list = Functions.GetListLength(data["TIMECARD"]["approve_status_list"])
                                 list_approve_status = []
                                 i=0
                                 for i in range(approve_status_list):
@@ -1236,8 +1237,7 @@ def working_status():
         Logging(" ")
 
 def add_working_status():
-    working_status_list = (int(len(driver.find_elements_by_xpath(data["TIMECARD"]["working_status"]))))
-
+    working_status_list = Functions.GetListLength(data["TIMECARD"]["working_status"])
     list_working_status = []
     i=0
     for i in range(working_status_list):
@@ -1253,7 +1253,7 @@ def add_working_status():
 
     Commands.ClickElement(data["TIMECARD"]["dropdown_time"]) 
     time.sleep(3)
-    status_time_list = (int(len(driver.find_elements_by_xpath(data["TIMECARD"]["status_time_list"]))))
+    status_time_list = Functions.GetListLength(data["TIMECARD"]["status_time_list"])
 
     list_status_time = []
     y = 0
@@ -1321,7 +1321,7 @@ def approval_OT():
     OT = Waits.WaitElementLoaded(10, data["TIMECARD"]["OT_scroll"])
     OT.location_once_scrolled_into_view
     time.sleep(2)
-    OT_list = int(len(driver.find_elements_by_xpath(data["TIMECARD"]["OT_list"])))
+    OT_list = Functions.GetListLength(data["TIMECARD"]["OT_list"])
 
     approval_OT_list = []
     i = 0
@@ -1378,7 +1378,7 @@ def approval_OT():
     time.sleep(3)
 
     Commands.ClickElement(data["TIMECARD"]["filter"]) 
-    filters_OT_list = int(len(driver.find_elements_by_xpath(data["TIMECARD"]["filters_OT_list"])))
+    filters_OT_list = Functions.GetListLength(data["TIMECARD"]["filters_OT_list"])
 
     list_filters_OT = []
     y = 0
@@ -1492,7 +1492,7 @@ def manager():
     except:
         Logging("- Add user from ORG successfully")
 
-    permission_list = int(len(driver.find_elements_by_xpath("//*[starts-with(@id,'right-sidebar')]//div[contains(text(),'Select department/user')]/following-sibling::div/div/div")))
+    permission_list = Functions.GetListLength("//*[starts-with(@id,'right-sidebar')]//div[contains(text(),'Select department/user')]/following-sibling::div/div/div")
 
     list_permission = []
     i = 0
@@ -1710,7 +1710,7 @@ def find_date(today_work_date):
     Commands.ClickElement(data["TIMECARD"]["work_schedule_page"]) 
     print("- Work schedule")
     time.sleep(3)
-    calendar_date = int(len(driver.find_element_by_xpath(data["TIMECARD"]["calendar_date"])))
+    calendar_date = Functions.GetListLength(data["TIMECARD"]["calendar_date"])
 
     list_date = []
     i = 0
@@ -1775,7 +1775,7 @@ def find_date(today_work_date):
         Commands.ClickElement(data["TIMECARD"]["view_next_month"]) 
         print("- View next month")
         time.sleep(2)
-        calendar_date = int(len(driver.find_elements_by_xpath("//*[@class='work-schedule-container']//div[@class='row']/div")))
+        calendar_date = Functions.GetListLength("//*[@class='work-schedule-container']//div[@class='row']/div")
 
         list_date = []
         i = 0
@@ -7776,22 +7776,22 @@ def arbitrary_decision():
 
 
 def timecard():
-    nightwork()
-    breaktime()
-    clock_out()
-    output_clockin,output_clockout,break_time,working_time,clock_in_time,work_method_up,today_work_date, OT_time = check_time()
-    date_clock_in = timesheet_list(output_clockin,output_clockout,break_time,working_time, OT_time)
-    #report_list1(output_clockin,output_clockout,break_time,working_time, OT_time, date_clock_in)
-    add_event2()
-    view_details()
+    # nightwork()
+    # breaktime()
+    # clock_out()
+    # output_clockin,output_clockout,break_time,working_time,clock_in_time,work_method_up,today_work_date, OT_time = check_time()
+    # date_clock_in = timesheet_list(output_clockin,output_clockout,break_time,working_time, OT_time)
+    # #report_list1(output_clockin,output_clockout,break_time,working_time, OT_time, date_clock_in)
+    # add_event2()
+    # view_details()
     working_status()
     
     # #day_list = find_date(today_work_date)
     # #work_schedule(day_list)
-    manager()
-    total_manager()
-    # # # work_correction()
-    delete_punch()
+    # manager()
+    # total_manager()
+    # # # # work_correction()
+    # delete_punch()
 
 def time_card():
     # # # # Napproval_OT()
