@@ -2768,7 +2768,8 @@
         "thursday": "//*[@col-id='day_3']//div[contains(@class,'cursor-pointer')]/span",
         "friday": "//*[@col-id='day_4']//div[contains(@class,'cursor-pointer')]/span",
         "saturday": "//*[@col-id='day_5']//div[contains(@class,'cursor-pointer')]/span",
-        "sunday2": "//*[@col-id='day_6']//div[contains(@class,'cursor-pointer')]/span",
+        "sunday": "//*[@col-id='day_6']//div[contains(@class,'cursor-pointer')]/span",
+        "total": "//span[contains(@class,'td-sum-of-time')]",
         "search": "//input[contains(@class,'form-control')]",
         "work_status": "//div[contains(@class,'label-rounded')]",
         "dailystatus_clockin": "//div[contains(@class,'ag-center-cols-viewport')]//*[@col-id='clock_in_title']/div[1]",
@@ -2792,7 +2793,7 @@
         "Minute": "//div[starts-with(@id, 'dropdown')]//button[starts-with(@id, 'btnMin')]//following-sibling::div//button[contains(.,'00')]",
         "Status": "//span[contains(.,'On Time')]",
         "Memo": "//div[contains(@class, 'modal-content')]//div[5]//textarea[contains(@name, 'memo')]",
-        "Save": "//span[contains(.,'Save')]]",
+        "Save": "//span[contains(.,'Save')]",
         "Edit2": "//div[contains(@class, 'admin_status')]//div[contains(@class, 'timeline-item  ')]//div[contains(.,'Clock-Out')]//div[contains(@class, 'd-flex ')]//span[1]//div[contains(@class, 'cursor-pointer')]",
         "Time2": "//button[starts-with(@id, 'btnHours')]",
         "Time3": "//div[starts-with(@id, 'dropdown')]//div//button[contains(.,'14')]",
@@ -3201,6 +3202,8 @@
         "detail_duplicate": "//span[contains(@ref,'eCellValue')]//div[contains(@class,'btn-view-detail')][2]",
         "delete_dept": "//button/span[contains(@data-lang-id, 'tc_action_delete')]",
         "view_detail": "//span[contains(@ref,'eCellValue')]//div[contains(@class,'btn-view-detail')][1]",
+        "exit_button": "//div[@class='modal-header']//button",
+        "view_next_month": "//*[@id='app']//div[@class='work-schedule-wrapper']//div[contains(@class,'month-navigation')]//*[contains(@class,'feather-chevron-right')]",
         "close_detail": "//*[starts-with(@id,'right-sidebar')][1]//div[contains(@class,'close-btn')]",
         "no_tice_success": "//*[starts-with(@id,'noty_bar')]//div[contains(text(),'Delete success')]",
         "total_manager": "//*[@id='app']//a[contains(@href,'/nhr/hr/timecard/admin/manager/admin')]/span",
@@ -3252,6 +3255,7 @@
         "work_place": "//div[contains(@class,'list-work-places')]//li[1]/a/div[1]",
         "add_holiday": "//div[contains(@class,'pos-absolute')]//div[2]/div[1]/button",
         "holiday_name": "//*[@id='form-holiday-setting']//*[@col-id='name']/div/input",
+        "edit_name": "//*[@col-id='name']/div/input",
         "del_holiday": "//button[starts-with(@id, 'btn-delete')]",
         "del_work_place": "//div[contains(@class,'list-work-places')]//li[contains(@class,'active')]//a/div[2]",
         "report_weekly_page": "//span[contains(@data-lang-id, 'tc_cal_weekly')]",
@@ -3269,7 +3273,7 @@
         "fancy_tree": "//span[contains(@class,'fancytree-title')]",
         "org_tree": "//span[contains(@data-lang-id,'tc_component_orgtree')]/../a",
         "click_save": "//div[contains(@class, 'modal-content')]//span[contains(@data-lang-id, 'tc_action_save')]",
-        "switch_to_admin": "/span[contains(.,'Switch to Admin')]",
+        "switch_to_admin": "//span[contains(.,'Switch to Admin')]",
         "switch_to_admin_wait": "//span[contains(.,'Missing Time clock')]",
         "view_more": "//span[contains(.,'Working Status')]/../.. /..//span[contains(@data-lang-id,'tc_status_view_more')]",
         "dash_board_wait": "//span[contains(@data-lang-id,'tc_dashboard_my_board')]",
@@ -3282,8 +3286,8 @@
         "save_edit_gps": "//span[contains(@data-lang-id, 'tc_action_save')]/..",
         "click_del_gps": "//form//div[1]/div[5]/div/span[contains(@ref, 'eCellValue')]/div/div/div/div[2]/div",
         "open_del_gps": "//button//span[contains(@data-lang-id, 'tc_action_delete')]",
-        "Tim_e": "//button[starts-with(@id, 'btnHours')]"
-
+        "company_setting": "//div[contains(@class,'company-statistic-setting')]/div/div[2]/div/div[1]",
+        "click_save_message": "//div[contains(@class,'content-body')]//button[2]"
     }
 }
 

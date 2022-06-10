@@ -1513,7 +1513,7 @@ def manager():
         search_dept.send_keys(Keys.ENTER)
         time.sleep(3)
         Commands.ClickElement(data["TIMECARD"]["select_department"]) 
-        Commands.ClickElementh(data["TIMECARD"]["add_dept"]) 
+        Commands.ClickElement(data["TIMECARD"]["add_dept"]) 
         time.sleep(2)
         Commands.ClickElement(data["TIMECARD"]["save_dept"]) 
         Logging("- Save")
@@ -1548,7 +1548,7 @@ def manager():
             time.sleep(3)
             # search = driver.find_element_by_xpath(data["TIMECARD"]["search_dept"])
             # search.send_keys(data["name_keyword"][1])
-            search = Commands.InputElement(data["TIMECARD"]["search_dept"], data["name_keyword"][1])
+            search = Commands.InputElement(data["TIMECARD"]["search_duplicate"], data["name_keyword"][1])
             search.send_keys(Keys.ENTER)
             time.sleep(2)
 
@@ -1671,6 +1671,8 @@ def total_manager():
     time.sleep(5)
     name_manager = driver.find_element_by_xpath(data["TIMECARD"]["exception_user_name"])
     name_manager.click()
+    name_manager_text = Functions.GetElementText(data["TIMECARD"]["exception_user_name"])
+
     Commands.ClickElement(data["TIMECARD"]["add_toltal_manager"]) 
     time.sleep(3)
 
@@ -1684,12 +1686,12 @@ def total_manager():
     except:
         Logging("=> Add Timecard Manager Fail")
         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["add_total_manager"]["fail"])
-
-    add_name_manager = driver.find_element_by_xpath("//span[text()='Managers']//following::div//ul//li//div[contains(@class,'first-line') and contains(.,'" + str(name_manager.text) + "')]")
+    
+    add_name_manager = driver.find_element_by_xpath("//span[text()='Managers']//following::div//ul//li//div[contains(@class,'first-line') and contains(.,'" + name_manager_text + "')]")
     if add_name_manager.is_displayed():
-        Logging("- User " + str(name_manager.text) + " display in custom ORG tree")
+        Logging("- User " + name_manager_text + " display in custom ORG tree")
         add_name_manager.click()
-        Commands.ClickElement("//span[text()='Managers']//following::div//ul//li//div[contains(@class,'first-line') and contains(.,'" + str(name_manager.text) + "')]//following::div[2]") 
+        Commands.ClickElement("//span[text()='Managers']//following::div//ul//li//div[contains(@class,'first-line') and contains(.,'" + name_manager_text + "')]//following::div[2]") 
         Logging("- Delete Timecard Manager")
         Commands.ClickElement(data["TIMECARD"]["delete_dept"]) 
         Logging("- Click Delete button")
@@ -1704,7 +1706,7 @@ def total_manager():
             Logging("=> Delete Timecard Manager Fail")
             TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["delete_total_manager"]["fail"])
     else:
-        Logging("- User " + str(name_manager.text) + " don't display in custom ORG tree")
+        Logging("- User " + name_manager_text + " don't display in custom ORG tree")
 
 def find_date(today_work_date):
     Commands.ClickElement(data["TIMECARD"]["work_schedule_page"]) 
@@ -6882,10 +6884,10 @@ def dashboard():
         #Swtich to Admin
         Logging("")
         Logging("***ADMIN PAGE***")
-        Commands.ClickElements(data["TIMECARD"]["dashboard_page"]) 
+        Commands.ClickElement(data["TIMECARD"]["dashboard_page"]) 
         Waits.WaitElementLoaded(40, data["TIMECARD"]["dashboard_wait"])
 
-        Commands.ClickElements(data["TIMECARD"]["switch_to_admin"]) 
+        Commands.ClickElement(data["TIMECARD"]["switch_to_admin"]) 
         Waits.WaitElementLoaded(40, data["TIMECARD"]["switch_to_admin_wait"])
         time.sleep(3)
 
@@ -6893,15 +6895,15 @@ def dashboard():
         open_box = driver.find_element_by_xpath(data["TIMECARD"]["open_box"]).text
         Logging("Date before change to next month: " + open_box)
 
-        Commands.ClickElements(data["TIMECARD"]["open_box"]) 
-        Commands.ClickElements(data["TIMECARD"]["change_date2"]) 
-        change_date = Commands.ClickElements(data["TIMECARD"]["change_date"]) 
+        Commands.ClickElement(data["TIMECARD"]["open_box"]) 
+        Commands.ClickElement(data["TIMECARD"]["change_date2"]) 
+        change_date = Commands.ClickElement(data["TIMECARD"]["change_date"]) 
         time.sleep(5)
 
         open_box2 = driver.find_element_by_xpath(data["TIMECARD"]["open_box2"]).text
         Logging("Date after change to next month: " + open_box2)
-        Commands.ClickElements(data["TIMECARD"]["open_box"]) 
-        Commands.ClickElements(data["TIMECARD"]["change_date3"]) 
+        Commands.ClickElement(data["TIMECARD"]["open_box"]) 
+        Commands.ClickElement(data["TIMECARD"]["change_date3"]) 
 
         time.sleep(3)
         today = driver.find_element_by_xpath(data["TIMECARD"]["today"]).text
@@ -6945,13 +6947,13 @@ def dashboard():
         #Box 1
         Logging("")
         Logging("***Working Time***")
-        click_pop_up = Commands.ClickElements(data["TIMECARD"]["click_pop_up"]) 
+        click_pop_up = Commands.ClickElement(data["TIMECARD"]["click_pop_up"]) 
         try:
             pop_up = driver.find_element_by_xpath(data["TIMECARD"]["p_op_up"])
             if pop_up.is_displayed():
                 Logging("Turn on checkbox successfully")
                 try:
-                    working_time_check_box = Commands.ClickElements(data["TIMECARD"]["working_time_check_box"]) 
+                    working_time_check_box = Commands.ClickElement(data["TIMECARD"]["working_time_check_box"]) 
                     working_time_check_box_input = driver.find_element_by_xpath(data["TIMECARD"]["working_time_check_box_input"])
                     if working_time_check_box_input.is_selected():
                         Logging("Check working time successfully")
@@ -6969,7 +6971,7 @@ def dashboard():
                         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["check_working_time"]["fail"])
 
                 try:
-                    OT_check_box = Commands.ClickElements(data["TIMECARD"]["OT_check_box"]) 
+                    OT_check_box = Commands.ClickElement(data["TIMECARD"]["OT_check_box"]) 
                     OT_check_box_input = driver.find_element_by_xpath(data["TIMECARD"]["input_otherOT_check_box_input_name"])
                     if OT_check_box_input.is_selected():
                         Logging("")
@@ -6990,7 +6992,7 @@ def dashboard():
                 Logging("Turn on check-box fail")
 
         #Box 2
-        click_pop_up2 = Commands.ClickElements(data["TIMECARD"]["click_pop_up2"]) 
+        click_pop_up2 = Commands.ClickElement(data["TIMECARD"]["click_pop_up2"]) 
         time.sleep(5)
         try:
             pop_up2 = driver.find_element_by_xpath(data["TIMECARD"]["pop_up2"])
@@ -6998,8 +7000,8 @@ def dashboard():
                 Logging("")
                 Logging("Turn on pop up filter successfully")
                 try:
-                    check_box = Commands.ClickElements(data["TIMECARD"]["check_box"]) 
-                    check_box_check = Commands.ClickElements(data["TIMECARD"]["check_box_check"])
+                    check_box = Commands.ClickElement(data["TIMECARD"]["check_box"]) 
+                    check_box_check = Commands.ClickElement(data["TIMECARD"]["check_box_check"])
                     driver.find_element_by_xpath(data["TIMECARD"]["click_pop_up2"]) 
                     if check_box_check.is_displayed():
                         Logging("Check filter-No.1 successfully")
@@ -7020,7 +7022,7 @@ def dashboard():
         #Click next page
         #Check if data is displayed or not
         Logging("")
-        Commands.ClickElements("//*[@id='app']//div[2]/ul/li[2]/a")
+        Commands.ClickElement("//*[@id='app']//div[2]/ul/li[2]/a")
         Logging("Check if data of Admin-Working time is displayed or not after click to next page")
         try:
             data_working_time_next_page = driver.find_element_by_xpath(data["TIMECARD"]["data_working_time_next_page"])
@@ -7035,15 +7037,15 @@ def dashboard():
         avg_open_box = driver.find_element_by_xpath(data["TIMECARD"]["avg_open_box"]).text
         Logging("Date before change to next month: " + avg_open_box)
 
-        Commands.ClickElements(data["TIMECARD"]["avg_open_box"])
-        Commands.ClickElements(data["TIMECARD"]["change_date2"])
-        change_date = Commands.ClickElements(data["TIMECARD"]["change_date"])
+        Commands.ClickElement(data["TIMECARD"]["avg_open_box"])
+        Commands.ClickElement(data["TIMECARD"]["change_date2"])
+        change_date = Commands.ClickElement(data["TIMECARD"]["change_date"])
         time.sleep(5)
 
-        avg_open_box2 = Commands.ClickElements(data["TIMECARD"]["avg_open_box2"]).text
+        avg_open_box2 = Commands.ClickElement(data["TIMECARD"]["avg_open_box2"]).text
         Logging("Date after change to next month: " + avg_open_box2)
-        Commands.ClickElements(data["TIMECARD"]["avg_open_box"])
-        Commands.ClickElements(data["TIMECARD"]["change_date3"])
+        Commands.ClickElement(data["TIMECARD"]["avg_open_box"])
+        Commands.ClickElement(data["TIMECARD"]["change_date3"])
 
         time.sleep(3)
         avg_today = driver.find_element_by_xpath(data["TIMECARD"]["avg_today"]).text
@@ -7075,10 +7077,10 @@ def dashboard():
         #MISSING TIME CLOCK
         Logging("")
         Logging("***MISSING TIME CLOCK***")
-        Commands.ClickElements(data["TIMECARD"]["timeline_page"])
+        Commands.ClickElement(data["TIMECARD"]["timeline_page"])
         Waits.WaitElementLoaded(40, data["TIMECARD"]["timeline_wait"])
         time.sleep(2)
-        Commands.ClickElements(data["TIMECARD"]["org_box"])
+        Commands.ClickElement(data["TIMECARD"]["org_box"])
         time.sleep(5)
         try:
             icon = driver.find_element_by_xpath(data["TIMECARD"]["i_con"])
@@ -7092,21 +7094,21 @@ def dashboard():
         tl_search2 = Commands.InputElement(data["TIMECARD"]["tl_search2"], data["name_keyword"][0])
         tl_search2.send_keys(Keys.ENTER)
         time.sleep(5)
-        Commands.ClickElements(data["TIMECARD"]["search_users"])
+        Commands.ClickElement(data["TIMECARD"]["search_users"])
         time.sleep(5)
-        Commands.ClickElements(data["TIMECARD"]["org_box"])
+        Commands.ClickElement(data["TIMECARD"]["org_box"])
 
         filters_input_dashboard = driver.find_element_by_xpath(data["TIMECARD"]["filters_input_dashboard"])
         filters_input_dashboard.send_keys(Keys.ARROW_DOWN)
         filters_input_dashboard.send_keys(Keys.ENTER)
         time.sleep(3)
-        Commands.ClickElements(data["TIMECARD"]["delete"])
-        Commands.ClickElements(data["TIMECARD"]["delete1"])
+        Commands.ClickElement(data["TIMECARD"]["delete"])
+        Commands.ClickElement(data["TIMECARD"]["delete1"])
         #Logging("Delete punch-in successfully")
 
-        Commands.ClickElements(data["TIMECARD"]["dashboard_page"])
+        Commands.ClickElement(data["TIMECARD"]["dashboard_page"])
         Waits.WaitElementLoaded(40, data["TIMECARD"]["dashboard_wait2"])
-        Commands.ClickElements(data["TIMECARD"]["click_missing"])
+        Commands.ClickElement(data["TIMECARD"]["click_missing"])
 
         time.sleep(5)
         item_clock1 = driver.find_element_by_xpath(data["TIMECARD"]["item_clock1"])
@@ -7115,15 +7117,15 @@ def dashboard():
         #Logging("Scroll successfully")
 
 
-        Commands.ClickElements(data["TIMECARD"]["add_schedu"])
+        Commands.ClickElement(data["TIMECARD"]["add_schedu"])
         #Select user
-        Commands.ClickElements(data["TIMECARD"]["user"])
+        Commands.ClickElement(data["TIMECARD"]["user"])
         # dashboard_search = driver.find_element_by_xpath(data["TIMECARD"]["dashboard_search"])
         # dashboard_search.send_keys(data["name_keyword"][0])
         dashboard_search = Commands.InputElement(data["TIMECARD"]["dashboard_search"], data["name_keyword"][0])
         dashboard_search.send_keys(Keys.ENTER)
         time.sleep(2)
-        Commands.ClickElements(data["TIMECARD"]["fancy_tree"])
+        Commands.ClickElement(data["TIMECARD"]["fancy_tree"])
         try:
             user = driver.find_element_by_xpath(data["TIMECARD"]["user"])
             if user.is_displayed():
@@ -7131,7 +7133,7 @@ def dashboard():
         except:
                 Logging("Select user failed")
 
-        Commands.ClickElements(data["TIMECARD"]["org_tree"])
+        Commands.ClickElement(data["TIMECARD"]["org_tree"])
         try:
             organization_box = driver.find_element_by_xpath(data["TIMECARD"]["organization_box"])
             if organization_box.is_displayed():
@@ -7140,12 +7142,12 @@ def dashboard():
                 Logging("Close organization box successfully")
 
         #Select clock in 
-        Commands.ClickElements(data["TIMECARD"]["Time"])
+        Commands.ClickElement(data["TIMECARD"]["Time"])
         time.sleep(2)
-        Commands.ClickElements(data["TIMECARD"]["Hour"])
+        Commands.ClickElement(data["TIMECARD"]["Hour"])
         #Input memo
         Commands.InputElement(data["TIMECARD"]["Memo"], "test")
-        Commands.ClickElements(data["TIMECARD"]["click_save"])
+        Commands.ClickElement(data["TIMECARD"]["click_save"])
         time.sleep(2)
         Logging("Clock in through missing time clock successfully")
         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["clockin_through_missing_time_clock"]["pass"])
@@ -7392,7 +7394,7 @@ def dashboard():
         Logging("Working status - Chart - Check data fail")
 
     driver.refresh()
-    Commands.ClickElements(data["TIMECARD"]["switch_to_admin"])
+    Commands.ClickElement(data["TIMECARD"]["switch_to_admin"])
     Waits.WaitElementLoaded(40, data["TIMECARD"]["switch_to_admin_wait"])
     time.sleep(3)
 
@@ -7402,7 +7404,7 @@ def dashboard():
         #Access Daily Status page through Admin-Working status
         Logging("")
         time.sleep(3)
-        Commands.ClickElements(data["TIMECARD"]["view_more"])
+        Commands.ClickElement(data["TIMECARD"]["view_more"])
         Waits.WaitElementLoaded(50, data["TIMECARD"]["weekly_status_wait"])
         time.sleep(5)
 
@@ -7421,7 +7423,7 @@ def dashboard():
 
 
     try:
-        Commands.ClickElements(data["TIMECARD"]["dashboard_page"])
+        Commands.ClickElement(data["TIMECARD"]["dashboard_page"])
         Waits.WaitElementLoaded(20, data["TIMECARD"]["dash_board_wait"])
         time.sleep(5)
         beacon_admin = driver.find_element_by_xpath(data["TIMECARD"]["bea_con_admin"])
@@ -7453,7 +7455,7 @@ def dashboard():
         #Access Timeline page through Admin-Timeline
         Logging("")
         time.sleep(3)
-        Commands.ClickElements(data["TIMECARD"]["scroll_timeline"])
+        Commands.ClickElement(data["TIMECARD"]["scroll_timeline"])
         Waits.WaitElementLoaded(40, data["TIMECARD"]["admin_timeline_more"])
 
         Logging("Check if able to access Timeline page through Admin - Timeline or not")
@@ -7472,17 +7474,18 @@ def dashboard():
 
 def basic_gps():
     try:
-        Commands.ClickElements(data["TIMECARD"]["basic_gps_page"])
+        Commands.ClickElement(data["TIMECARD"]["basic_gps_page"])
         Waits.WaitElementLoaded(40, data["TIMECARD"]["basic_gps_wait"])
         time.sleep(2)
-        Commands.ClickElements(data["TIMECARD"]["time_clock"])
+        Commands.ClickElement(data["TIMECARD"]["time_clock"])
         time.sleep(3)
     except:
         Logging(" ")
 
+
     Logging(" ")
     Logging("***ADD GPS***")
-    Commands.ClickElements(data["TIMECARD"]["add_gps"])
+    Commands.ClickElement(data["TIMECARD"]["add_gps"])
     time.sleep(3)
     # input_name_gps = driver.find_element_by_xpath(data["TIMECARD"]["input_name_gps"])
     # input_name_gps.send_keys("hanhtest")
@@ -7500,20 +7503,21 @@ def basic_gps():
     input_address.send_keys(Keys.ENTER)
     time.sleep(3)
     #SAVE GPS
-    Commands.ClickElements(data["TIMECARD"]["save_gps"])
+    Commands.ClickElement(data["TIMECARD"]["save_gps"])
     time.sleep(3)
     try:
         gps_noti = Waits.WaitElementLoaded(10, data["TIMECARD"]["pre_OT_noty"])
         gps_noti_list = [data["TIMECARD"]["gps_noti"][0], data["TIMECARD"]["gps_noti"][1]]
         if gps_noti.text in gps_noti_list:
             Logging("Duplicated data is available")
-            click_cancel = Commands.ClickElements(data["TIMECARD"]["click_cancel"])
+            click_cancel = Commands.ClickElement(data["TIMECARD"]["click_cancel"])
             time.sleep(3)
         else:
             time.sleep(3)
-            gps_name = driver.find_element_by_xpath(data["TIMECARD"]["gps_name"]).text
+            #gps_name = driver.find_element_by_xpath(data["TIMECARD"]["gps_name"]).text
+            gps_name_text = Functions.GetElementText(data["TIMECARD"]["gps_name"])
             try:
-                if gps_name == "hanhtest":
+                if gps_name_text == "hanhtest":
                     Logging("Add GPS successfully")
                     TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["add_gps"]["pass"])
             except:
@@ -7527,18 +7531,19 @@ def basic_gps():
     Logging("")
     Logging("***EDIT GPS")
     try:
-        Commands.ClickElements(data["TIMECARD"]["click_edit_gps"])
+        Commands.ClickElement(data["TIMECARD"]["click_edit_gps"])
         edit_gps = driver.find_element_by_xpath(data["TIMECARD"]["edit_gps"])
         if edit_gps.is_displayed():
             try:
                 input_name_gps = driver.find_element_by_xpath(data["TIMECARD"]["input_name_gps"])
                 input_name_gps.clear()
                 input_name_gps.send_keys("test edit")
-                Commands.ClickElements(data["TIMECARD"]["save_edit_gps"])
+                Commands.ClickElement(data["TIMECARD"]["save_edit_gps"])
                 time.sleep(3)
-                gps_name = driver.find_element_by_xpath(data["TIMECARD"]["gps_name"]).text
+                # gps_name = driver.find_element_by_xpath(data["TIMECARD"]["gps_name"]).text
+                gps_name_text = Functions.GetElementText(data["TIMECARD"]["gps_name"])
                 try:
-                    if gps_name == "test edit":
+                    if gps_name_text == "test edit":
                         Logging("Edit Name successfully")
                         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["edit_gps"]["pass"])
                 except:
@@ -7591,8 +7596,9 @@ def basic_gps():
         search_field.send_keys(Keys.ENTER)
         time.sleep(3)
         try:
-            gps_name = driver.find_element_by_xpath(data["TIMECARD"]["gps_name"]).text
-            if gps_name == "test edit":
+            # gps_name = driver.find_element_by_xpath(data["TIMECARD"]["gps_name"]).text
+            gps_name_text = Functions.GetElementText(data["TIMECARD"]["gps_name"])
+            if gps_name_text == "test edit":
                 Logging("Search GPS successfully")
                 TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["search_gps"]["pass"])
         except:
@@ -7605,13 +7611,13 @@ def basic_gps():
     Logging("")
     Logging("***DELETE GPS")
     try:
-        Commands.ClickElements(data["TIMECARD"]["click_del_gps"])
+        Commands.ClickElement(data["TIMECARD"]["click_del_gps"])
         time.sleep(3)
         delete_gps = driver.find_element_by_xpath(data["TIMECARD"]["delete_gps"])
         if delete_gps.is_displayed():
             #Logging("Open delete dialog succeessfully")
             time.sleep(3)
-            Commands.ClickElements(data["TIMECARD"]["open_del_gps"])
+            Commands.ClickElement(data["TIMECARD"]["open_del_gps"])
             time.sleep(1)
             delete_noti = Waits.WaitElementLoaded(10, data["TIMECARD"]["pre_OT_noty"])
             delete_noti_list = [data["TIMECARD"]["delete_noti"][0], data["TIMECARD"]["delete_noti"][1]]
@@ -7631,7 +7637,7 @@ def exception_users():
     Logging("")
     Logging("*** ADD EXCEPTION USERS")
     time.sleep(2)
-    exception_users = Commands.ClickElements(data["TIMECARD"]["exception_users"])
+    exception_users = Commands.ClickElement(data["TIMECARD"]["exception_users"])
     Waits.WaitElementLoaded(10, data["TIMECARD"]["exception_users_wait"])
     time.sleep(2)
     # input_exc_user = driver.find_element_by_xpath(data["TIMECARD"]["input_exc_user"])
@@ -7642,8 +7648,10 @@ def exception_users():
     time.sleep(3)
     exception_user_name = driver.find_element_by_xpath(data["TIMECARD"]["exception_user_name"])
     exception_user_name.click()
+    exception_user_name_text = Functions.GetElementText(data["TIMECARD"]["exception_user_name"])
+
     time.sleep(2)
-    exception_users_add = Commands.ClickElements(data["TIMECARD"]["exception_users_add"])
+    exception_users_add = Commands.ClickElement(data["TIMECARD"]["exception_users_add"])
     time.sleep(2)
     
     try:
@@ -7657,12 +7665,12 @@ def exception_users():
     
     Logging(" ")
     Logging("*** DELETE EXCEPTION USER")
-    add_name_manager = driver.find_element_by_xpath("//span[text()='Exception Users']//following::div//ul//li//div[contains(@class,'first-line') and contains(.,'" + str(exception_user_name.text) + "')]")
+    add_name_manager = driver.find_element_by_xpath("//span[text()='Exception Users']//following::div//ul//li//div[contains(@class,'first-line') and contains(.,'" + exception_user_name_text + "')]")
     if add_name_manager.is_displayed():
-        Logging("User " + str(exception_user_name.text) + " is display in exception users list")
+        Logging("User " + exception_user_name_text + " is display in exception users list")
         add_name_manager.click()
-        Commands.ClickElements("//span[text()='Exception Users']//following::div//ul//li//div[contains(@class,'first-line') and contains(.,'" + str(exception_user_name.text) + "')]//following::div[2]")
-        Commands.ClickElements(data["TIMECARD"]["delete_dept"])
+        Commands.ClickElement("//span[text()='Exception Users']//following::div//ul//li//div[contains(@class,'first-line') and contains(.,'" + exception_user_name_text + "')]//following::div[2]")
+        Commands.ClickElement(data["TIMECARD"]["delete_dept"])
         time.sleep(2)
 
         try:
@@ -7672,7 +7680,7 @@ def exception_users():
         except:
             Logging("Delete exception user failed")
     else:
-        Logging("- User " + str(exception_user_name.text) + " isn't display in exception users list")
+        Logging("- User " + exception_user_name_text + " isn't display in exception users list")
 
 
 def outside_users():   
@@ -7687,8 +7695,10 @@ def outside_users():
     time.sleep(3)
     outside_user_name = driver.find_element_by_xpath(data["TIMECARD"]["outside_user_name"])
     outside_user_name.click()
+    outside_user_name_text = Functions.GetElementText(data["TIMECARD"]["outside_user_name"])
+
     time.sleep(2)
-    outside_users_add = Commands.ClickElements(data["TIMECARD"]["outside_users_add"])
+    outside_users_add = Commands.ClickElement(data["TIMECARD"]["outside_users_add"])
     time.sleep(2)
     
     try:
@@ -7702,12 +7712,12 @@ def outside_users():
 
     Logging(" ")
     Logging("*** DELETE OUTSIDE ATTENDANCE AVAILABLE USERS")
-    add_outside_name = driver.find_element_by_xpath("//span[text()='Available Users']//following::div//ul//li//div[contains(@class,'first-line') and contains(.,'" + str(outside_user_name.text) + "')]")
+    add_outside_name = driver.find_element_by_xpath("//span[text()='Available Users']//following::div//ul//li//div[contains(@class,'first-line') and contains(.,'" + outside_user_name_text + "')]")
     if add_outside_name.is_displayed():
-        Logging("User " + str(outside_user_name.text) + " is display in available users list")
+        Logging("User " + outside_user_name_text + " is display in available users list")
         add_outside_name.click()
-        Commands.ClickElements("//span[text()='Available Users']//following::div//ul//li//div[contains(@class,'first-line') and contains(.,'" + str(outside_user_name.text) + "')]//following::div[2]")
-        Commands.ClickElements(data["TIMECARD"]["delete_dept"])
+        Commands.ClickElement("//span[text()='Available Users']//following::div//ul//li//div[contains(@class,'first-line') and contains(.,'" + outside_user_name_text + "')]//following::div[2]")
+        Commands.ClickElement(data["TIMECARD"]["delete_dept"])
         time.sleep(2)
 
         try:
@@ -7717,18 +7727,18 @@ def outside_users():
         except:
             Logging("Delete outside attendance available user failed")
     else:
-        Logging("- User " + str(outside_user_name.text) + " isn't display in available users list")
+        Logging("- User " + outside_user_name_text + " isn't display in available users list")
 
 
 def arbitrary_decision():
     Logging("")
     Logging("*** ADD ARBITRARY DECISION")
     time.sleep(2)
-    arbitrary_user = Commands.ClickElements(data["TIMECARD"]["arbitrary_user"])
+    arbitrary_user = Commands.ClickElement(data["TIMECARD"]["arbitrary_user"])
     Waits.WaitElementLoaded(10, data["TIMECARD"]["arbitrary_user_wait"])
     time.sleep(2)
 
-    arbitrary_user_select = Commands.ClickElements(data["TIMECARD"]["arbitrary_user_select"])
+    arbitrary_user_select = Commands.ClickElement(data["TIMECARD"]["arbitrary_user_select"])
     time.sleep(2)
     # input_arbitrary_user = driver.find_element_by_xpath(data["TIMECARD"]["input_arbitrary_user"])
     # input_arbitrary_user.send_keys(data["name_keyword"][0])
@@ -7738,8 +7748,10 @@ def arbitrary_decision():
     time.sleep(3)
     arbitrary_user_name = driver.find_element_by_xpath(data["TIMECARD"]["arbitrary_user_name"])
     arbitrary_user_name.click()
+    arbitrary_user_name_text = Functions.GetElementText(data["TIMECARD"]["arbitrary_user_name"])
+
     time.sleep(2)
-    arbitrary_users_add = Commands.ClickElements(data["TIMECARD"]["arbitrary_users_add"])
+    arbitrary_users_add = Commands.ClickElement(data["TIMECARD"]["arbitrary_users_add"])
     time.sleep(2)
     try:
         arbitrary_user_noti =  driver.find_element_by_xpath(data["TIMECARD"]["arbitrary_user_noti"])
@@ -7752,12 +7764,12 @@ def arbitrary_decision():
   
     Logging(" ")
     Logging("*** DELETE ARBITRARY DECISION")
-    add_arbitrary_name = driver.find_element_by_xpath("//span[text()='Available Users']//following::div//ul//li//div[contains(@class,'first-line') and contains(.,'" + str(arbitrary_user_name.text) + "')]")
+    add_arbitrary_name = driver.find_element_by_xpath("//span[text()='Available Users']//following::div//ul//li//div[contains(@class,'first-line') and contains(.,'" + arbitrary_user_name_text + "')]")
     if add_arbitrary_name.is_displayed():
-        Logging("User " + str(arbitrary_user_name.text) + " is display in available users list")
+        Logging("User " + arbitrary_user_name_text + " is display in available users list")
         add_arbitrary_name.click()
-        Commands.ClickElements("//span[text()='Available Users']//following::div//ul//li//div[contains(@class,'first-line') and contains(.,'" + str(arbitrary_user_name.text) + "')]//following::div[2]")
-        Commands.ClickElements(data["TIMECARD"]["delete_dept"])
+        Commands.ClickElement("//span[text()='Available Users']//following::div//ul//li//div[contains(@class,'first-line') and contains(.,'" + arbitrary_user_name_text + "')]//following::div[2]")
+        Commands.ClickElement(data["TIMECARD"]["delete_dept"])
         time.sleep(2)
 
         try:
@@ -7767,7 +7779,7 @@ def arbitrary_decision():
         except:
             Logging("Delete arbitrary decision failed")
     else:
-        Logging("- User " + str(arbitrary_user_name.text) + " isn't display in available users list")
+        Logging("- User " + arbitrary_user_name_text + " isn't display in available users list")
 
 
 
@@ -7776,22 +7788,22 @@ def arbitrary_decision():
 
 
 def timecard():
-    # nightwork()
-    # breaktime()
-    # clock_out()
-    # output_clockin,output_clockout,break_time,working_time,clock_in_time,work_method_up,today_work_date, OT_time = check_time()
-    # date_clock_in = timesheet_list(output_clockin,output_clockout,break_time,working_time, OT_time)
-    # #report_list1(output_clockin,output_clockout,break_time,working_time, OT_time, date_clock_in)
-    # add_event2()
-    # view_details()
+    nightwork()
+    breaktime()
+    clock_out()
+    output_clockin,output_clockout,break_time,working_time,clock_in_time,work_method_up,today_work_date, OT_time = check_time()
+    date_clock_in = timesheet_list(output_clockin,output_clockout,break_time,working_time, OT_time)
+    #report_list1(output_clockin,output_clockout,break_time,working_time, OT_time, date_clock_in)
+    add_event2()
+    view_details()
     working_status()
     
-    # #day_list = find_date(today_work_date)
-    # #work_schedule(day_list)
-    # manager()
-    # total_manager()
-    # # # # work_correction()
-    # delete_punch()
+    #day_list = find_date(today_work_date)
+    #work_schedule(day_list)
+    manager()
+    total_manager()
+    # # work_correction()
+    delete_punch()
 
 def time_card():
     # # # # Napproval_OT()
