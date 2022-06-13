@@ -408,6 +408,129 @@ def time_clock_out():
     Commands.ClickElement(data["TIMECARD"]["save_edit"]) 
     Logging("=> Save edit time clock-out")
 
+def add_clock_in_clock_out():
+    try:
+        clock_in_but = driver.find_element_by_xpath(data["TIMECARD"]["clock_in_but"])
+        if clock_in_but.is_displayed():
+            click_close = Commands.ClickElement(data["TIMECARD"]["click_close"]) 
+    except:
+        Logging(" ")
+
+    #Add clockin
+    try:
+        Commands.ClickElement(data["TIMECARD"]["daily_status_page"]) 
+        Waits.WaitElementLoaded(30, data["TIMECARD"]["weekly_status_wait"])
+        time.sleep(3)
+        add_schedule = Commands.ClickElement(data["TIMECARD"]["add_schedule"])
+        time.sleep(3)
+        add_schedu = Commands.ClickElement(data["TIMECARD"]["add_schedu"]) 
+        time.sleep(3)
+
+        Logging("")
+        time_select = Commands.ClickElement(data["TIMECARD"]["time_select"]) 
+        time.sleep(5)
+        hour = Commands.ClickElement(data["TIMECARD"]["hour"]) 
+        save = Commands.ClickElement(data["TIMECARD"]["sa_ve"]) 
+        #Logging("Clock-in through timesheets successfully")  
+        PrintGreen(">>>Clock-in through timesheets successfully")   
+        TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["clockin_through_timeline"]["pass"])
+    except:
+        #Logging("Can't clock in through timesheets")
+        PrintRed(">>>Cant clock in through timesheets") 
+        TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["clockin_through_timeline"]["fail"])
+
+    #Add clockout
+    try:
+        time.sleep(3)
+        add_schedule1 = Commands.ClickElement(data["TIMECARD"]["add_schedule1"])
+        time.sleep(3)
+        add_schedu1 = Commands.ClickElement(data["TIMECARD"]["add_schedu1"]) 
+        time.sleep(5)
+        time_select2 = Commands.ClickElement(data["TIMECARD"]["time_select2"]) 
+        time.sleep(5)
+        hour2 = Commands.ClickElement(data["TIMECARD"]["hour2"]) 
+        clock_out = Commands.ClickElement(data["TIMECARD"]["clock_out"])
+        time.sleep(5)
+        save2 = Commands.ClickElement(data["TIMECARD"]["save2"]) 
+        #Logging("Clock-out through timesheets successfully")
+        PrintGreen(">>>Clock-out through timesheets successfully") 
+        TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["clockout_through_timeline"]["pass"])
+    except:
+        #Logging("Can't clock out through timesheets")
+        PrintRed(">>>Cant clock-out through timesheets")
+        TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["clockout_through_timeline"]["fail"])
+
+    try:
+        time.sleep(5)
+        Commands.ClickElement(data["TIMECARD"]["timesheet_page"]) 
+        Waits.WaitElementLoaded(30, data["TIMECARD"]["timesheet_wait"])
+
+        Logging(" ")
+        Logging("Edit clockin")
+        time.sleep(5)
+        #Click Edit
+        Edit = Commands.ClickElement(data["TIMECARD"]["Edit"]) 
+        time.sleep(5)
+        Time = Commands.ClickElement(data["TIMECARD"]["Time"]) 
+        time.sleep(5)
+        Hour = Commands.ClickElement(data["TIMECARD"]["Hour"]) 
+
+        Time1 = Commands.ClickElement(data["TIMECARD"]["Time1"]) 
+        time.sleep(3)
+        Minute = Commands.ClickElement(data["TIMECARD"]["Minute"]) 
+
+        #Click On-time
+        Status = Commands.ClickElement(data["TIMECARD"]["Status"]) 
+
+        #Input Memo
+        Memo = Commands.InputElement(data["TIMECARD"]["Memo"], "test")
+        #Logging("Input memo")
+
+        #Save
+        Save = Commands.ClickElement(data["TIMECARD"]["Save"]) 
+        #Logging("Edit clockin successfully")    
+        PrintGreen("Edit clock in successfully")
+        TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["edit_clockin"]["pass"])
+    except:
+        #Logging("Edit clockin failed")   
+        PrintRed("Edit clock in failed")
+        TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["edit_clockin"]["fail"])
+
+    try:
+        Logging(" ")
+        Logging("Edit clockout")
+        nb_out=[]
+        time.sleep(10)
+        #Click Edit
+        Edit2 = Commands.ClickElement(data["TIMECARD"]["Edit2"]) 
+        time.sleep(5)
+        Time2 = Commands.ClickElement(data["TIMECARD"]["Time2"]) 
+        time.sleep(5)
+        Hour2 = Commands.ClickElement(data["TIMECARD"]["Hour2"]) 
+
+        Time12 = Commands.ClickElement(data["TIMECARD"]["Time12"]) 
+        time.sleep(2)
+        Minute2 = Commands.ClickElement(data["TIMECARD"]["Minute2"]) 
+
+        #Click On-time
+        Status2 = Commands.ClickElement(data["TIMECARD"]["Status2"]) 
+
+        #Input Memo
+        Memo2 = Commands.InputElement(data["TIMECARD"]["Memo2"], "test")
+        #Logging("Input memo")
+
+        #Save
+        Save2 = Commands.ClickElement(data["TIMECARD"]["Save2"]) 
+        #Logging("Edit clockout successfully")
+        PrintGreen("Edit clock out successfully")
+        TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["edit_clockout"]["pass"])        
+        time.sleep(5)
+    except:
+        PrintRed("Edit clock out failed")
+        TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["edit_clockout"]["fail"])    
+
+    
+
 def check_time():
     time.sleep(5)
     #Print Clockin and Clokout
@@ -607,6 +730,7 @@ def report_list1(output_clockin,output_clockout,break_time,working_time, OT_time
 
     else:
         Logging("- Cannot find date")
+
 
 def add_event2():
     #SELECT APPROVAL SETTING 
@@ -1069,7 +1193,7 @@ def add_event2():
         time.sleep(3)
 
         #Approval page
-        approval_page = Commands.ClickElement(data["TIMECARD"]["input_othapproval_pageer_name"]) 
+        approval_page = Commands.ClickElement(data["TIMECARD"]["approval_page"]) 
 
         ev_status_approve = driver.find_element_by_xpath(data["TIMECARD"]["event_status_approve"])
         #Logging (status_approve.text)
@@ -1236,6 +1360,7 @@ def working_status():
         time.sleep(2)
         Logging(" ")
 
+
 def add_working_status():
     working_status_list = Functions.GetListLength(data["TIMECARD"]["working_status"])
     list_working_status = []
@@ -1277,6 +1402,7 @@ def add_working_status():
         Logging("- Select time of working status")
         Commands.ClickElement(data["TIMECARD"]["save_working_status"]) 
         Logging("- Save working status")
+    
 
 
 
@@ -3942,6 +4068,7 @@ def timeline():
         #Logging("Can't clock out through timeline")
         PrintRed(">>>Cant clock-out through timeline")
         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["clockout_through_timeline"]["fail"])
+    
     try:
         time.sleep(5)
         clockin_time_a = driver.find_element_by_xpath(data["TIMECARD"]["clockin_time_a"])
@@ -4027,6 +4154,8 @@ def work_place():
         select_location_input.send_keys(Keys.ARROW_DOWN)
         time.sleep(2)
         select_location_input.send_keys(Keys.ARROW_DOWN)
+        time.sleep(2)
+        select_location_input.send_keys(Keys.ARROW_DOWN)
         select_location_input.send_keys(Keys.ENTER)
 
         #Input time zone
@@ -4044,10 +4173,11 @@ def work_place():
         Logging("")
         #Logging("Add work place successfully")
         work_place_noti =  driver.find_element_by_xpath(data["TIMECARD"]["work_place_noti"])
-        if work_place_noti.text == "Duplicated data exists":
-            Logging("Duplicated data is available")
-        elif work_place_noti.text == "Data inserted successfully.":
+        Logging(work_place_noti.text)
+        if work_place_noti.text == "Data inserted successfully.":
             PrintGreen(">>>Add work place successfully")
+        else:
+            Logging("Duplicated data is available")
             TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["work_place"]["pass"])
     except:
         #Logging("Add work place fail")
@@ -4055,146 +4185,146 @@ def work_place():
         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["work_place"]["fail"])
 
         
-    try:
-        Commands.ClickElement(data["TIMECARD"]["open_work_place_box"]) 
-        time.sleep(3)
-        Commands.ClickElement(data["TIMECARD"]["work_place"]) 
-        work_place_data = driver.find_element_by_xpath(data["TIMECARD"]["work_place_data"]).text
-        Logging("Work place before edit: " + work_place_data)
+    # try:
+    #     Commands.ClickElement(data["TIMECARD"]["open_work_place_box"]) 
+    #     time.sleep(3)
+    #     Commands.ClickElement(data["TIMECARD"]["work_place"]) 
+    #     work_place_data = driver.find_element_by_xpath(data["TIMECARD"]["work_place_data"]).text
+    #     Logging("Work place before edit: " + work_place_data)
 
-        #Add holiday
-        Commands.ClickElement(data["TIMECARD"]["add_holiday"]) 
+    #     #Add holiday
+    #     Commands.ClickElement(data["TIMECARD"]["add_holiday"]) 
 
-        #Input holiday name
-        time.sleep(3)
-        holiday_name = "hoiday" + date_id
-        Commands.InputElement(data["TIMECARD"]["holiday_name"], holiday_name)
-        #Logging("Input Holiday name" )
-        time.sleep(3)
-
-
-        #Select holiday
-        holiday_type_list = ["Legal Holiday",  "Company Holiday",  "Substitute Holiday"]
-        select_holiday_type = Select(driver.find_element_by_xpath("//*[@id='form-holiday-setting']//select"))
-        select_holiday_type.select_by_visible_text(random.choice(holiday_type_list))
-
-        #Save holiday
-        Logging("")
-        holiday_save = Commands.ClickElement(data["TIMECARD"]["holiday_save"]) 
-        #Logging("Add new holiday successfully")
-        holiday_noti =  driver.find_element_by_xpath(data["TIMECARD"]["holiday_noti"])
-        if holiday_noti.text == "There is duplicated data, please try again":
-            Logging("Duplicated data is available")
-        elif holiday_noti.text == "Data saved successfully.":
-            PrintGreen(">>>Add work holiday successfully")
-            TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["holiday"]["pass"])
-    except:
-        #Logging("Add new holiday fail")
-        PrintRed(">>>Add work holiday failed")
-        TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["holiday"]["fail"])
-
-    try:
-        time.sleep(5)
-        holiday_data_before = driver.find_element_by_xpath(data["TIMECARD"]["holiday_data_before"]).text
-        Logging("Holiday name before edit: " + holiday_data_before)
+    #     #Input holiday name
+    #     time.sleep(3)
+    #     holiday_name = "hoiday" + date_id
+    #     Commands.InputElement(data["TIMECARD"]["holiday_name"], "123")
+    #     #Logging("Input Holiday name" )
+    #     time.sleep(3)
 
 
-        #After edit work place
-        #Edit work place
-        time.sleep(3)
-        work_place_edit = Commands.ClickElement(data["TIMECARD"]["work_place_edit"]) 
+    #     #Select holiday
+    #     holiday_type_list = ["Legal Holiday",  "Company Holiday",  "Substitute Holiday"]
+    #     select_holiday_type = Select(driver.find_element_by_xpath("//*[@id='form-holiday-setting']//select"))
+    #     select_holiday_type.select_by_visible_text(random.choice(holiday_type_list))
+
+    #     #Save holiday
+    #     Logging("")
+    #     holiday_save = Commands.ClickElement(data["TIMECARD"]["holiday_save"]) 
+    #     #Logging("Add new holiday successfully")
+    #     holiday_noti =  driver.find_element_by_xpath(data["TIMECARD"]["holiday_noti"])
+    #     if holiday_noti.text == "There is duplicated data, please try again":
+    #         Logging("Duplicated data is available")
+    #     elif holiday_noti.text == "Data saved successfully.":
+    #         PrintGreen(">>>Add work holiday successfully")
+    #         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["holiday"]["pass"])
+    # except:
+    #     #Logging("Add new holiday fail")
+    #     PrintRed(">>>Add work holiday failed")
+    #     TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["holiday"]["fail"])
+
+    # try:
+    #     time.sleep(5)
+    #     holiday_data_before = driver.find_element_by_xpath(data["TIMECARD"]["holiday_data_before"]).text
+    #     Logging("Holiday name before edit: " + holiday_data_before)
+
+
+    #     #After edit work place
+    #     #Edit work place
+    #     time.sleep(3)
+    #     work_place_edit = Commands.ClickElement(data["TIMECARD"]["work_place_edit"]) 
         
-        #Input name
-        Logging("")
-        input_other_name = driver.find_element_by_xpath(data["TIMECARD"]["input_other_name"])
-        input_other_name.clear()
-        input_other_name.send_keys("hanh06")
-        Commands.ClickElement("//*[@id='app']//li[1]/span[1]") 
-        time.sleep(5)
-        input_other_name1 = driver.find_element_by_xpath(data["TIMECARD"]["input_other_name1"]).text
-        Logging("Work place after edit: " + input_other_name1)
-        time.sleep(3)
+    #     #Input name
+    #     Logging("")
+    #     input_other_name = driver.find_element_by_xpath(data["TIMECARD"]["input_other_name"])
+    #     input_other_name.clear()
+    #     input_other_name.send_keys("hanh06")
+    #     Commands.ClickElement("//*[@id='app']//li[1]/span[1]") 
+    #     time.sleep(5)
+    #     input_other_name1 = driver.find_element_by_xpath(data["TIMECARD"]["input_other_name1"]).text
+    #     Logging("Work place after edit: " + input_other_name1)
+    #     time.sleep(3)
 
-        #Compare before and after edit
-        Logging("")
-        # Logging(work_place_data)
-        # Logging(input_other_name1)
-        if work_place_data == input_other_name1:
-            #Logging("Edit work place failed")
-            PrintRed(">>>Edit work place failed")
-            TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["edit_work_place"]["fail"])
-        else:
-            #Logging("Edit work place successfully")
-            PrintGreen(">>>Edit work place successfully")
-            TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["edit_work_place"]["pass"])
-    except:
-        #Logging("Edit work place failed")
-        PrintRed(">>>Edit work place failed")
+    #     #Compare before and after edit
+    #     Logging("")
+    #     # Logging(work_place_data)
+    #     # Logging(input_other_name1)
+    #     if work_place_data == input_other_name1:
+    #         #Logging("Edit work place failed")
+    #         PrintRed(">>>Edit work place failed")
+    #         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["edit_work_place"]["fail"])
+    #     else:
+    #         #Logging("Edit work place successfully")
+    #         PrintGreen(">>>Edit work place successfully")
+    #         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["edit_work_place"]["pass"])
+    # except:
+    #     #Logging("Edit work place failed")
+    #     PrintRed(">>>Edit work place failed")
 
-    try:
-        #Edit holiday
-        Commands.ClickElement("//button[starts-with(@id, 'btn-edit')]") 
+    # try:
+    #     #Edit holiday
+    #     Commands.ClickElement("//button[starts-with(@id, 'btn-edit')]") 
 
-        #Edit holiday name
-        edit_name = driver.find_element_by_xpath(data["TIMECARD"]["edit_name"])
-        edit_name.clear()
-        edit_name.send_keys("test")
+    #     #Edit holiday name
+    #     edit_name = driver.find_element_by_xpath(data["TIMECARD"]["edit_name"])
+    #     edit_name.clear()
+    #     edit_name.send_keys("test")
 
-        holiday_type_list = ["Legal Holiday",  "Company Holiday",  "Substitute Holiday"]
-        select_holiday_type = Select(driver.find_element_by_xpath("//*[@id='form-holiday-setting']//select"))
-        select_holiday_type.select_by_visible_text(random.choice(holiday_type_list))
+    #     holiday_type_list = ["Legal Holiday",  "Company Holiday",  "Substitute Holiday"]
+    #     select_holiday_type = Select(driver.find_element_by_xpath("//*[@id='form-holiday-setting']//select"))
+    #     select_holiday_type.select_by_visible_text(random.choice(holiday_type_list))
 
-        #Save
-        Logging("")
-        Commands.ClickElement(data["TIMECARD"]["holiday_save"]) 
-        time.sleep(5)
-        holiday_data_after = driver.find_element_by_xpath(data["TIMECARD"]["holiday_data_after"]).text
-        Logging("Holiday name after edit: " + holiday_data_after)
-
-
-        #Compare before and after edit
-        Logging("")
-        # Logging(holiday_data_before)
-        # Logging(holiday_data_after)
-        if holiday_data_before == holiday_data_after:
-            #Logging("Edit holiday failed")
-            PrintRed(">>>Edit holiday failed")
-            TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["edit_holiday"]["fail"])
-        else:
-            #Logging("Edit holiday successfully")
-            PrintGreen(">>>Edit holiday successfully")
-            TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["edit_holiday"]["pass"])
-    except:
-        #Logging("Edit holiday failed")
-        PrintRed(">>>Edit holiday failed")
+    #     #Save
+    #     Logging("")
+    #     Commands.ClickElement(data["TIMECARD"]["holiday_save"]) 
+    #     time.sleep(5)
+    #     holiday_data_after = driver.find_element_by_xpath(data["TIMECARD"]["holiday_data_after"]).text
+    #     Logging("Holiday name after edit: " + holiday_data_after)
 
 
-    try:
-        #Delete holiday
-        Logging("")
-        Commands.ClickElement(data["TIMECARD"]["del_holiday"]) 
-        Commands.ClickElement(data["TIMECARD"]["delete1"]) 
-        #Logging("Delete holiday successfully")
-        PrintGreen(">>>Delete holiday successfully")
-        TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["delete_holiday"]["pass"])
-    except:
-        #Logging("Delete work place fail")
-        PrintRed(">>>Delete holiday failed")
-        TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["delete_holiday"]["fail"])
+    #     #Compare before and after edit
+    #     Logging("")
+    #     # Logging(holiday_data_before)
+    #     # Logging(holiday_data_after)
+    #     if holiday_data_before == holiday_data_after:
+    #         #Logging("Edit holiday failed")
+    #         PrintRed(">>>Edit holiday failed")
+    #         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["edit_holiday"]["fail"])
+    #     else:
+    #         #Logging("Edit holiday successfully")
+    #         PrintGreen(">>>Edit holiday successfully")
+    #         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["edit_holiday"]["pass"])
+    # except:
+    #     #Logging("Edit holiday failed")
+    #     PrintRed(">>>Edit holiday failed")
+
+
+    # try:
+    #     #Delete holiday
+    #     Logging("")
+    #     Commands.ClickElement(data["TIMECARD"]["del_holiday"]) 
+    #     Commands.ClickElement(data["TIMECARD"]["delete1"]) 
+    #     #Logging("Delete holiday successfully")
+    #     PrintGreen(">>>Delete holiday successfully")
+    #     TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["delete_holiday"]["pass"])
+    # except:
+    #     #Logging("Delete work place fail")
+    #     PrintRed(">>>Delete holiday failed")
+    #     TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["delete_holiday"]["fail"])
     
-    try:
-        #Delete work place
-        time.sleep(3)
-        Logging("")
-        Commands.ClickElement(data["TIMECARD"]["del_work_place"]) 
-        Commands.ClickElement(data["TIMECARD"]["delete1"]) 
-        #Logging("Delete work place successfully")
-        PrintGreen(">>>Delete work place successfully")
-        TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["delete_work_place"]["pass"])
-    except:
-        #Logging("Delete work place fail")
-        PrintRed(">>>Delete work place failed")
-        TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["delete_work_place"]["fail"])
+    # try:
+    #     #Delete work place
+    #     time.sleep(3)
+    #     Logging("")
+    #     Commands.ClickElement(data["TIMECARD"]["del_work_place"]) 
+    #     Commands.ClickElement(data["TIMECARD"]["delete1"]) 
+    #     #Logging("Delete work place successfully")
+    #     PrintGreen(">>>Delete work place successfully")
+    #     TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["delete_work_place"]["pass"])
+    # except:
+    #     #Logging("Delete work place fail")
+    #     PrintRed(">>>Delete work place failed")
+    #     TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["delete_work_place"]["fail"])
 
 
 def report_weekly():
@@ -7791,6 +7921,9 @@ def timecard():
     nightwork()
     breaktime()
     clock_out()
+
+    delete_punch()
+    add_clock_in_clock_out()
     output_clockin,output_clockout,break_time,working_time,clock_in_time,work_method_up,today_work_date, OT_time = check_time()
     date_clock_in = timesheet_list(output_clockin,output_clockout,break_time,working_time, OT_time)
     #report_list1(output_clockin,output_clockout,break_time,working_time, OT_time, date_clock_in)
@@ -7802,63 +7935,63 @@ def timecard():
     #work_schedule(day_list)
     manager()
     total_manager()
-    # # work_correction()
+    # work_correction()
     delete_punch()
 
 def time_card():
-    # # # # Napproval_OT()
-    weekly_status()
-    status1 = daily_status()
+    # # # # # Napproval_OT()
+    # weekly_status()
+    # status1 = daily_status()
 
-    rp=report()
-    working_time_report_decimal=rp[0]
-    worked_time_report_decimal=rp[1]
-    break_time_report_decimal=rp[2]
+    # rp=report()
+    # working_time_report_decimal=rp[0]
+    # worked_time_report_decimal=rp[1]
+    # break_time_report_decimal=rp[2]
 
-    clockin()
-    #timesheet_calendar_check()
-    clockout()
-    edit_clockin()
+    # clockin()
+    # #timesheet_calendar_check()
+    # clockout()
+    # edit_clockin()
 
-    nb_out=edit_clockout()
-    hour_number1=nb_out[0]
-    working_number1=nb_out[1]
-    break_number1=nb_out[2]
-    OT_number1=nb_out[3]
+    # nb_out=edit_clockout()
+    # hour_number1=nb_out[0]
+    # working_number1=nb_out[1]
+    # break_number1=nb_out[2]
+    # OT_number1=nb_out[3]
 
-    nb_report=report_2nd()
-    working_time_decimal_2nd=nb_report[0]
-    worked_time_decimal_2nd =nb_report[1]
-    break_time_decimal_2nd = nb_report[2]
+    # nb_report=report_2nd()
+    # working_time_decimal_2nd=nb_report[0]
+    # worked_time_decimal_2nd =nb_report[1]
+    # break_time_decimal_2nd = nb_report[2]
 
-    calculation(working_time_report_decimal,worked_time_report_decimal,break_time_report_decimal,hour_number1,working_number1,break_number1,working_time_decimal_2nd,worked_time_decimal_2nd,break_time_decimal_2nd)
+    # calculation(working_time_report_decimal,worked_time_report_decimal,break_time_report_decimal,hour_number1,working_number1,break_number1,working_time_decimal_2nd,worked_time_decimal_2nd,break_time_decimal_2nd)
 
-    daily_status2(status1,break_number1,working_number1,OT_number1)
+    # daily_status2(status1,break_number1,working_number1,OT_number1)
 
-    weekly_status2()
+    # weekly_status2()
 
-    company_timecard_reports()
+    # company_timecard_reports()
 
-    timeline()
+    # timeline()
 
 
     work_place()
 
-    report_weekly()
+    # report_weekly()
 
-    report_list()
+    # report_list()
 
 
-    dashboard()
+    # dashboard()
 
-    basic_gps()
+    # basic_gps()
 
-    exception_users()
+    # exception_users()
 
-    outside_users()
+    # outside_users()
 
-    arbitrary_decision()
+    # arbitrary_decision()
     
-    # # # # OT_post_midnight()
+    # # # # # OT_post_midnight()
 
-    # work_shift()
+    # # work_shift()
