@@ -844,6 +844,7 @@ def add_event2():
                                 # Logging(status_approve.text)
                                 if event_status_approve.text == "Event":
                                     Logging ("- Event approval is displayed in approval list")
+                                try:
                                     open_approve_status_list = Commands.ClickElement(data["TIMECARD"]["open_approve_status_list"]) 
                                     #Logging("Open successfully")
                                     time.sleep(5)
@@ -860,7 +861,8 @@ def add_event2():
                                     time.sleep(1)
                                     approve_status1 = driver.find_element_by_xpath("//div[contains(@class,'select-approval-status-content')]/div/div[contains(.,'" + str(x1) + "')]")
                                     approve_status1.click()
-                                    Logging("- Select event approve status successfully")
+                                    Logging("- Select event approve status successfully")                              
+
                                     time.sleep(5)
                                     #Scroll to detail
                                     slider = driver.find_element_by_xpath("//div[@ref='eBodyHorizontalScrollViewport']")
@@ -870,7 +872,7 @@ def add_event2():
                                     time.sleep(5)
                                     #Logging ("Scroll successfully")
                                     #Click view details
-                                    Commands.ClickElement(data["TIMECARD"]["click_detail"]) 
+                                    Commands.ClickElement("//div[1]/*[@col-id='id']//div[contains(@class, 'btn-view-detail')]") 
                                     time.sleep(5)
                                     #Print status
                                     status_approve_event = driver.find_element_by_xpath(data["TIMECARD"]["status_approve_event"]).text
@@ -882,10 +884,14 @@ def add_event2():
                                         Logging ("- Status is changed => Approve successfully")
                                         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["approve_status"]["pass"])
                                         #approval_OT()
-                                else:
-                                        Logging ("Event approval is not displayed in approval list")
-                            else: 
-                                    Logging ("Event approval is not displayed in approval list")
+                                except:
+                                    Logging(" ")
+
+                                #Click view details
+                                Commands.ClickElement(data["TIMECARD"]["click_detail"]) 
+                                time.sleep(5)
+                            else:
+                                Logging ("Event approval is not displayed in approval list")
                         else:
                             Logging("- Save event Fail")
                             TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["add_event"]["fail"])
@@ -950,51 +956,56 @@ def add_event2():
                             # Logging(status_approve.text)
                             if event_status_approve.text == "Event":
                                 Logging ("- Event approval is displayed in approval list")
-                                open_approve_status_list = Commands.ClickElement(data["TIMECARD"]["open_approve_status_list"]) 
-                                #Logging("Open successfully")
-                                time.sleep(5)
-                                #Click random (Reject, Approve)
-                                approve_status_list = Functions.GetListLength(data["TIMECARD"]["approve_status_list"])
-                                list_approve_status = []
-                                i=0
-                                for i in range(approve_status_list):
-                                    i += 1
-                                    approve_status = driver.find_element_by_xpath("//div[contains(@class,'select-approval-status-content')]/div[" + str(i) + "]/div")
-                                    list_approve_status.append(approve_status.text)
+                                try:
+                                    open_approve_status_list = Commands.ClickElement(data["TIMECARD"]["open_approve_status_list"]) 
+                                    #Logging("Open successfully")
+                                    time.sleep(5)
+                                    #Click random (Reject, Approve)
+                                    approve_status_list = Functions.GetListLength(data["TIMECARD"]["approve_status_list"])
+                                    list_approve_status = []
+                                    i=0
+                                    for i in range(approve_status_list):
+                                        i += 1
+                                        approve_status = driver.find_element_by_xpath("//div[contains(@class,'select-approval-status-content')]/div[" + str(i) + "]/div")
+                                        list_approve_status.append(approve_status.text)
 
-                                x1 = random.choice(list_approve_status)
-                                time.sleep(1)
-                                approve_status1 = driver.find_element_by_xpath("//div[contains(@class,'select-approval-status-content')]/div/div[contains(.,'" + str(x1) + "')]")
-                                approve_status1.click()
-                                Logging("- Select event approve status successfully")
-                                time.sleep(5)
-                                #Scroll to detail
-                                slider = driver.find_element_by_xpath("//div[@ref='eBodyHorizontalScrollViewport']")
-                                horizontal_bar = driver.find_element_by_xpath("//div[@ref='eHorizontalRightSpacer']")
-                                webdriver.ActionChains(driver).click_and_hold(slider).move_to_element(horizontal_bar).perform()
-                                webdriver.ActionChains(driver).release().perform()
-                                time.sleep(5)
-                                #Logging ("Scroll successfully")
-                                #Click view details
-                                Commands.ClickElement("//div[1]/*[@col-id='id']//div[contains(@class, 'btn-view-detail')]") 
-                                time.sleep(5)
-                                #Print status
-                                status_approve_event = driver.find_element_by_xpath(data["TIMECARD"]["status_approve_event"]).text
-                                Logging ("- Modal is opened successfully")
-                                if status_approve_event == "Pending":
-                                    Logging ("- Status is not changed => Approve failed")
-                                    TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["approve_status"]["fail"])
-                                elif status_approve_event != str(x1):
-                                    Logging ("- Status is changed => Approve successfully")
-                                    TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["approve_status"]["pass"])
-                                    #approval_OT()
+                                    x1 = random.choice(list_approve_status)
+                                    time.sleep(1)
+                                    approve_status1 = driver.find_element_by_xpath("//div[contains(@class,'select-approval-status-content')]/div/div[contains(.,'" + str(x1) + "')]")
+                                    approve_status1.click()
+                                    Logging("- Select event approve status successfully")                              
+
+                                    time.sleep(5)
+                                    #Scroll to detail
+                                    slider = driver.find_element_by_xpath("//div[@ref='eBodyHorizontalScrollViewport']")
+                                    horizontal_bar = driver.find_element_by_xpath("//div[@ref='eHorizontalRightSpacer']")
+                                    webdriver.ActionChains(driver).click_and_hold(slider).move_to_element(horizontal_bar).perform()
+                                    webdriver.ActionChains(driver).release().perform()
+                                    time.sleep(5)
+                                    #Logging ("Scroll successfully")
+                                    #Click view details
+                                    Commands.ClickElement("//div[1]/*[@col-id='id']//div[contains(@class, 'btn-view-detail')]") 
+                                    time.sleep(5)
+                                    #Print status
+                                    status_approve_event = driver.find_element_by_xpath(data["TIMECARD"]["status_approve_event"]).text
+                                    Logging ("- Modal is opened successfully")
+                                    if status_approve_event == "Pending":
+                                        Logging ("- Status is not changed => Approve failed")
+                                        TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["approve_status"]["fail"])
+                                    elif status_approve_event != str(x1):
+                                        Logging ("- Status is changed => Approve successfully")
+                                        TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["approve_status"]["pass"])
+                                        #approval_OT()
+                                except:
+                                    Logging(" ")
+
                                 #Click view details
                                 Commands.ClickElement(data["TIMECARD"]["click_detail"]) 
                                 time.sleep(5)
                             else:
-                                    Logging ("Event approval is not displayed in approval list")
-                        else: 
                                 Logging ("Event approval is not displayed in approval list")
+                        else: 
+                            Logging ("Event approval is not displayed in approval list")
                     else:
                         Logging("- Save event Fail")
                         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["add_event"]["fail"])
@@ -1403,6 +1414,8 @@ def add_working_status():
         Commands.ClickElement(data["TIMECARD"]["save_working_status"]) 
         Logging("- Save working status")
     
+
+
 
 
 
@@ -7939,58 +7952,58 @@ def timecard():
     delete_punch()
 
 def time_card():
-    # # # # # Napproval_OT()
-    # weekly_status()
-    # status1 = daily_status()
+    # # # # Napproval_OT()
+    weekly_status()
+    status1 = daily_status()
 
-    # rp=report()
-    # working_time_report_decimal=rp[0]
-    # worked_time_report_decimal=rp[1]
-    # break_time_report_decimal=rp[2]
+    rp=report()
+    working_time_report_decimal=rp[0]
+    worked_time_report_decimal=rp[1]
+    break_time_report_decimal=rp[2]
 
-    # clockin()
-    # #timesheet_calendar_check()
-    # clockout()
-    # edit_clockin()
+    clockin()
+    #timesheet_calendar_check()
+    clockout()
+    edit_clockin()
 
-    # nb_out=edit_clockout()
-    # hour_number1=nb_out[0]
-    # working_number1=nb_out[1]
-    # break_number1=nb_out[2]
-    # OT_number1=nb_out[3]
+    nb_out=edit_clockout()
+    hour_number1=nb_out[0]
+    working_number1=nb_out[1]
+    break_number1=nb_out[2]
+    OT_number1=nb_out[3]
 
-    # nb_report=report_2nd()
-    # working_time_decimal_2nd=nb_report[0]
-    # worked_time_decimal_2nd =nb_report[1]
-    # break_time_decimal_2nd = nb_report[2]
+    nb_report=report_2nd()
+    working_time_decimal_2nd=nb_report[0]
+    worked_time_decimal_2nd =nb_report[1]
+    break_time_decimal_2nd = nb_report[2]
 
-    # calculation(working_time_report_decimal,worked_time_report_decimal,break_time_report_decimal,hour_number1,working_number1,break_number1,working_time_decimal_2nd,worked_time_decimal_2nd,break_time_decimal_2nd)
+    calculation(working_time_report_decimal,worked_time_report_decimal,break_time_report_decimal,hour_number1,working_number1,break_number1,working_time_decimal_2nd,worked_time_decimal_2nd,break_time_decimal_2nd)
 
-    # daily_status2(status1,break_number1,working_number1,OT_number1)
+    daily_status2(status1,break_number1,working_number1,OT_number1)
 
-    # weekly_status2()
+    weekly_status2()
 
-    # company_timecard_reports()
+    company_timecard_reports()
 
-    # timeline()
-
-
-    work_place()
-
-    # report_weekly()
-
-    # report_list()
+    timeline()
 
 
-    # dashboard()
+    #work_place()
 
-    # basic_gps()
+    report_weekly()
 
-    # exception_users()
+    report_list()
 
-    # outside_users()
 
-    # arbitrary_decision()
+    dashboard()
+
+    basic_gps()
+
+    exception_users()
+
+    outside_users()
+
+    arbitrary_decision()
     
     # # # # # OT_post_midnight()
 
