@@ -39,6 +39,24 @@ date = now.strftime("%m/%d/%y %H:%M:%S")
 
 print_date = now.strftime("%H:%M")
 
+def admin_user():
+    company_timecard = driver.find_element_by_xpath("//label[contains(@data-lang-id,'tc_menu_company')]")
+    if company_timecard.is_displayed():
+        Logging("This user is Admin")
+        timecard()
+        time_card()
+    else:
+        Logging("This is regular user")
+        # nightwork()
+        # breaktime()
+        # clock_out()
+        # delete_punch()
+        # add_clock_in_clock_out()
+        # output_clockin,output_clockout,break_time,working_time,clock_in_time,work_method_up,today_work_date, OT_time = check_time()
+        # add_event2()
+        # view_details()
+        # working_status()
+
 
 def input_reason_late():
     try:
@@ -2920,19 +2938,26 @@ def daily_status2(status1,break_number1,working_number1,OT_number1):
         estimate2 = driver.find_element_by_xpath(data["TIMECARD"]["estimate2"])
         Logging("Estimate: " + estimate2.text)   
 
+        #Scroll to the end
+        slider = driver.find_element_by_xpath("//div[@ref='eBodyHorizontalScrollViewport']")
+        horizontal_bar = driver.find_element_by_xpath("//div[@ref='eHorizontalRightSpacer']")
+        webdriver.ActionChains(driver).click_and_hold(slider).move_to_element(horizontal_bar).perform()
+        webdriver.ActionChains(driver).release().perform()
+        #Logging ("Scroll successfully")
+
         workingtime2 = driver.find_element_by_xpath(data["TIMECARD"]["workingtime2"])
         Logging("working time before change to decimal: " + workingtime2.text[0:1])
         workingtime_status = workingtime2.text[0:1]
         workingtime_status_hour = workingtime_status.split("H")[0]
         workingtime_status_number = int(workingtime_status_hour)
-        Logging("working time after change to decimal: " + str(workingtime_status_number))
+        Logging("Working time after change to decimal: " + str(workingtime_status_number))
 
         OvT = driver.find_element_by_xpath(data["TIMECARD"]["OvT"])
         Logging("OT time before change to decimal: " + OvT.text[0:1])
         OT1 = OvT.text[0:1]
         OT_hour = OT1.split("H")[0]
         OT_number = int(OT_hour)
-        Logging(" OT time after change to decimal: " + str(OT_number))
+        Logging("OT time after change to decimal: " + str(OT_number))
         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["after_login_daily_status_data"]["pass"])
 
         time.sleep(5)
@@ -3204,11 +3229,11 @@ def weekly_status2():
             saturday_time_decimal2 = hour_number_saturday_time2
             Logging("saturday after change to decimal: " + str(saturday_time_decimal2))
 
-        sunday2 = driver.find_element_by_xpath(data["TIMECARD"]["sunday2"])
+        sunday2 = driver.find_element_by_xpath(data["TIMECARD"]["sunday"])
         Logging("sunday: " + sunday2.text)
 
         Logging("")
-        total2 = driver.find_element_by_xpath(data["TIMECARD"]["total2"])
+        total2 = driver.find_element_by_xpath(data["TIMECARD"]["total"])
         Logging("total before change to decimal: " + total2.text)
         total_time2 = total2.text
         try:
@@ -7929,6 +7954,8 @@ def arbitrary_decision():
     
 
 
+def admin_and_user():
+    admin_user()
 
 def timecard():
     nightwork()
@@ -7985,26 +8012,26 @@ def time_card():
 
     company_timecard_reports()
 
-    timeline()
+    # timeline()
 
 
-    #work_place()
+    # #work_place()
 
-    report_weekly()
+    # report_weekly()
 
-    report_list()
+    # report_list()
 
 
-    dashboard()
+    # dashboard()
 
-    basic_gps()
+    # basic_gps()
 
-    exception_users()
+    # exception_users()
 
-    outside_users()
+    # outside_users()
 
-    arbitrary_decision()
+    # arbitrary_decision()
     
-    # # # # # OT_post_midnight()
+    # # # # # # OT_post_midnight()
 
-    # # work_shift()
+    # # # work_shift()

@@ -28,6 +28,12 @@ def MyExecution(domain_name):
     except:
         Logging("Cannot continue execution")
         error_menu.append("H_functions.access_hr")
+
+    try:
+        HR_timecard.admin_and_user()
+    except:
+        Logging("Cannot continue execution")
+        error_menu.append("HR_timecard.admin_and_user()")
     
     try:
         HR_timecard.timecard()
@@ -54,12 +60,13 @@ def MyExecution(domain_name):
 
 def My_Execution(domain_name):
     H_functions.access_hr(domain_name)
-    HR_timecard.timecard()
-    HR_timecard.time_card()
+    HR_timecard.admin_and_user()
+    #HR_timecard.timecard()
+    #HR_timecard.time_card()
     #HR_timecard_OT.timecard_OT()
     #HR_timecard_OT.timecard_report()
 
-#My_Execution("http:/groupware57.hanbiro.net/nhr/login")
+My_Execution("http:/groupware57.hanbiro.net/nhr/login")
 #My_Execution("http:/gw.hanbirolinux.tk/nhr/login")
-My_Execution("http:/global3.hanbiro.com/nhr/login")
+#My_Execution("http:/global3.hanbiro.com/nhr/login")
 
