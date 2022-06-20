@@ -2626,6 +2626,7 @@
         "save": "//*[@class='modal-content']//form//div//button[contains(.,'Save')]",
         "pop_up": "//*[contains(@id,'click-out-side-3') and contains(@class,'item-header show')]",
         "clock_in_but": "//*[@id='click-out-side-3']//button[contains(.,'Clock-In')]",
+        "click_close": "//*[@id='click-out-side-3']/div[2]/div/div/div[1]/div[2]",
         "pop_up_hid": "//*[@id='click-out-side-3']//img",
         "nightwork": "//*[@class='modal-content']//span/h6[contains(.,'Confirm Nightwork')]",
         "close_nightwork": "//*[@class='modal-content']//button/span[contains(.,'Close')]",
@@ -2653,7 +2654,7 @@
             "//div[2]//div[contains(@class, 'cursor-pointer')]/button",
             "//*[@class='modal-content']//button[contains(.,'Yes')]"
         ],
-        "clear_working_status": "//*[@id='click-out-side-5']//div/button[contains(.,'Clear')]",
+        "clear_working_status": "//span[contains(.,'Clear')]",
         "date_work": "//*[@class='main-calendar']//div[contains(@class,'tui-full-calendar-weekday-schedules')]//span[contains(@title,'",
         "day_off": "//*[@class='main-calendar']//div[contains(@class,'tui-full-calendar-weekday-schedules')]//span[contains(@title,'Day Off')]",
         "holiday": "//*[@class='main-calendar']//div[contains(@class,'tui-full-calendar-weekday-schedules')]//span[contains(@title,'Holiday')]",
@@ -2822,7 +2823,6 @@
         "clockin_UI": "//div[contains(@class,'check-in-status')]",
         "clockout_UI": "//div[contains(@class,'check-out-status')]",
         "ws_search2": "//input[contains(@class,'form-control')]",
-        "total2": "//span[contains(@class,'td-sum-of-time')]",
         "ws_clockin_UI": "//div[contains(@class,'check-in-status')]",
         "ws_clockout_UI": "//div[contains(@class,'check-out-status')]",
         "ws_office_time": "//div[contains(@class, 'info-card')]//div[contains(.,'Office time')]//div[2]/div",
@@ -2831,10 +2831,10 @@
         "ws_OT_time": "//div[contains(@class, 'info-card')]/div[5]/div[2]/div[1]",
         "company_report_page": "//a[contains(@href,'/nhr/hr/timecard/company/statistics')]",
         "working_day": "//*[@col-id='weekday']//div[contains(@class,'ag-react-container')]//div//div",
-        "worked_day": "//*[@col-id='day_work']//div[contains(@class,'ag-react-container')]",
+        "worked_day": "//*[@col-id='day_work']//div[contains(@class,'ag-react-container')]//div//div",
         "avg_clock_in": "//*[@col-id='avg_clock_in']//div[contains(@class,'ag-react-container')]",
         "avg_clock_out": "//*[@col-id='avg_clock_out']//div[contains(@class,'ag-react-container')]",
-        "avg_worked_time_per_day": "//*[@col-id='avg_daily_work']//div[contains(@class,'ag-react-container')]",
+        "avg_worked_time_per_day": "//*[@col-id='avg_daily_work']//div[contains(@class,'ag-react-container')]//div//div",
         "avg_worked_time_per_week": "//*[@col-id='avg_weekly_work']//div[contains(@class,'ag-react-container')]//div//div",
         "scheduled_workingday": "//span[contains(.,'Scheduled working day')]/../..//div[contains(@class,'d-flex ')]/following-sibling::div",
         "scheduled_worked_day": "//span[contains(.,'Worked day')]/../..//div[contains(@class,'d-flex ')]/following-sibling::div",
@@ -3141,7 +3141,7 @@
         "notice_success": "//*[starts-with(@id,'noty_bar')]//div[contains(text(),'Data deleted successfully.')]",
         "input_out_user": "//span[contains(@data-lang-id, 'tc_available_user')]/../../../..//input",
         "outside_user_name": "//span[contains(@data-lang-id, 'tc_outside_clock_in_out_exception_users')]/../..//span[@class='fancytree-title']",
-        "outside_users_add": "/span[contains(@data-lang-id, 'tc_outside_clock_in_out_exception_users')]/../..//label[contains(@data-lang-id, 'tc_action_add')]",
+        "outside_users_add": "//span[contains(@data-lang-id, 'tc_outside_clock_in_out_exception_users')]/../..//label[contains(@data-lang-id, 'tc_action_add')]",
         "out_user_noti": "//*[starts-with(@id,'noty_bar')]//div[contains(@class,'alert-body')]",
         "outside_notice": "//*[starts-with(@id,'noty_bar')]//div[contains(text(),'Data deleted successfully.')]",
         "arbitrary_user": "//a[contains(@href,'/nhr/hr/timecard/admin/basic/approval')]",
@@ -3248,7 +3248,7 @@
         "search_users": "//div[contains(@class,'avatar-wrapper')]//li",
         "work_shifts": "//span[contains(@class, 'text-truncate') and contains(., 'Work Shifts')]",
         "work_shift_search": "//div[contains(@class,'working-setting-content')]/../../div[1]",
-        "work_place_page": "//span[contains(@class, 'text-truncate') and contains(., 'Work Place')]",
+        "work_place_page": "//a[contains(@href,'/nhr/hr/timecard/admin/holiday')]",
         "work_place_wait": "//*[@id='form-holiday-setting']",
         "open_work_place_box": "//div[contains(@class,'title-section')]//button[contains(@type,'button')]",
         "add_work_place": "/html/body/div[4]/div",
@@ -3287,7 +3287,36 @@
         "click_del_gps": "//form//div[1]/div[5]/div/span[contains(@ref, 'eCellValue')]/div/div/div/div[2]/div",
         "open_del_gps": "//button//span[contains(@data-lang-id, 'tc_action_delete')]",
         "company_setting": "//div[contains(@class,'company-statistic-setting')]/div/div[2]/div/div[1]",
-        "click_save_message": "//div[contains(@class,'content-body')]//button[2]"
+        "click_save_message": "//div[contains(@class,'content-body')]//button[2]",
+        "add_name_manager": "//span[text()='Managers']//following::div//ul//li//div[contains(@class,'first-line') and contains(.,'%s')]",
+        "add_name_manager2": "//span[text()='Managers']//following::div//ul//li//div[contains(@class,'first-line') and contains(.,'%s')]//following::div[2]",
+        "permission": "//*[starts-with(@id,'right-sidebar')]//div[contains(text(),'Select department/user')]/following-sibling::div/div/div['%s']//label",
+        "select_per": "//*[starts-with(@id,'right-sidebar')]//div[contains(text(),'Select department/user')]/following-sibling::div/div/div//label[contains(.,'%s')]",
+        "manager_permission": "//*[starts-with(@id,'right-sidebar')]//div[contains(.,'Select department/user')]//following-sibling::div//label[contains(.,'%s')]/preceding-sibling::input",
+        "out_put_clockin": "//*[@class = 'check-in-status tx-20 tx-bold text-center']",
+        "work_shift": "//span[contains(@data-lang-id, 'tc_menu_working_settings')]",
+        "work_policy": "//span[contains(@data-lang-id, 'tc_title_work_policy')]",
+        "OT_data": "//span[@data-lang-id='tc_status_ot']",
+        "OT_data_time": "//*[@id='base_overtime_hour']/input",
+        "over_time_work": "//span[contains(@data-lang-id, 'tc_title_over_time_work')]",
+        "available_application_time": "//*[@id='overtime_approve_pre_limit']/div/input",
+        "date_data": "//input[contains(@class, 'form-control')]/..//input",
+        "date_data_check": "//div[contains(@data-lang-id, 'tc_title_date')]/following-sibling::div",
+        "memo_data_check": "//div[contains(@data-lang-id, 'tc_status_memo')]/following-sibling::div",
+        "time_data_check": "//div[contains(@data-lang-id, 'tc_title_time')]/following-sibling::div",
+        "menu_report": "//li[4]//span[contains(@data-lang-id, 'tc_menu_report')]",
+        "weekly_average": "//tbody[starts-with(@id, 'tbody-scroll-table')]//div[1]//div[contains(.,'Weekly average')]",
+        "text_working_time": "//tbody[starts-with(@id, 'tbody-scroll-table')]//div[contains(.,'Weekly average')]/../../td[2]//div[2]",
+        "text_break_time": "//tbody[starts-with(@id, 'tbody-scroll-table')]//div[contains(.,'Weekly average')]/../../td[3]//div[2]",
+        "text_OT_time": "//tbody[starts-with(@id, 'tbody-scroll-table')]//div[contains(.,'Weekly average')]/../../td[4]//div[2]",
+        "text_total_working_hour": "//tbody[starts-with(@id, 'tbody-scroll-table')]//div[contains(.,'Weekly average')]/../../td[5]//div[2]",
+        "clockout_scroll": "//div[contains(@class, 'admin_status')]//div[contains(@class, 'timeline-item  ')]//div[contains(.,'Clock-Out')]//div[contains(@class, 'd-flex ')]//span[2]//div[contains(@class, 'cursor-pointer')]"
+
+
+
+
+
+
     }
 }
 
