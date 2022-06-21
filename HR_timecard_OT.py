@@ -40,7 +40,7 @@ def output(local_xpath):
 
 
 def clock_in():
-    driver.find_element_by_xpath(data["TIMECARD"]["timesheet_page"]).click()
+    Commands.ClickElement(data["TIMECARD"]["timesheet_page"])
     Waits.WaitElementLoaded(10, data["TIMECARD"]["timesheet_wait"])
     time.sleep(3)
     output_clockin = driver.find_element_by_xpath(data["TIMECARD"]["out_put_clockin"])
@@ -58,14 +58,14 @@ def Napproval_OT(time_clock_in):
     if bool(time_clock_in) == True:
         Logging("Run pre OT function")
         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["check_true"]["pass"])
-        text_format_hour = output("//span[contains(@data-lang-id, 'tc_title_work_policy')]/../../div[contains(.,'Work Policy')]//following-sibling::div//div[2]")
+        text_format_hour = output(data["TIMECARD"]["timesheet_wait"])
         clock_in_default = text_format_hour
         #Logging(clock_in_default)
         clock_in_default_hour = clock_in_default.split(" ")[0]
         #Logging(clock_in_default_hour)
 
         #Calculate to find out valid time 
-        text_OT_since = output("//span[contains(@data-lang-id, 'tc_status_overtime_since')]/following-sibling::div")
+        text_OT_since = output(data["TIMECARD"]["text_OT_since"])
         Logging("OT since: " + text_OT_since)
         OT_since_hour = text_OT_since
         OT_since_hour = OT_since_hour.split(":")[0]
@@ -80,18 +80,17 @@ def Napproval_OT(time_clock_in):
 
         work_shift = driver.find_element_by_xpath(data["TIMECARD"]["work_shift"])
         work_shift.location_once_scrolled_into_view
-        driver.find_element_by_xpath(data["TIMECARD"]["work_shift"]).click()
+        Commands.ClickElement(data["TIMECARD"]["work_shift"])
         time.sleep(3)
-        driver.find_element_by_xpath(data["TIMECARD"]["work_shift_search"]).click()
+        Commands.ClickElement(data["TIMECARD"]["work_shift_search"])
         time.sleep(3)
-        wss_search2 = driver.find_element_by_xpath(data["TIMECARD"]["ws_search"])
-        wss_search2.send_keys("automationtest1")
+        wss_search2 =  Commands.InputElement(data["TIMECARD"]["ws_search"], "automationtest1")
         wss_search2.send_keys(Keys.ENTER)
         time.sleep(3)
-        driver.find_element_by_xpath(data["TIMECARD"]["click_first_choice"]).click()
-        driver.find_element_by_xpath(data["TIMECARD"]["work_shift_search"]).click()
+        Commands.ClickElement(data["TIMECARD"]["click_first_choice"])
+        Commands.ClickElement(data["TIMECARD"]["work_shift_search"])
         time.sleep(3)
-        text_work_method_name = output("//div[contains(@class, 'work-method-name')]")
+        text_work_method_name = output(data["TIMECARD"]["text_work_method_name"])
         Logging("Work method name: " + text_work_method_name)
         x9 = text_work_method_name
 
@@ -100,10 +99,10 @@ def Napproval_OT(time_clock_in):
         basic.click()
         Waits.WaitElementLoaded(10, data["TIMECARD"]["setting_wait"])
         time.sleep(2)
-        driver.find_element_by_xpath(data["TIMECARD"]["work_policy"]).click()
+        Commands.ClickElement(data["TIMECARD"]["work_policy"])
         time.sleep(3)
         work_policy = driver.find_element_by_xpath(data["TIMECARD"]["work_policy"])
-        driver.find_element_by_xpath("//div[contains(@class, 'policy-list-methods')]/ul/a//h6[contains(.,'" + x9 +"')] ").click()
+        Commands.ClickElement("//div[contains(@class, 'policy-list-methods')]/ul/a//h6[contains(.,'" + x9 +"')] ")
 
         #Check OT data
         OT_data = driver.find_element_by_xpath(data["TIMECARD"]["OT_data"])
@@ -117,7 +116,7 @@ def Napproval_OT(time_clock_in):
         Logging("Total of OT time: " + str(OT_data_time_decimal) + "hrs")
 
         #Print available application time
-        driver.find_element_by_xpath(data["TIMECARD"]["over_time_work"]).click()
+        Commands.ClickElement(data["TIMECARD"]["over_time_work"]).click()
         available_application_time = driver.find_element_by_xpath(data["TIMECARD"]["available_application_time"])
         available_application_time_value = available_application_time.get_attribute("value")
         #Logging(available_application_time_value)
@@ -151,7 +150,7 @@ def Napproval_OT(time_clock_in):
                 Logging("=> Able to apply pre-OT")
                 TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["pre_OT_check"]["pass"])
                 driver.refresh()
-                driver.find_element_by_xpath(data["TIMECARD"]["setting_approval"]).click()
+                Commands.ClickElement(data["TIMECARD"]["setting_approval"])
                 # Logging("- Setting: Basic_Approval")
                 time.sleep(3)
                 OT = WebDriverWait(driver,10).until(EC.presence_of_element_located((By.XPATH, data["TIMECARD"]["OT_scroll"])))
@@ -182,18 +181,18 @@ def Napproval_OT(time_clock_in):
                         approver = driver.find_element_by_xpath(data["TIMECARD"]["approver"])
                         if approver.text == "No data was found.":
                             Logging("- Don't have approval line")
-                            driver.find_element_by_xpath(data["TIMECARD"]["add_approver"]).click()
-                            WebDriverWait(driver,10).until(EC.presence_of_element_located((By.XPATH, data["TIMECARD"]["wait_OT"])))
+                            Commands.ClickElement(data["TIMECARD"]["add_approver"])
+                            Waits.WaitElementLoaded(10, data["TIMECARD"]["wait_OT"])
                             time.sleep(2)
                             approval_line = driver.find_element_by_xpath(data["TIMECARD"]["approval_line"])
                             approval_line.send_keys(data["name_keyword"][1])
                             approval_line.send_keys(Keys.ENTER)
                             time.sleep(3)
-                            driver.find_element_by_xpath(data["TIMECARD"]["select_user"]).click()
-                            driver.find_element_by_xpath(data["TIMECARD"]["plus_button"]).click()
-                            driver.find_element_by_xpath(data["TIMECARD"]["save_approver"]).click()
+                            Commands.ClickElement(data["TIMECARD"]["select_user"])
+                            Commands.ClickElement(data["TIMECARD"]["plus_button"])
+                            Commands.ClickElement(data["TIMECARD"]["save_approver"])
                             Logging("- Save approval line")
-                            approver_list = WebDriverWait(driver,10).until(EC.presence_of_element_located((By.XPATH,  data["TIMECARD"]["approver_list"] + data["name_keyword"][1] + "')]")))
+                            approver_list = Waits.WaitElementLoaded(10,  data["TIMECARD"]["approver_list"] + data["name_keyword"][1] + "')]")
                             if approver_list.is_displayed():
                                 Logging("- Save approvers list Successfully")
                             else:
@@ -205,23 +204,23 @@ def Napproval_OT(time_clock_in):
 
                 driver.refresh()
                 time.sleep(3)
-                driver.find_element_by_xpath(data["TIMECARD"]["my_timesheets"]).click()
+                Commands.ClickElement(data["TIMECARD"]["my_timesheets"])
                 time.sleep(1)
-                driver.find_element_by_xpath(data["TIMECARD"]["calendar"]).click()
-                WebDriverWait(driver,10).until(EC.presence_of_element_located((By.XPATH, data["TIMECARD"]["wait_calendar"])))
+                Commands.ClickElement(data["TIMECARD"]["calendar"])
+                Waits.WaitElementLoaded(10, data["TIMECARD"]["wait_calendar"])
                 time.sleep(3)
-                driver.find_element_by_xpath(data["TIMECARD"]["add_event"]).click()
+                Commands.ClickElement(data["TIMECARD"]["add_event"])
                 time.sleep(1)
-                driver.find_element_by_xpath(data["TIMECARD"]["add_OT"]).click()
+                Commands.ClickElement(data["TIMECARD"]["add_OT"])
                 time.sleep(3)
                 #Check max application time
-                text_max_application_time = output("//span[contains(@data-lang-id,'tc_title_max_ot_apply')]/../following-sibling::div")
+                text_max_application_time = output(data["TIMECARD"]["text_max_application_time"])
                 #Logging("Max application time: " + text_max_application_time)
                 max_application = text_max_application_time
                 max_application_hour = max_application.split("H")[0]
                 Logging("Max application time: " + max_application_hour)
 
-                text_remaining_OT_time = output("//span[contains(@data-lang-id,'tc_status_ot_n')]/../following-sibling::div")
+                text_remaining_OT_time = output(data["TIMECARD"]["text_remaining_OT_time"])
                 #Logging("Remaining OT time: " + text_remaining_OT_time)
                 remaining_OT = text_remaining_OT_time
                 remaining_OT_hour = remaining_OT.split("/")[0]
@@ -240,7 +239,7 @@ def Napproval_OT(time_clock_in):
                     TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["data_check_OT_max"]["fail"])
 
                 #Estimate working hours
-                text_estimate_default = output("//span[contains(@data-lang-id,'tc_title_estimate_working_hours')]/../following-sibling::div")
+                text_estimate_default = output(data["TIMECARD"]["text_estimate_default"])
                 Logging("Estimate time before select filter: " + text_estimate_default)
                 estimate_time = text_estimate_default
                 estimate_time1 = estimate_time.split("~")[1]
@@ -265,7 +264,7 @@ def Napproval_OT(time_clock_in):
                 Logging("Select filters time OT")
                 time.sleep(3)
 
-                filter_number = driver.find_element_by_xpath("//div[contains(@class,'dropdown')]//span[1]/span")
+                filter_number = driver.find_element_by_xpath(data["TIMECARD"]["filter_number"])
                 m1 = filter_number.text
                 #Logging(m1)
                 filter_number_data = m1.split(" ")[0]
@@ -273,7 +272,7 @@ def Napproval_OT(time_clock_in):
                 #Logging(filter_number_decimal)
 
                 #Check estimate time
-                text_estimate_after_select_OT = output("//span[contains(@data-lang-id,'tc_title_estimate_working_hours')]/../following-sibling::div")
+                text_estimate_after_select_OT = output(data["TIMECARD"]["text_estimate_after_select_OT"])
                 Logging("Estimate time after select filter: " + text_estimate_after_select_OT)
                 estimate_after_select_OT_time = text_estimate_after_select_OT
                 estimate_after_select_OT_time1 = estimate_after_select_OT_time.split("~")[1]
@@ -314,7 +313,7 @@ def Napproval_OT(time_clock_in):
                 except:
                     Logging(" ")
 
-                driver.find_element_by_xpath(data["TIMECARD"]["save_approval_line"]).click()
+                Commands.ClickElement(data["TIMECARD"]["save_approval_line"])
                 Logging("- Apply Pre OT")
 
                 try:
@@ -328,7 +327,7 @@ def Napproval_OT(time_clock_in):
                         Logging("- Apply Pre OT has already")
                         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["pre_OT"]["pass"])
                         time.sleep(3)
-                        driver.find_element_by_xpath("//div[@class='modal-header ']//button").click()
+                        Commands.ClickElement(data["TIMECARD"]["exit_button"])
                         time.sleep(2)
                         WebDriverWait(driver,10).until(EC.presence_of_element_located((By.XPATH, data["TIMECARD"]["exit"]))).click()
                     else:
@@ -341,7 +340,7 @@ def Napproval_OT(time_clock_in):
 
 
                 time.sleep(5)
-                driver.find_element_by_xpath(data["TIMECARD"]["approval"]).click()
+                Commands.ClickElement(data["TIMECARD"]["approval"])
                 #Logging("- My Timecard: Approval")
                 WebDriverWait(driver,10).until(EC.presence_of_element_located((By.XPATH, data["TIMECARD"]["approval_list"])))
                 time.sleep(3)
@@ -356,7 +355,7 @@ def Napproval_OT(time_clock_in):
                         webdriver.ActionChains(driver).click_and_hold(slider).move_to_element(horizontal_bar).perform()
                         webdriver.ActionChains(driver).release().perform()
                         time.sleep(5)
-                        driver.find_element_by_xpath(data["TIMECARD"]["detail"]).click()
+                        Commands.ClickElement(data["TIMECARD"]["detail"])
                         Logging("- View detail approval")
                         time.sleep(2) 
                         if str(x) == "Automatic approval":
@@ -422,13 +421,13 @@ def Napproval_OT(time_clock_in):
                                 except:
                                     Logging("Memo is empty")
 
-                                driver.find_element_by_xpath(data["TIMECARD"]["turn_off_view"]).click()
+                                Commands.ClickElement(data["TIMECARD"]["turn_off_view"])
                                 time.sleep(2)
                             else:
                                 Logging("- Pre OT hasn't been approved automatically")
                                 TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["cancel_pre_OT_auto"]["fail"])
                                 Logging("=> Fail")
-                                driver.find_element_by_xpath(data["TIMECARD"]["turn_off_view"]).click()
+                                Commands.ClickElement(data["TIMECARD"]["turn_off_view"])
                                 time.sleep(2)
                         else:
                             status_pre_OT = driver.find_element_by_xpath(data["TIMECARD"]["status_pre_OT"])
@@ -494,12 +493,12 @@ def Napproval_OT(time_clock_in):
                                     Logging("Memo is empty")
 
 
-                                driver.find_element_by_xpath(data["TIMECARD"]["turn_off_view"]).click()
+                                Commands.ClickElement(data["TIMECARD"]["turn_off_view"])
                                 time.sleep(2)
                             elif status_pre_OT == "Cancelled":
                                 Logging("- Pre OT has been Cancelled")
                                 TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["cancel_pre_OT"]["pass"])
-                                driver.find_element_by_xpath(data["TIMECARD"]["turn_off_view"]).click()
+                                Commands.ClickElement(data["TIMECARD"]["turn_off_view"])
                                 time.sleep(2)
                             elif status_pre_OT == "Progressing":
                                 Logging("- Pre OT is in progressing")
@@ -511,7 +510,7 @@ def Napproval_OT(time_clock_in):
                                 Logging("Memo: " + memo_data_check.text)
 
                                 try:
-                                    approver_data_check = driver.find_element_by_xpath("//label[contains(@data-lang-id, 'tc_title_approver')]")
+                                    approver_data_check = driver.find_element_by_xpath(data["TIMECARD"]["route_add_event"])
                                     Logging ("Approver: " + approver_data_check.text)
                                     try:
                                         if approver_data_check.is_displayed:
@@ -530,7 +529,7 @@ def Napproval_OT(time_clock_in):
                                 except:
                                     Logging ("Approver is empty")
 
-                                time_data_check = driver.find_element_by_xpath("//div[contains(@data-lang-id, 'tc_title_time')]/following-sibling::div")
+                                time_data_check = driver.find_element_by_xpath(data["TIMECARD"]["time_data_check"])
                                 Logging("Duration: " + time_data_check.text)
                                 time_data_check_time = time_data_check.text
                                 time_data_check_time1 = time_data_check_time.split(" ")[0]
@@ -583,22 +582,22 @@ def Napproval_OT(time_clock_in):
                                     Logging("Memo is empty")
 
 
-                                driver.find_element_by_xpath(data["TIMECARD"]["turn_off_view"]).click()
+                                Commands.ClickElement(data["TIMECARD"]["turn_off_view"])
                                 time.sleep(2)
                             else:
                                 status_pre_OT.click()
                                 Logging("- Cancel Pre OT")
                                 time.sleep(2)
-                                driver.find_element_by_xpath(data["TIMECARD"]["yes_but"][1]).click()
+                                Commands.ClickElement(data["TIMECARD"]["yes_but"][1])
                                 time.sleep(5)
-                                driver.find_element_by_xpath(data["TIMECARD"]["reload"]).click()
-                                status_update = WebDriverWait(driver,10).until(EC.presence_of_element_located((By.XPATH, data["TIMECARD"]["status_update"])))
+                                Commands.ClickElement(data["TIMECARD"]["reload"])
+                                status_update = Waits.WaitElementLoaded(10, data["TIMECARD"]["status_update"])
                                 time.sleep(5)
                                 if status_update.text == "Cancelled":
                                     Logging("- Cancel Pre OT successfully")
                                     TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["click_cancel_pre_OT"]["pass"])
                                     #Details data
-                                    open_detail = driver.find_element_by_xpath("//*[@id='my-request']//div[contains(@ref,'eCenterContainer')]/div[1]/div[6]").click()
+                                    open_detail = Commands.ClickElement(data["TIMECARD"]["detail"])
                                     time.sleep(3)
                                     #Details data
                                     date_data_check = driver.find_element_by_xpath(data["TIMECARD"]["date_data_check"])
@@ -607,7 +606,7 @@ def Napproval_OT(time_clock_in):
                                     Logging("Memo: " + memo_data_check.text)
                                     
                                     try:
-                                        approver_data_check = driver.find_element_by_xpath("//label[contains(@data-lang-id, 'tc_title_approver')]")
+                                        approver_data_check = driver.find_element_by_xpath(data["TIMECARD"]["route_add_event"])
                                         Logging ("Approver: " + approver_data_check.text)
                                         try:
                                             if approver_data_check.is_displayed:
@@ -679,7 +678,7 @@ def Napproval_OT(time_clock_in):
                                     except:
                                         Logging("Memo is empty")
 
-                                    driver.find_element_by_xpath(data["TIMECARD"]["turn_off_view"]).click()
+                                    Commands.ClickElement(data["TIMECARD"]["turn_off_view"])
                                     time.sleep(2)
                                 else:
                                     Logging("- Cancel Pre OT fail")
@@ -700,10 +699,10 @@ def Napproval_OT(time_clock_in):
         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["check_true"]["fail"])
 
 
-    driver.find_element_by_xpath(data["TIMECARD"]["menu_report"]).click()
+    Commands.ClickElement(data["TIMECARD"]["menu_report"])
     Waits.WaitElementLoaded(10, data["TIMECARD"]["report_wait"])
     time.sleep(2)   
-    driver.find_element_by_xpath(data["TIMECARD"]["report_weekly_page"]).click()
+    Commands.ClickElement(data["TIMECARD"]["report_weekly_page"])
     time.sleep(5)
 
     weekly_average = driver.find_element_by_xpath(data["TIMECARD"]["weekly_average"])
@@ -743,15 +742,15 @@ def Napproval_OT(time_clock_in):
     #Logging(total_working_time_hour_decimal)
 
     #Clear clock-out
-    driver.find_element_by_xpath(data["TIMECARD"]["timesheet_page"]).click()
+    Commands.ClickElement(data["TIMECARD"]["timesheet_page"])
     Waits.WaitElementLoaded(30, data["TIMECARD"]["timesheet_wait"])
 
     clockout_scroll = driver.find_element_by_xpath(data["TIMECARD"]["clockout_scroll"])
     clockout_scroll.location_once_scrolled_into_view
     time.sleep(2)
 
-    clear_clock_out = driver.find_element_by_xpath(data["TIMECARD"]["clockout_scroll"]).click()
-    clear_clock_out_yes = driver.find_element_by_xpath("//span[contains(@data-lang-id, 'tc_action_confirm_yes')]").click()
+    clear_clock_out = Commands.ClickElement(data["TIMECARD"]["clockout_scroll"])
+    clear_clock_out_yes = Commands.ClickElement("//span[contains(@data-lang-id, 'tc_action_confirm_yes')]")
     time.sleep(5)
 
     # # work1 = working_time_hour1
@@ -774,10 +773,10 @@ def Napproval_OT(time_clock_in):
     # # totalworkingtime = elements["total"]
 
     # time.sleep(5)
-    driver.find_element_by_xpath(data["TIMECARD"]["report_page"]).click()
+    Commands.ClickElement(data["TIMECARD"]["report_page"])
     Waits.WaitElementLoaded(30, data["TIMECARD"]["report_wait"])
     time.sleep(2)   
-    driver.find_element_by_xpath(data["TIMECARD"]["report_weekly_page"]).click()
+    Commands.ClickElement(data["TIMECARD"]["report_weekly_page"])
     time.sleep(5)
 
     Logging(" ")
@@ -866,12 +865,12 @@ def Napproval_OT(time_clock_in):
                 driver.find_element_by_xpath(data["TIMECARD"]["input_reason_leave_early"]).send_keys(data["TIMECARD"]["reason_leave_early"])
                 Logging("- Input reason")
                 time.sleep(2)
-                driver.find_element_by_xpath(data["TIMECARD"]["save"]).click()
+                Commands.ClickElement(data["TIMECARD"]["save"])
                 Logging("- Save reason")
                 time.sleep(3)
             except:
                 Logging("Clock-out already")
-                driver.find_element_by_xpath(data["TIMECARD"]["my_timesheets"]).click()
+                Commands.ClickElement(data["TIMECARD"]["my_timesheets"])
                 Logging("Select My timecard: Timesheets")
         else:
             Logging("Clock-out already")
@@ -883,11 +882,11 @@ def Napproval_OT(time_clock_in):
         #Logging("Click show pop up")
         time.sleep(5)
         try:
-            WebDriverWait(driver,10).until(EC.presence_of_element_located((By.XPATH, data["TIMECARD"]["OT_popup"])))
-            driver.find_element_by_xpath(data["TIMECARD"]["OT_clockout"]).click()
+            Waits.WaitElementLoaded(10, data["TIMECARD"]["OT_popup"])
+            Commands.ClickElement(data["TIMECARD"]["OT_clockout"])
             Logging("Clock-out")
             time.sleep(2)
-            driver.find_element_by_xpath(data["TIMECARD"]["yes_but"][0]).click()
+            Commands.ClickElement(data["TIMECARD"]["yes_but"][0])
         except:
             pop_up = driver.find_element_by_xpath(data["TIMECARD"]["pop_up"])
             if pop_up.is_displayed():
@@ -899,21 +898,21 @@ def Napproval_OT(time_clock_in):
                     driver.find_element_by_xpath(data["TIMECARD"]["input_reason_leave_early"]).send_keys(data["TIMECARD"]["reason_leave_early"])
                     Logging("- Input reason")
                     time.sleep(2)
-                    driver.find_element_by_xpath(data["TIMECARD"]["save"]).click()
+                    Commands.ClickElement(data["TIMECARD"]["save"])
                     Logging("- Save reason")
                     time.sleep(3)
                 except:
                     Logging("Clock-out already")
-                    driver.find_element_by_xpath(data["TIMECARD"]["my_timesheets"]).click()
+                    Commands.ClickElement(data["TIMECARD"]["my_timesheets"])
                     Logging("Select My timecard: Timesheets")
             else:
                 Logging("Clock-out already")
 
 def report_weekly_before():
-    driver.find_element_by_xpath(data["TIMECARD"]["report_page"]).click()
+    Commands.ClickElement(data["TIMECARD"]["report_page"])
     Waits.WaitElementLoaded(30, data["TIMECARD"]["report_wait"])
     time.sleep(2)   
-    driver.find_element_by_xpath(data["TIMECARD"]["report_weekly_page"]).click()
+    Commands.ClickElement(data["TIMECARD"]["report_weekly_page"])
     time.sleep(5)
 
     weekly_average = driver.find_element_by_xpath(data["TIMECARD"]["weekly_average"])
@@ -953,15 +952,15 @@ def report_weekly_before():
     #Logging(total_working_time_hour_decimal)
 
     #Clear clock-out
-    driver.find_element_by_xpath(data["TIMECARD"]["timesheet_page"]).click()
+    Commands.ClickElement(data["TIMECARD"]["timesheet_page"])
     Waits.WaitElementLoaded(30, data["TIMECARD"]["timesheet_wait"])
 
     clockout_scroll = driver.find_element_by_xpath(data["TIMECARD"]["clockout_scroll"])
     clockout_scroll.location_once_scrolled_into_view
     time.sleep(2)
 
-    clear_clock_out = driver.find_element_by_xpath(data["TIMECARD"]["clockout_scroll"]).click()
-    clear_clock_out_yes = driver.find_element_by_xpath("//span[contains(@data-lang-id, 'tc_action_confirm_yes')]").click()
+    clear_clock_out = Commands.ClickElement(data["TIMECARD"]["clockout_scroll"])
+    clear_clock_out_yes = Commands.ClickElement(data["TIMECARD"]["confirm_yes"])
     time.sleep(5)
 
     work1 = working_time_hour_decimal
@@ -985,10 +984,10 @@ def report_weekly_after(elements):
     totalworkingtime = elements["total"]
 
     # time.sleep(5)
-    driver.find_element_by_xpath(data["TIMECARD"]["report_page"]).click()
+    Commands.ClickElement(data["TIMECARD"]["report_page"])
     Waits.WaitElementLoaded(30, data["TIMECARD"]["report_wait"])
     time.sleep(2)   
-    driver.find_element_by_xpath(data["TIMECARD"]["report_weekly_page"]).click()
+    Commands.ClickElement(data["TIMECARD"]["report_weekly_page"])
     time.sleep(5)
 
     Logging(" ")
@@ -1077,12 +1076,12 @@ def report_weekly_after(elements):
                 driver.find_element_by_xpath(data["TIMECARD"]["input_reason_leave_early"]).send_keys(data["TIMECARD"]["reason_leave_early"])
                 Logging("- Input reason")
                 time.sleep(2)
-                driver.find_element_by_xpath(data["TIMECARD"]["save"]).click()
+                Commands.ClickElement(data["TIMECARD"]["save"])
                 Logging("- Save reason")
                 time.sleep(3)
             except:
                 Logging("Clock-out already")
-                driver.find_element_by_xpath(data["TIMECARD"]["my_timesheets"]).click()
+                Commands.ClickElement(data["TIMECARD"]["my_timesheets"])
                 Logging("Select My timecard: Timesheets")
         else:
             Logging("Clock-out already")
@@ -1094,11 +1093,11 @@ def report_weekly_after(elements):
         #Logging("Click show pop up")
         time.sleep(5)
         try:
-            WebDriverWait(driver,10).until(EC.presence_of_element_located((By.XPATH, data["TIMECARD"]["OT_popup"])))
-            driver.find_element_by_xpath(data["TIMECARD"]["OT_clockout"]).click()
+            Waits.WaitElementLoaded(10, data["TIMECARD"]["OT_popup"])
+            Commands.ClickElement(data["TIMECARD"]["OT_clockout"])
             Logging("Clock-out")
             time.sleep(2)
-            driver.find_element_by_xpath(data["TIMECARD"]["yes_but"][0]).click()
+            Commands.ClickElement(data["TIMECARD"]["yes_but"][0])
         except:
             pop_up = driver.find_element_by_xpath(data["TIMECARD"]["pop_up"])
             if pop_up.is_displayed():
@@ -1110,12 +1109,12 @@ def report_weekly_after(elements):
                     driver.find_element_by_xpath(data["TIMECARD"]["input_reason_leave_early"]).send_keys(data["TIMECARD"]["reason_leave_early"])
                     Logging("- Input reason")
                     time.sleep(2)
-                    driver.find_element_by_xpath(data["TIMECARD"]["save"]).click()
+                    Commands.ClickElement(data["TIMECARD"]["save"])
                     Logging("- Save reason")
                     time.sleep(3)
                 except:
                     Logging("Clock-out already")
-                    driver.find_element_by_xpath(data["TIMECARD"]["my_timesheets"]).click()
+                    Commands.ClickElement(data["TIMECARD"]["my_timesheets"])
                     Logging("Select My timecard: Timesheets")
             else:
                 Logging("Clock-out already")
