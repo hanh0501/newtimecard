@@ -3310,13 +3310,22 @@
         "text_break_time": "//tbody[starts-with(@id, 'tbody-scroll-table')]//div[contains(.,'Weekly average')]/../../td[3]//div[2]",
         "text_OT_time": "//tbody[starts-with(@id, 'tbody-scroll-table')]//div[contains(.,'Weekly average')]/../../td[4]//div[2]",
         "text_total_working_hour": "//tbody[starts-with(@id, 'tbody-scroll-table')]//div[contains(.,'Weekly average')]/../../td[5]//div[2]",
-        "clockout_scroll": "//div[contains(@class, 'admin_status')]//div[contains(@class, 'timeline-item  ')]//div[contains(.,'Clock-Out')]//div[contains(@class, 'd-flex ')]//span[2]//div[contains(@class, 'cursor-pointer')]"
-
-
-
-
-
-
+        "clockout_scroll": "//div[contains(@class, 'admin_status')]//div[contains(@class, 'timeline-item  ')]//div[contains(.,'Clock-Out')]//div[contains(@class, 'd-flex ')]//span[2]//div[contains(@class, 'cursor-pointer')]",
+        "text_format_hour": "//span[contains(@data-lang-id, 'tc_title_work_policy')]/../../div[contains(.,'Work Policy')]//following-sibling::div//div[2]",
+        "text_OT_since": "//span[contains(@data-lang-id, 'tc_status_overtime_since')]/following-sibling::div",
+        "text_work_method_name": "//div[contains(@class, 'work-method-name')]",
+        "text_max_application_time": "//span[contains(@data-lang-id,'tc_title_max_ot_apply')]/../following-sibling::div",
+        "text_remaining_OT_time": "//span[contains(@data-lang-id,'tc_status_ot_n')]/../following-sibling::div",
+        "text_estimate_default": "//span[contains(@data-lang-id,'tc_title_estimate_working_hours')]/../following-sibling::div",
+        "filter_number": "//div[contains(@class,'dropdown')]//span[1]/span",
+        "confirm_yes": "//span[contains(@data-lang-id, 'tc_action_confirm_yes')]",
+        "text_estimate_after_select_OT": "//span[contains(@data-lang-id,'tc_title_estimate_working_hours')]/../following-sibling::div",
+        "icon_layer": "//*[@class='row']/div['%s']/div[starts-with(@id,'selectableItem')]/div//div[@class='cursor-pointer']/div/div[1]/*[starts-with(@id,'Layer')]",
+        "da_te_work": "//*[@class='row']/div['5s']/div[starts-with(@id,'selectableItem')]/div/div[1]/span",
+        "date_work_up": "//*[@class='row']/div/div[starts-with(@id,'selectableItem')]/div/div[1]/span[contains(.,'%s')]",
+        "date_work_up1": "//*[@class='row']/div/div[starts-with(@id,'selectableItem')]/div/div[1]/span[contains(.,'%s')]",
+        "date_update": "//*[@class='row']/div/div[starts-with(@id,'selectableItem')]/div/div[1]/span[contains(.,'%s')]/../../..",
+        "date_update1": "//*[@class='row']/div/div[starts-with(@id,'selectableItem')]/div/div[1]/span[contains(.,'%s')]/../../.."
     }
 }
 
