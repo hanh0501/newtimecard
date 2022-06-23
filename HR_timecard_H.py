@@ -23,7 +23,7 @@ from datetime import datetime
 import os.path
 import time
 import select
-from H_functions import driver, data, ValidateFailResultAndSystem,TesCase_LogResult, Logging#, TestlinkResult_Fail, TestlinkResult_Pass
+from H_functions import driver, data,TesCase_LogResult, Logging#, TestlinkResult_Fail, TestlinkResult_Pass
 from simple_colors import *
 from framework_sample import *
 
@@ -189,7 +189,7 @@ def time_clock_in():
 
         Commands.ClickElement(data["TIMECARD"]["btn_hour"]) 
         time.sleep(2)
-        hours_time = driver.find_element_by_xpath("//*[starts-with(@id,'btnHours')]//following-sibling::div/button[contains(.,'" + clock_time + "')]")
+        hours_time = driver.find_element_by_xpath(data["TIMECARD"]["hours_time"] %  clock_time)
         hours_time.click()
         Logging("- Select hours clock-in")
         Commands.ClickElement(data["TIMECARD"]["btn_min"]) 
@@ -412,7 +412,7 @@ def time_clock_out():
 
     Commands.ClickElement(data["TIMECARD"]["btn_hour"]) 
     time.sleep(2)
-    hours_time = driver.find_element_by_xpath("//*[starts-with(@id,'btnHours')]//following-sibling::div/button[contains(.,'" + str(clock_out_time_update) + "')]")
+    hours_time = driver.find_element_by_xpath(data["TIMECARD"]["hours_time"] % str(clock_out_time_update))
     hours_time.click()
     Logging("- Select hours clock-out")
     Commands.ClickElement(data["TIMECARD"]["btn_min"]) 
@@ -556,16 +556,18 @@ def add_clock_in_clock_out():
 def check_time():
     time.sleep(5)
     #Print Clockin and Clokout
-    today_work = driver.find_element_by_xpath(data["TIMECARD"]["today_work"])
-    today_work_date = today_work.text[8:10]
+    # today_work = driver.find_element_by_xpath(data["TIMECARD"]["today_work"])
+    # today_work_date = today_work.text[8:10]
+    today_work = Functions.GetElementText(data["TIMECARD"]["today_work"])
+    today_work_date = today_work[8:10]
     #Logging(today_work_date)
 
-    format_time = driver.find_element_by_xpath(data["TIMECARD"]["format_time"])
-    clock_in_time = format_time.text
+    format_time = Functions.GetElementText(data["TIMECARD"]["format_time"])
+    clock_in_time = format_time
     #Logging(clock_in_time)
 
-    work_method = driver.find_element_by_xpath(data["TIMECARD"]["work_method"])
-    work_method_up = work_method.text
+    work_method = Functions.GetElementText(data["TIMECARD"]["work_method"])
+    work_method_up = work_method
     #Logging(work_method_up)
 
     output_clock_in = driver.find_element_by_xpath(data["TIMECARD"]["output_clockin"])
@@ -574,24 +576,24 @@ def check_time():
     Logging(">> Clock-in: " + output_clock_in.text)
     output_clockin = output_clock_in.text
 
-    output_clock_out = driver.find_element_by_xpath(data["TIMECARD"]["output_clockout"])
-    Logging(">> Clock-out: " + output_clock_out.text)
-    output_clockout = output_clock_out.text
+    output_clock_out = Functions.GetElementText(data["TIMECARD"]["output_clockout"])
+    Logging(">> Clock-out: " + output_clock_out)
+    output_clockout = output_clock_out
 
-    officetime = driver.find_element_by_xpath(data["TIMECARD"]["officetime"])
-    Logging(">> Office Time: " + officetime.text)
+    officetime = Functions.GetElementText(data["TIMECARD"]["officetime"])
+    Logging(">> Office Time: " + officetime)
 
-    breaktime = driver.find_element_by_xpath(data["TIMECARD"]["breaktime"])
-    Logging(">> Break Time: " + breaktime.text)
-    break_time = breaktime.text
+    breaktime = Functions.GetElementText(data["TIMECARD"]["breaktime"])
+    Logging(">> Break Time: " + breaktime)
+    break_time = breaktime
 
-    workingtime = driver.find_element_by_xpath(data["TIMECARD"]["workingtime"])
-    Logging(">> Working Time: " + workingtime.text)
-    working_time = workingtime.text
+    workingtime = Functions.GetElementText(data["TIMECARD"]["workingtime"])
+    Logging(">> Working Time: " + workingtime)
+    working_time = workingtime
 
-    OT = driver.find_element_by_xpath(data["TIMECARD"]["OT"])
-    Logging(">> OT Time: " + OT.text)
-    OT_time = OT.text
+    OT = Functions.GetElementText(data["TIMECARD"]["OT"])
+    Logging(">> OT Time: " + OT)
+    OT_time = OT
 
     #data = [output_clockin,output_clockout,break_time,working_time,clock_in_time,work_method_up,today_work_date, OT_time]
     t_data = {
@@ -611,7 +613,7 @@ def timesheet_list(**t_data):
     output_clockout = t_data["output_clockout"]
     break_time = t_data["break_time"]
     working_time = t_data["working_time"]
-    OT_time = t_data["OT_time"]
+    #OT_time = t_data["OT_time"]
 
     date_clockin = driver.find_element_by_xpath(data["TIMECARD"]["date_clockin"])
     #Logging(date_clockin.text)
@@ -795,7 +797,7 @@ def add_event2():
     i = 0
     for i in range(EV_list):
         i += 1
-        approvalEV = driver.find_element_by_xpath(data["TIMECARD"]["approvalEV"] + "[" + str(i) + "]/label")
+        approvalEV = driver.find_element_by_xpath(data["TIMECARD"]["approvalEV"] + "['%s']/label" % str(i))
         approval_EV_list.append(approvalEV.text)
 
     Logging("- Total of type Approval Event: " + str(len(approval_EV_list)))
@@ -803,7 +805,7 @@ def add_event2():
 
     x = random.choice(approval_EV_list)
     time.sleep(1)
-    select_approval_EV = driver.find_element_by_xpath(data["TIMECARD"]["EV_list"] + "[contains(.,'" + str(x) + "')]")
+    select_approval_EV = driver.find_element_by_xpath(data["TIMECARD"]["EV_list"] + "[contains(.,'%s')]" % str(x))
     select_approval_EV.click()
     Logging("- Select Approval Event type")
     time.sleep(2)
@@ -897,12 +899,12 @@ def add_event2():
                                     i=0
                                     for i in range(approve_status_list):
                                         i += 1
-                                        approve_status = driver.find_element_by_xpath("//div[contains(@class,'select-approval-status-content')]/div[" + str(i) + "]/div")
+                                        approve_status = driver.find_element_by_xpath(data["TIMECARD"]["approve_status"] % str(i))
                                         list_approve_status.append(approve_status.text)
 
                                     x1 = random.choice(list_approve_status)
                                     time.sleep(1)
-                                    approve_status1 = driver.find_element_by_xpath("//div[contains(@class,'select-approval-status-content')]/div/div[contains(.,'" + str(x1) + "')]")
+                                    approve_status1 = driver.find_element_by_xpath(data["TIMECARD"]["approve_status1"] % str(x1))
                                     approve_status1.click()
                                     Logging("- Select event approve status successfully")                              
 
@@ -1009,12 +1011,12 @@ def add_event2():
                                     i=0
                                     for i in range(approve_status_list):
                                         i += 1
-                                        approve_status = driver.find_element_by_xpath("//div[contains(@class,'select-approval-status-content')]/div[" + str(i) + "]/div")
+                                        approve_status = driver.find_element_by_xpath(data["TIMECARD"]["approve_status"] % str(i))
                                         list_approve_status.append(approve_status.text)
 
                                     x1 = random.choice(list_approve_status)
                                     time.sleep(1)
-                                    approve_status1 = driver.find_element_by_xpath("//div[contains(@class,'select-approval-status-content')]/div/div[contains(.,'" + str(x1) + "')]")
+                                    approve_status1 = driver.find_element_by_xpath(data["TIMECARD"]["approve_status1"] % str(x1))
                                     approve_status1.click()
                                     Logging("- Select event approve status successfully")                              
 
@@ -1421,12 +1423,12 @@ def add_working_status():
     i=0
     for i in range(working_status_list):
         i += 1
-        working_status = driver.find_element_by_xpath("//*[@id='click-out-side-4']//div[contains(@class,'item-header-content')]//div[2]/div/div" + "[" + str(i) + "]/div")
+        working_status = driver.find_element_by_xpath(data["TIMECARD"]["working_sta_tus"] + "['%s']/div" % str(i))
         list_working_status.append(working_status.text)
 
     x = random.choice(list_working_status)
     time.sleep(1)
-    status = driver.find_element_by_xpath("//*[@id='click-out-side-4']//div[contains(@class,'item-header-content')]//div[2]/div/div/div[contains(.,'" + str(x) + "')]")
+    status = driver.find_element_by_xpath(data["TIMECARD"]["status"] % str(x))
     status.click()
     Logging("- Select status")
 
@@ -1438,12 +1440,12 @@ def add_working_status():
     y = 0
     for y in range(status_time_list):
         y += 1
-        status_time = driver.find_element_by_xpath("//*[starts-with(@id,'dropdown')]/div/button" + "[" + str(y) + "]/div")
+        status_time = driver.find_element_by_xpath(data["TIMECARD"]["status_time"] + "['%s']/div" % str(y))
         list_status_time.append(status_time.text)
 
     m = random.choice(list_status_time)
     time.sleep(1)
-    time_st = driver.find_element_by_xpath("//*[starts-with(@id,'dropdown')]/div/button/div[contains(.,'" + str(m) + "')]")
+    time_st = driver.find_element_by_xpath(data["TIMECARD"]["time_st"] % str(m))
     time_st.click()
     time.sleep(3)
 
@@ -1902,9 +1904,9 @@ def find_date(today_work_date):
         i += 1
         if i % 8 != 0:
             try:
-                icon_layer = driver.find_element_by_xpath("//*[@class='row']/div[" + str(i) + "]/div[starts-with(@id,'selectableItem')]/div//div[@class='cursor-pointer']/div/div[1]/*[starts-with(@id,'Layer')]")
+                icon_layer = driver.find_element_by_xpath(data["TIMECARD"]["icon_layer"] % str(i))
                 if icon_layer.is_displayed():
-                    date_work = driver.find_element_by_xpath("//*[@class='row']/div[" + str(i) + "]/div[starts-with(@id,'selectableItem')]/div/div[1]/span")
+                    date_work = driver.find_element_by_xpath(data["TIMECARD"]["da_te_work"] % str(i))
                     if date_work.text > str(today_work_date):
                         list_date.append(date_work.text)
                     else:
@@ -1921,20 +1923,20 @@ def find_date(today_work_date):
 
     if len(list_date) >= 2:
         for x in list_date[0::]:
-            date_work_up = driver.find_element_by_xpath("//*[@class='row']/div/div[starts-with(@id,'selectableItem')]/div/div[1]/span[contains(.,'" + str(x) + "')]")
+            date_work_up = driver.find_element_by_xpath(data["TIMECARD"]["date_work_up"] % str(x))
             #print(date_work_up.text)
             date_work_update = int(date_work_up.text)
 
             for y in list_date[1::]:
-                date_work_up1 = driver.find_element_by_xpath("//*[@class='row']/div/div[starts-with(@id,'selectableItem')]/div/div[1]/span[contains(.,'" + str(y) + "')]")
+                date_work_up1 = driver.find_element_by_xpath(data["TIMECARD"]["date_work_up1"] % str(y))
                 #print(date_work_up1.text)
                 date_work_update1 = int(date_work_up1.text)
 
                 day_list = []
                 if date_work_update == date_work_update1 - 1:
-                    date_update = driver.find_element_by_xpath("//*[@class='row']/div/div[starts-with(@id,'selectableItem')]/div/div[1]/span[contains(.,'" + str(x) + "')]/../../..")
+                    date_update = driver.find_element_by_xpath(data["TIMECARD"]["date_update"] % str(x))
                     date_update_get = date_update.get_attribute("id")
-                    date_update1 = driver.find_element_by_xpath("//*[@class='row']/div/div[starts-with(@id,'selectableItem')]/div/div[1]/span[contains(.,'" + str(y) + "')]/../../..")
+                    date_update1 = driver.find_element_by_xpath(data["TIMECARD"]["date_update1"] % str(y))
                     date_update1_get = date_update1.get_attribute("id")
                     day_list.append(date_update_get)
                     day_list.append(date_update1_get)
@@ -1967,9 +1969,9 @@ def find_date(today_work_date):
             i += 1
             if i % 8 != 0:
                 try:
-                    icon_layer = driver.find_element_by_xpath("//*[@class='row']/div[" + str(i) + "]/div[starts-with(@id,'selectableItem')]/div//div[@class='cursor-pointer']/div/div[1]/*[starts-with(@id,'Layer')]")
+                    icon_layer = driver.find_element_by_xpath(data["TIMECARD"]["icon_layer"] % str(i))
                     if icon_layer.is_displayed():
-                        Waits.WaitElementLoaded(10, "//*[@class='row']/div[" + str(i) + "]/div[starts-with(@id,'selectableItem')]/div//div[@class='cursor-pointer']/div/div[1]/*[starts-with(@id,'Layer')]").click()
+                        Waits.WaitElementLoaded(10, data["TIMECARD"]["icon_layer_wait"] % str(i)).click()
                         print("- Select date")
                         break
                     else:
@@ -8008,16 +8010,16 @@ def timecard():
     timecard_data = check_time()
     date_clock_in = timesheet_list(**timecard_data)
     timecard_data["date_clock_in"] = date_clock_in
-    # #report_list1(**timecard_data)
-    # add_event2()
-    # view_details()
-    # working_status()
+    #report_list1(**timecard_data)
+    add_event2()
+    view_details()
+    working_status()
     
-    # #day_list = find_date(today_work_date)
-    # #work_schedule(day_list)
-    # manager()
-    # total_manager()
-    # delete_punch()
+    #day_list = find_date(today_work_date)
+    #work_schedule(day_list)
+    manager()
+    total_manager()
+    delete_punch()
     
 
 def time_card():

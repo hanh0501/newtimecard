@@ -3325,7 +3325,28 @@
         "date_work_up": "//*[@class='row']/div/div[starts-with(@id,'selectableItem')]/div/div[1]/span[contains(.,'%s')]",
         "date_work_up1": "//*[@class='row']/div/div[starts-with(@id,'selectableItem')]/div/div[1]/span[contains(.,'%s')]",
         "date_update": "//*[@class='row']/div/div[starts-with(@id,'selectableItem')]/div/div[1]/span[contains(.,'%s')]/../../..",
-        "date_update1": "//*[@class='row']/div/div[starts-with(@id,'selectableItem')]/div/div[1]/span[contains(.,'%s')]/../../.."
+        "date_update1": "//*[@class='row']/div/div[starts-with(@id,'selectableItem')]/div/div[1]/span[contains(.,'%s')]/../../..",
+        "to_day": "//*[@class='admin_status']//div[contains(@class,'list-table-wrapper')]//form//div[contains(@ref,'eCenterContainer')]//div[contains(@col-id,'date')]/div[contains(.,'%s')]/parent::div/parent::div",
+        "clockin": "//*[contains(@class,'list-table-wrapper')]//div[contains(@col-id,'date') and contains(.,'%s')]/following-sibling::div[contains(@col-id,'clock_in')]/div/div/div",
+        "breaktime_li": "//*[contains(@class,'list-table-wrapper')]//div[contains(@col-id,'date') and contains(.,'%s')]/following-sibling::div[contains(@col-id,'clock_out')]/div/div/div",
+        "workingtime_li": "//*[contains(@class,'list-table-wrapper')]//div[contains(@col-id,'date') and contains(.,'%s')]/following-sibling::div[contains(@col-id,'basic_work_label')]/div/div",
+        "hours_time": "//*[starts-with(@id,'btnHours')]//following-sibling::div/button[contains(.,'%s')]",
+        "approve_status": "//div[contains(@class,'select-approval-status-content')]/div['%s']/div",
+        "approve_status1": "//div[contains(@class,'select-approval-status-content')]/div/div[contains(.,'%s')]",
+        "working_sta_tus": "//*[@id='click-out-side-4']//div[contains(@class,'item-header-content')]//div[2]/div/div",
+        "status": "//*[@id='click-out-side-4']//div[contains(@class,'item-header-content')]//div[2]/div/div/div[contains(.,'%s')]",
+        "status_time": "//*[starts-with(@id,'dropdown')]/div/button",
+        "time_st": "//*[starts-with(@id,'dropdown')]/div/button/div[contains(.,'%s')]"
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     }
 }
 
