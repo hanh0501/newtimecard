@@ -53,8 +53,8 @@ def account():
 def admin_user():
     admin_account = account()
     if admin_account == True:
-        timecard()
-        #time_card()
+        #timecard()
+        time_card()
     else:
         normal_user()
 
@@ -2347,22 +2347,24 @@ def daily_status():
         estimate = driver.find_element_by_xpath(data["TIMECARD"]["estimate"])
         Logging("estimate: " + estimate.text)
         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["daily_status_data"]["pass"])
-
         return status1
     except:
         Logging (">>>Check data fail")
 
 
+
 def report():   
     try:
         time.sleep(3)
-        rp =[]
+        #rp =[]
         Commands.ClickElement(data["TIMECARD"]["report_page"]) 
         Waits.WaitElementLoaded(30, data["TIMECARD"]["report_wait"])
         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["access_daily_status_page"]["pass"])
     except:
         PrintRed(">>>Access page fail")
         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["access_daily_status_page"]["fail"])
+
+    working_time = {}
 
     try:
         Logging("")
@@ -2388,9 +2390,10 @@ def report():
             #Logging(hour_number_report1)
 
             working_time_report_decimal = ((minutes_number_report1) / 60) + (hour_number_report1)
-            rp.append(working_time_report_decimal)
+            #rp.append(working_time_report_decimal)
             Logging("working time after change to decimal: " + str(round(working_time_report_decimal, 2)))
             #Logging("working time after change to decimal: " + str(working_time_report_decimal))
+        
         except:
             hour_time_report1 = working_time_report1.split(" ")[0]
             #Logging(hour_time_report1)
@@ -2399,9 +2402,10 @@ def report():
             #Logging(hour_number_report1)
 
             working_time_report_decimal = hour_number_report1
-            rp.append(working_time_report_decimal)
+            #rp.append(working_time_report_decimal)
             Logging("working time after change to decimal: " + str(working_time_report_decimal))
-
+        finally:
+            working_time["working_time_report_decimal"] = working_time_report_decimal
         #workedtimeUI_number
         Logging("Change worked time to decimal")
         time.sleep(5)
@@ -2422,7 +2426,7 @@ def report():
             #Logging(hour_worked_number_report1)
 
             worked_time_report_decimal = ((minutes_worked_number_report1) / 60) + (hour_worked_number_report1)
-            rp.append(worked_time_report_decimal)
+            #rp.append(worked_time_report_decimal)
             Logging("worked time after change to decimal: " + str(round(worked_time_report_decimal, 2)))
             #Logging("worked time after change to decimal: " +  str(worked_time_report_decimal))
         except:
@@ -2433,9 +2437,10 @@ def report():
             #Logging(hour_worked_number_report1)
 
             worked_time_report_decimal = hour_worked_number_report1
-            rp.append(worked_time_report_decimal)
+            #rp.append(worked_time_report_decimal)
             Logging("worked time after change to decimal: " +  str(worked_time_report_decimal))
-
+        finally:
+            working_time["worked_time_report_decimal"] = worked_time_report_decimal
         #breaktimeUI_number
         Logging("Change break time to decimal")
         time.sleep(5)
@@ -2456,10 +2461,10 @@ def report():
             #Logging(hour_break_number_report1)
 
             break_time_report_decimal = ((minutes_break_number_report1) / 60)  + (hour_break_number_report1)
-            rp.append(break_time_report_decimal)
+            #rp.append(break_time_report_decimal)
             Logging("break time after change to decimal: " + str(break_time_report_decimal))
             TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["report_data"]["pass"])
-            return rp
+            #return rp
         except:
             hour_break_time_report1 = break_time_report1.split(" ")[0]
             #Logging(hour_break_time_report1)
@@ -2468,13 +2473,16 @@ def report():
             #Logging(hour_break_number_report1)
 
             break_time_report_decimal = (hour_break_number_report1)
-            rp.append(break_time_report_decimal)
+            #rp.append(break_time_report_decimal)
             Logging("break time after change to decimal: " + str(break_time_report_decimal))
             TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["report_data"]["pass"])
-            return rp
-
+            #return rp
+        finally:
+            working_time["break_time_report_decimal"] = break_time_report_decimal
     except:
         Logging ("Check data fail")
+    return working_time
+
 
 
 def clockin():
@@ -2665,10 +2673,12 @@ def edit_clockin():
 
 
 def edit_clockout():
+    nb_out={}
+
     try:
         Logging(" ")
         Logging("Edit clockout")
-        nb_out=[]
+        #nb_out={}
         time.sleep(10)
         #Click Edit
         Edit2 = Commands.ClickElement(data["TIMECARD"]["Edit2"]) 
@@ -2711,8 +2721,9 @@ def edit_clockout():
 
     hour1 = office_time1.split("H")[0]
     hour_number1 = int(hour1)
-    nb_out.append(hour_number1)
+    #nb_out.append(hour_number1)
     Logging("office time after change to decimal: " + str(hour_number1))
+    nb_out["hour_number1"] = hour_number1
 
     #workingtimeUI_timesheet
     Logging("Change timesheet-working time to decimal")
@@ -2723,8 +2734,9 @@ def edit_clockout():
 
     working_hour1 = working_time1.split("H")[0]
     working_number1 = int(working_hour1)
-    nb_out.append(working_number1)
+    #nb_out.append(working_number1)
     Logging("working time after change to decimal: " + str(working_number1))
+    nb_out["working_number1"] = working_number1
 
     #breaktimeUI_timesheet
     Logging("Change timesheet-break time to decimal")
@@ -2735,8 +2747,9 @@ def edit_clockout():
 
     break_hour1 = break_time1.split("H")[0]
     break_number1 = int(break_hour1)
-    nb_out.append(break_number1)
+    #nb_out.append(break_number1)
     Logging("break time after change to decimal: " + str(break_number1))
+    nb_out["break_number1"] = break_number1
 
     #OTUI_timesheet
     Logging("Change timesheet-OT time to decimal")
@@ -2747,16 +2760,21 @@ def edit_clockout():
 
     OT_hour1 = OT_time1.split("H")[0]
     OT_number1 = int(OT_hour1)
-    nb_out.append(OT_number1)
+    #nb_out.append(OT_number1)
     Logging("OT time after change to decimal: " + str(OT_number1))
+    nb_out["OT_number1"] = OT_number1
+
     return nb_out
     #return hour_number1, working_number1, break_number1, OT_number1
-  
+
+
+
 
 def report_2nd():
+    nb_report=[]
     try:
         time.sleep(5)
-        nb_report=[]
+        #nb_report=[]
         Commands.ClickElement(data["TIMECARD"]["report_page"]) 
         Waits.WaitElementLoaded(30, data["TIMECARD"]["report_wait"])
 
@@ -2783,7 +2801,7 @@ def report_2nd():
             #Logging(hour_number2)
 
             working_time_decimal_2nd = ((minutes_number2) / 60) + (hour_number2)
-            nb_report.append(working_time_decimal_2nd)
+            #nb_report.append(working_time_decimal_2nd)
             Logging("working time after change to decimal: " + str(round(working_time_decimal_2nd, 2)))
             #Logging("working time after change to decimal: " + str(working_time_decimal_2nd))
         except:
@@ -2794,9 +2812,11 @@ def report_2nd():
             #Logging(hour_number2)
 
             working_time_decimal_2nd = hour_number2
-            nb_report.append(working_time_decimal_2nd)
+            #nb_report.append(working_time_decimal_2nd)
 
             Logging("working time after change to decimal: " + str(working_time_decimal_2nd))
+        finally:
+            nb_report["working_time_decimal_2nd"] = working_time_decimal_2nd
 
         #workedtimeUI_number
         Logging("Change worked time to decimal")
@@ -2818,7 +2838,7 @@ def report_2nd():
             #Logging(hour_worked_number2)
 
             worked_time_decimal_2nd = ((minutes_worked_number2) / 60) + (hour_worked_number2)
-            nb_report.append(worked_time_decimal_2nd)
+            #nb_report.append(worked_time_decimal_2nd)
             Logging("worked time after change to decimal: " + str(round(worked_time_decimal_2nd, 2)))
             #Logging("worked time after change to decimal: " + str(worked_time_decimal_2nd))
         except:
@@ -2829,8 +2849,10 @@ def report_2nd():
             #Logging(hour_worked_number2)
 
             worked_time_decimal_2nd = hour_worked_number2
-            nb_report.append(worked_time_decimal_2nd)
+            #nb_report.append(worked_time_decimal_2nd)
             Logging("worked time after change to decimal: " + str(worked_time_decimal_2nd))
+        finally:
+            nb_report["worked_time_decimal_2nd"] = worked_time_decimal_2nd
 
         #breaktimeUI_number
         Logging("Change break time to decimal")
@@ -2852,11 +2874,11 @@ def report_2nd():
             #Logging(hour_break_number2)
 
             break_time_decimal_2nd = ((minutes_break_number_report2) / 60) + (hour_break_number2)
-            nb_report.append(break_time_decimal_2nd)
+            #nb_report.append(break_time_decimal_2nd)
             Logging("break time after change to decimal: " + str(break_time_decimal_2nd))
             #return working_time_decimal_2nd, worked_time_decimal_2nd, break_time_decimal_2nd
-            TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["after_login_report_data"]["pass"])  
-            return nb_report
+            TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["after_login_report_data"]["pass"]) 
+            #return nb_report
         except:
             hour_break_time2 = break_time2.split(" ")[0]
             #Logging(hour_break_time2)
@@ -2865,18 +2887,32 @@ def report_2nd():
             #Logging(hour_break_number2)
 
             break_time_decimal_2nd = hour_break_number2
-            nb_report.append(break_time_decimal_2nd)
+            #nb_report.append(break_time_decimal_2nd)
             Logging("break time after change to decimal: " + str(break_time_decimal_2nd))
-            #return working_time_decimal_2nd, worked_time_decimal_2nd, break_time_decimal_2nd
-            TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["after_login_report_data"]["pass"])  
-            return nb_report
+            TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["after_login_report_data"]["pass"]) 
+        finally:
+            nb_report["break_time_decimal_2nd"] = break_time_decimal_2nd
     except:
         #Logging("Check data fail")
         PrintRed(">>>Check data fail")
 
+    return nb_report
 
 
-def calculation(working_time_report_decimal,worked_time_report_decimal,break_time_report_decimal,hour_number1,working_number1,break_number1,working_time_decimal_2nd,worked_time_decimal_2nd,break_time_decimal_2nd):
+
+def calculation(**working_time):
+    working_time_report_decimal = working_time["working_time_report_decimal"]
+    worked_time_report_decimal = working_time["worked_time_report_decimal"]
+    break_time_report_decimal = working_time["break_time_report_decimal"]
+
+    hour_number1 = working_time["hour_number1"]
+    working_number1 = working_time["working_number1"]
+    break_number1 = working_time["break_number1"]
+    OT_number1 = working_time["OT_number1"]
+
+    working_time_decimal_2nd = working_time["working_time_decimal_2nd"]
+    worked_time_decimal_2nd = working_time["worked_time_decimal_2nd"]
+    break_time_decimal_2nd = working_time["break_time_decimal_2nd"]
     try:
     #Calculation step by step #working time
         Logging("")
@@ -2923,7 +2959,12 @@ def calculation(working_time_report_decimal,worked_time_report_decimal,break_tim
         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["compare_time"]["fail"])
 
 
-def daily_status2(status1,break_number1,working_number1,OT_number1):
+def daily_status2(**working_time):
+    status1 = working_time["status1"]
+    working_number1 = working_time["working_number1"]
+    break_number1 = working_time["break_number1"]
+    OT_number1 = working_time["OT_number1"]
+
     try:
         #After login
         Logging("")
@@ -7864,11 +7905,11 @@ def exception_users():
     
     Logging(" ")
     Logging("*** DELETE EXCEPTION USER")
-    add_name_manager = driver.find_element_by_xpath("//span[text()='Exception Users']//following::div//ul//li//div[contains(@class,'first-line') and contains(.,'" + exception_user_name_text + "')]")
+    add_name_manager = driver.find_element_by_xpath(data["TIMECARD"]["add_name_mana_ger"] % exception_user_name_text)
     if add_name_manager.is_displayed():
         Logging("User " + exception_user_name_text + " is display in exception users list")
         add_name_manager.click()
-        Commands.ClickElement("//span[text()='Exception Users']//following::div//ul//li//div[contains(@class,'first-line') and contains(.,'" + exception_user_name_text + "')]//following::div[2]")
+        Commands.ClickElement(data["TIMECARD"]["del_manager"] % exception_user_name_text)
         Commands.ClickElement(data["TIMECARD"]["delete_dept"])
         time.sleep(2)
 
@@ -7911,11 +7952,11 @@ def outside_users():
 
     Logging(" ")
     Logging("*** DELETE OUTSIDE ATTENDANCE AVAILABLE USERS")
-    add_outside_name = driver.find_element_by_xpath("//span[text()='Available Users']//following::div//ul//li//div[contains(@class,'first-line') and contains(.,'" + outside_user_name_text + "')]")
+    add_outside_name = driver.find_element_by_xpath(data["TIMECARD"]["add_outside_name"] % outside_user_name_text)
     if add_outside_name.is_displayed():
         Logging("User " + outside_user_name_text + " is display in available users list")
         add_outside_name.click()
-        Commands.ClickElement("//span[text()='Available Users']//following::div//ul//li//div[contains(@class,'first-line') and contains(.,'" + outside_user_name_text + "')]//following::div[2]")
+        Commands.ClickElement(data["TIMECARD"]["del_outside_user"] % outside_user_name_text)
         Commands.ClickElement(data["TIMECARD"]["delete_dept"])
         time.sleep(2)
 
@@ -7963,11 +8004,11 @@ def arbitrary_decision():
   
     Logging(" ")
     Logging("*** DELETE ARBITRARY DECISION")
-    add_arbitrary_name = driver.find_element_by_xpath("//span[text()='Available Users']//following::div//ul//li//div[contains(@class,'first-line') and contains(.,'" + arbitrary_user_name_text + "')]")
+    add_arbitrary_name = driver.find_element_by_xpath(data["TIMECARD"]["add_arbitrary_name"] % arbitrary_user_name_text)
     if add_arbitrary_name.is_displayed():
         Logging("User " + arbitrary_user_name_text + " is display in available users list")
         add_arbitrary_name.click()
-        Commands.ClickElement("//span[text()='Available Users']//following::div//ul//li//div[contains(@class,'first-line') and contains(.,'" + arbitrary_user_name_text + "')]//following::div[2]")
+        Commands.ClickElement(data["TIMECARD"]["del_arbitrary_name"] % arbitrary_user_name_text)
         Commands.ClickElement(data["TIMECARD"]["delete_dept"])
         time.sleep(2)
 
@@ -8027,55 +8068,50 @@ def time_card():
     weekly_status()
     status1 = daily_status()
 
-    rp=report()
-    working_time_report_decimal=rp[0]
-    worked_time_report_decimal=rp[1]
-    break_time_report_decimal=rp[2]
 
+    working_time = report()
     clockin()
     #timesheet_calendar_check()
     clockout()
     edit_clockin()
 
-    nb_out=edit_clockout()
-    hour_number1=nb_out[0]
-    working_number1=nb_out[1]
-    break_number1=nb_out[2]
-    OT_number1=nb_out[3]
-
-    nb_report=report_2nd()
-    working_time_decimal_2nd=nb_report[0]
-    worked_time_decimal_2nd =nb_report[1]
-    break_time_decimal_2nd = nb_report[2]
-
-    calculation(working_time_report_decimal,worked_time_report_decimal,break_time_report_decimal,hour_number1,working_number1,break_number1,working_time_decimal_2nd,worked_time_decimal_2nd,break_time_decimal_2nd)
-
-    daily_status2(status1,break_number1,working_number1,OT_number1)
-
-    weekly_status2()
-
-    company_timecard_reports()
-
-    timeline()
+    nb_out = edit_clockout()
+    working_time.update(nb_out)
 
 
-    #work_place()
+    nb_report = report_2nd()
+    working_time.update(nb_report)
+    #working_time.update(status1)
 
-    report_weekly()
-
-    report_list()
+    calculation(**working_time)
 
 
-    dashboard()
+    daily_status2(**working_time)
 
-    basic_gps()
+    # weekly_status2()
 
-    exception_users()
+    # company_timecard_reports()
 
-    outside_users()
+    # timeline()
 
-    arbitrary_decision()
+
+    # #work_place()
+
+    # report_weekly()
+
+    # report_list()
+
+
+    # dashboard()
+
+    # basic_gps()
+
+    # exception_users()
+
+    # outside_users()
+
+    # arbitrary_decision()
     
-    # # # # # # OT_post_midnight()
+    # # # # # # # OT_post_midnight()
 
-    # # # work_shift()
+    # # # # work_shift()
