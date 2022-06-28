@@ -53,7 +53,7 @@ def account():
 def admin_user():
     admin_account = account()
     if admin_account == True:
-        #timecard()
+        timecard()
         time_card()
     else:
         normal_user()
@@ -618,13 +618,13 @@ def timesheet_list(**t_data):
     date_clockin = driver.find_element_by_xpath(data["TIMECARD"]["date_clockin"])
     #Logging(date_clockin.text)
     date_clock_in = date_clockin.text
-    Logging(date_clock_in)
+    #Logging(date_clock_in)
     timesheet_list = Commands.ClickElement(data["TIMECARD"]["timesheet_list"]) 
     Logging("- My Timesheets: List")
 
     Waits.WaitElementLoaded(20, data["TIMECARD"]["timesheet_list_wwait"])
     time.sleep(3)
-
+ 
     i = 0
     for i in range(50):  
         i += 1
@@ -2393,7 +2393,6 @@ def report():
             #rp.append(working_time_report_decimal)
             Logging("working time after change to decimal: " + str(round(working_time_report_decimal, 2)))
             #Logging("working time after change to decimal: " + str(working_time_report_decimal))
-        
         except:
             hour_time_report1 = working_time_report1.split(" ")[0]
             #Logging(hour_time_report1)
@@ -2770,17 +2769,24 @@ def edit_clockout():
 
 
 
-def report_2nd():
-    nb_report=[]
+def report_2nd(working_time):
+    working_time_report_decimal = working_time["working_time_report_decimal"]
+    worked_time_report_decimal = working_time["worked_time_report_decimal"]
+    break_time_report_decimal = working_time["break_time_report_decimal"]
+
+    hour_number1 = working_time["hour_number1"]
+    working_number1 = working_time["working_number1"]
+    break_number1 = working_time["break_number1"]
     try:
         time.sleep(5)
-        #nb_report=[]
+        # nb_report=[]
         Commands.ClickElement(data["TIMECARD"]["report_page"]) 
         Waits.WaitElementLoaded(30, data["TIMECARD"]["report_wait"])
 
         Logging("")
         PrintYellow("***Report - After log in***")
 
+        #nb_report=[]
         #workingtimeUI_number
         Logging("Change working time to decimal")
         time.sleep(5)
@@ -2815,8 +2821,7 @@ def report_2nd():
             #nb_report.append(working_time_decimal_2nd)
 
             Logging("working time after change to decimal: " + str(working_time_decimal_2nd))
-        finally:
-            nb_report["working_time_decimal_2nd"] = working_time_decimal_2nd
+
 
         #workedtimeUI_number
         Logging("Change worked time to decimal")
@@ -2851,8 +2856,7 @@ def report_2nd():
             worked_time_decimal_2nd = hour_worked_number2
             #nb_report.append(worked_time_decimal_2nd)
             Logging("worked time after change to decimal: " + str(worked_time_decimal_2nd))
-        finally:
-            nb_report["worked_time_decimal_2nd"] = worked_time_decimal_2nd
+
 
         #breaktimeUI_number
         Logging("Change break time to decimal")
@@ -2890,17 +2894,60 @@ def report_2nd():
             #nb_report.append(break_time_decimal_2nd)
             Logging("break time after change to decimal: " + str(break_time_decimal_2nd))
             TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["after_login_report_data"]["pass"]) 
-        finally:
-            nb_report["break_time_decimal_2nd"] = break_time_decimal_2nd
+
     except:
-        #Logging("Check data fail")
-        PrintRed(">>>Check data fail")
+        Logging("Check data fail")
+        #PrintRed(">>>Check data fail")
 
-    return nb_report
+    try:
+    #Calculation step by step #working time
+        Logging("")
+        Logging("Compare workingtime - before and after log in")
+        if round(working_time_report_decimal) + hour_number1 == round(working_time_decimal_2nd):
+            # Logging(working_time_report_decimal)
+            # Logging(hour_number1)
+            # Logging(working_time_decimal_2nd)
+            #Logging("Result was the same - calculation was right")
+            PrintGreen(">>>Result was the same - calculation was right") 
+        else:
+            #Logging("Result was different - calculation was wrong")
+            PrintRed(">>>Result was different - calculation was wrong")
+
+        #Calculation step by step #worked time  
+        Logging("Compare workedtime - before and after log in")
+        if round(worked_time_report_decimal, 2) + working_number1 == round(worked_time_decimal_2nd, 2):
+            # Logging(worked_time_report_decimal)
+            # Logging(working_number1)
+            # Logging(worked_time_decimal_2nd)
+            #Logging("Result was the same - calculation was right")
+            PrintGreen(">>>Result was the same - calculation was right") 
+        else:
+            #Logging("Result was different - calculation was wrong")
+            PrintRed(">>>Result was different - calculation was wrong")
+
+        #Calculation step by step #break time
+        Logging("Compare break time - before and after log in")  
+        if round(break_time_report_decimal) + round(break_number1) == round(break_time_decimal_2nd):
+            # Logging(break_time_report_decimal)
+            # Logging(break_number1)
+            # Logging(break_time_decimal_2nd)
+            #Logging("Result was the same - calculation was right")
+            PrintGreen(">>>Result was the same - calculation was right") 
+        else:
+            #Logging("Result was different - calculation was wrong") 
+            PrintRed(">>>Result was different - calculation was wrong")
+
+        TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["compare_time"]["pass"])
+
+    except:
+        #Logging("Can't calculation")
+        PrintRed(">>>Cant calculate")
+        TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["compare_time"]["fail"])
 
 
 
-def calculation(**working_time):
+
+def calculation(working_time):
     working_time_report_decimal = working_time["working_time_report_decimal"]
     worked_time_report_decimal = working_time["worked_time_report_decimal"]
     break_time_report_decimal = working_time["break_time_report_decimal"]
@@ -2908,7 +2955,6 @@ def calculation(**working_time):
     hour_number1 = working_time["hour_number1"]
     working_number1 = working_time["working_number1"]
     break_number1 = working_time["break_number1"]
-    OT_number1 = working_time["OT_number1"]
 
     working_time_decimal_2nd = working_time["working_time_decimal_2nd"]
     worked_time_decimal_2nd = working_time["worked_time_decimal_2nd"]
@@ -2959,8 +3005,7 @@ def calculation(**working_time):
         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["compare_time"]["fail"])
 
 
-def daily_status2(**working_time):
-    status1 = working_time["status1"]
+def daily_status2(working_time):
     working_number1 = working_time["working_number1"]
     break_number1 = working_time["break_number1"]
     OT_number1 = working_time["OT_number1"]
@@ -8066,7 +8111,7 @@ def timecard():
 def time_card():
     # # # Napproval_OT()
     weekly_status()
-    status1 = daily_status()
+    daily_status()
 
 
     working_time = report()
@@ -8079,38 +8124,33 @@ def time_card():
     working_time.update(nb_out)
 
 
-    nb_report = report_2nd()
-    working_time.update(nb_report)
-    #working_time.update(status1)
+    report_2nd(working_time)
 
-    calculation(**working_time)
+    daily_status2(working_time)
 
+    weekly_status2()
 
-    daily_status2(**working_time)
+    company_timecard_reports()
 
-    # weekly_status2()
-
-    # company_timecard_reports()
-
-    # timeline()
+    timeline()
 
 
-    # #work_place()
+    #work_place()
 
-    # report_weekly()
+    report_weekly()
 
-    # report_list()
+    report_list()
 
 
-    # dashboard()
+    dashboard()
 
-    # basic_gps()
+    basic_gps()
 
-    # exception_users()
+    exception_users()
 
-    # outside_users()
+    outside_users()
 
-    # arbitrary_decision()
+    arbitrary_decision()
     
     # # # # # # # OT_post_midnight()
 
