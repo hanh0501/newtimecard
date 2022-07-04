@@ -2704,7 +2704,8 @@
             "Data saved successfully."
         ],
         
-
+        
+        "admin_account": "//label[contains(@data-lang-id,'tc_menu_company')]",
         "add_working_status": "//div[contains(@class,'icon-user-status down')]",
         "working_status": "//*[@id='click-out-side-4']//div[contains(@class,'item-header-content')]//div[2]/div/div/div",
         "dropdown_time": "//*[starts-with(@id,'dropdown')]/button",
@@ -3243,7 +3244,7 @@
         "dashboard_page": "//span[contains(@class, 'text-truncate') and contains(., 'Dashboard')]",
         "dashboard_wait": "//span[contains(@data-lang-id,'tc_dashboard_name')]",
         "dashboard_wait2": "//span[contains(@data-lang-id,'tc_dashboard_missing_timeclock')]",
-        "dashboard_settlement": "//span[contains(.,'Settlement')]",
+        "dashboard_settlement": "//span[contains(.,'Device')]",
         "org_box": "//div[contains(@class,'main-side-container-history')]/../../div[1]",
         "search_users": "//div[contains(@class,'avatar-wrapper')]//li",
         "work_shifts": "//span[contains(@class, 'text-truncate') and contains(., 'Work Shifts')]",
@@ -3336,12 +3337,19 @@
         "working_sta_tus": "//*[@id='click-out-side-4']//div[contains(@class,'item-header-content')]//div[2]/div/div",
         "status": "//*[@id='click-out-side-4']//div[contains(@class,'item-header-content')]//div[2]/div/div/div[contains(.,'%s')]",
         "status_time": "//*[starts-with(@id,'dropdown')]/div/button",
-        "time_st": "//*[starts-with(@id,'dropdown')]/div/button/div[contains(.,'%s')]"
-    
-    
-    
-    
-    
+        "time_st": "//*[starts-with(@id,'dropdown')]/div/button/div[contains(.,'%s')]",
+        "add_name_mana_ger": "//span[text()='Exception Users']//following::div//ul//li//div[contains(@class,'first-line') and contains(.,'%s')]",
+        "del_manager": "//span[text()='Exception Users']//following::div//ul//li//div[contains(@class,'first-line') and contains(.,'%s')]//following::div[2]",
+        "add_outside_name": "//span[text()='Available Users']//following::div//ul//li//div[contains(@class,'first-line') and contains(.,'%s')]",
+        "del_outside_user": "//span[text()='Available Users']//following::div//ul//li//div[contains(@class,'first-line') and contains(.,'%s')]//following::div[2]",
+        "add_arbitrary_name": "//span[text()='Available Users']//following::div//ul//li//div[contains(@class,'first-line') and contains(.,'%s')]",
+        "del_arbitrary_name": "//span[text()='Available Users']//following::div//ul//li//div[contains(@class,'first-line') and contains(.,'%s')]//following::div[2]",
+        "click_work_policy": "//div[contains(@class, 'policy-list-methods')]/ul/a//h6[contains(.,'%s')]",
+        "approval_OT": "['%s']/label",
+        "select_approval_OT": "[contains(.,'%s')]",
+        "filters": "//button[contains(.,'Select Filters')]/following-sibling::div/a[contains(.,'%s')]",
+        "filter_time": "//button[contains(.,'Select Filters')]/following-sibling::div/a[contains(.,'%s')]",
+        "clear_clock_out_yes": "//span[contains(@data-lang-id, 'tc_action_confirm_yes')]"
     
     
     
