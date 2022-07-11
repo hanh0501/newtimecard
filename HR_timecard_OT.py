@@ -52,29 +52,21 @@ def clock_in():
         clock_in_time = None
     else:
         clock_in_time = time_clock_in
+        return time_clock_in
 
-    return clock_in_time
-
-def Napproval_OT(clock_in_time):
-    if bool(clock_in_time) == True:
+def Napproval_OT(time_clock_in):
+    if bool(time_clock_in) == True:
         Logging("Run pre OT function")
         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["check_true"]["pass"])
         text_format_hour = output(data["TIMECARD"]["timesheet_wait"])
-        clock_in_default = text_format_hour
-        #Logging(clock_in_default)
-        clock_in_default_hour = clock_in_default.split(" ")[0]
+        clock_in_default_hour = text_format_hour.split(" ")[0]
         #Logging(clock_in_default_hour)
 
         #Calculate to find out valid time 
         text_OT_since = output(data["TIMECARD"]["text_OT_since"])
         Logging("OT since: " + text_OT_since)
-        OT_since_hour = text_OT_since
-        OT_since_hour = OT_since_hour.split(":")[0]
-        OT_since_hour_decimal = int(OT_since_hour)
-
-        OT_since_minute = text_OT_since
-        OT_since_minute = OT_since_minute.split(":")[1]
-        OT_since_minute_decimal = int(OT_since_minute)
+        OT_since_hour_decimal = int(text_OT_since.split(":")[0])
+        OT_since_minute_decimal = int(text_OT_since.split(":")[1])
 
         OT_since_decimal = ((OT_since_minute_decimal) / 60) + (OT_since_hour_decimal)
         Logging("OT time after change to decimal: " + str(OT_since_decimal))
@@ -133,13 +125,9 @@ def Napproval_OT(clock_in_time):
         Logging("Valid time to apply pre-ot(decimal): " + str(result))
 
         Logging("Current time: " + print_date)
-        print_date_hour = print_date
-        print_date_hour = print_date_hour.split(":")[0]
-        print_date_hour_decimal = int(print_date_hour)
+        print_date_hour_decimal = int(print_date.split(":")[0])
 
-        print_date_minute = print_date
-        print_date_minute = print_date_minute.split(":")[1]
-        print_date_minute_decimal = int(print_date_minute)
+        print_date_minute_decimal = int(print_date.split(":")[1])
 
         print_date_decimal = ((print_date_minute_decimal) / 60) + (print_date_hour_decimal)
         Logging("Current time after change to decimal: " + str(print_date_decimal))
@@ -157,7 +145,7 @@ def Napproval_OT(clock_in_time):
                 OT = WebDriverWait(driver,10).until(EC.presence_of_element_located((By.XPATH, data["TIMECARD"]["OT_scroll"])))
                 OT.location_once_scrolled_into_view
                 time.sleep(2)
-                OT_list = int(len(driver.find_elements_by_xpath(data["TIMECARD"]["OT_list"])))
+                OT_list = Functions.GetListLength(data["TIMECARD"]["OT_list"])
 
                 approval_OT_list = []
                 i = 0
@@ -216,15 +204,12 @@ def Napproval_OT(clock_in_time):
                 #Check max application time
                 text_max_application_time = output(data["TIMECARD"]["text_max_application_time"])
                 #Logging("Max application time: " + text_max_application_time)
-                max_application = text_max_application_time
-                max_application_hour = max_application.split("H")[0]
+                max_application_hour = text_max_application_time.split("H")[0]
                 Logging("Max application time: " + max_application_hour)
 
                 text_remaining_OT_time = output(data["TIMECARD"]["text_remaining_OT_time"])
                 #Logging("Remaining OT time: " + text_remaining_OT_time)
-                remaining_OT = text_remaining_OT_time
-                remaining_OT_hour = remaining_OT.split("/")[0]
-                remaining_OT_number = remaining_OT_hour.split("H")[0]
+                remaining_OT_number = text_remaining_OT_time.split("/")[0].split("H")[0]
                 Logging("Remaining OT time: " + remaining_OT_number)
 
                 #Calculation to check pre OT data
@@ -241,15 +226,12 @@ def Napproval_OT(clock_in_time):
                 #Estimate working hours
                 text_estimate_default = output(data["TIMECARD"]["text_estimate_default"])
                 Logging("Estimate time before select filter: " + text_estimate_default)
-                estimate_time = text_estimate_default
-                estimate_time1 = estimate_time.split("~")[1]
-                estimate_time2 = estimate_time1.split(":")[0]
-                estimate_time_decimal = int(estimate_time2)
+                estimate_time_decimal = int(text_estimate_default.split("~")[1].split(":")[0])
                 #Logging(estimate_time_decimal)
 
 
                 driver.find_element_by_xpath(data["TIMECARD"]["filter"]).click()
-                filters_OT_list = int(len(driver.find_elements_by_xpath(data["TIMECARD"]["filters_OT_list"])))
+                filters_OT_list = Functions.GetListLength(data["TIMECARD"]["filters_OT_list"])
 
                 list_filters_OT = []
                 y = 0
@@ -267,17 +249,13 @@ def Napproval_OT(clock_in_time):
                 filter_number = driver.find_element_by_xpath(data["TIMECARD"]["filter_number"])
                 m1 = filter_number.text
                 #Logging(m1)
-                filter_number_data = m1.split(" ")[0]
-                filter_number_decimal = int(filter_number_data)
+                filter_number_decimal = int(m1.split(" ")[0])
                 #Logging(filter_number_decimal)
 
                 #Check estimate time
                 text_estimate_after_select_OT = output(data["TIMECARD"]["text_estimate_after_select_OT"])
                 Logging("Estimate time after select filter: " + text_estimate_after_select_OT)
-                estimate_after_select_OT_time = text_estimate_after_select_OT
-                estimate_after_select_OT_time1 = estimate_after_select_OT_time.split("~")[1]
-                estimate_after_select_OT_time2 = estimate_after_select_OT_time1.split(":")[0]
-                estimate_after_select_OT_decimal = int(estimate_after_select_OT_time2)
+                estimate_after_select_OT_decimal = int(text_estimate_after_select_OT.split("~")[1].split(":")[0])
                 #Logging(estimate_after_select_OT_decimal)
 
                 try:
@@ -372,11 +350,7 @@ def Napproval_OT(clock_in_time):
                                 Logging("Memo: " + memo_data_check)
                                 time_data_check = driver.find_element_by_xpath(data["TIMECARD"]["time_data_check"])
                                 Logging("Duration: " + time_data_check)
-
-                                time_data_check_time = time_data_check.text
-                                time_data_check_time1 = time_data_check_time.split(" ")[0]
-                                time_data_check_time2 = time_data_check_time1.split("H")[0]
-                                time_data_check_decimal = int(time_data_check_time2)
+                                time_data_check_decimal = int(time_data_check.text.split(" ")[0].split("H")[0])
 
                                 try:
                                     if time_data_check.is_displayed:
@@ -444,11 +418,7 @@ def Napproval_OT(clock_in_time):
                                 Logging("Memo: " + memo_data_check.text)
                                 time_data_check = driver.find_element_by_xpath(data["TIMECARD"]["time_data_check"])
                                 Logging("Duration: " + time_data_check.text)
-
-                                time_data_check_time = time_data_check.text
-                                time_data_check_time1 = time_data_check_time.split(" ")[0]
-                                time_data_check_time2 = time_data_check_time1.split("H")[0]
-                                time_data_check_decimal = int(time_data_check_time2)
+                                time_data_check_decimal = int(time_data_check.text.split(" ")[0].split("H")[0])
                                 try:
                                     if time_data_check.is_displayed:
                                         Logging("Duration is displayed")
@@ -533,10 +503,7 @@ def Napproval_OT(clock_in_time):
 
                                 time_data_check = driver.find_element_by_xpath(data["TIMECARD"]["time_data_check"])
                                 Logging("Duration: " + time_data_check.text)
-                                time_data_check_time = time_data_check.text
-                                time_data_check_time1 = time_data_check_time.split(" ")[0]
-                                time_data_check_time2 = time_data_check_time1.split("H")[0]
-                                time_data_check_decimal = int(time_data_check_time2)
+                                time_data_check_decimal = int(time_data_check.text.split(" ")[0].split("H")[0])
 
                                 try:
                                     if time_data_check.is_displayed:
@@ -629,11 +596,7 @@ def Napproval_OT(clock_in_time):
 
                                     time_data_check = driver.find_element_by_xpath("//div[contains(@data-lang-id, 'tc_title_time')]/following-sibling::div")
                                     Logging("Duration: " + time_data_check.text)
-
-                                    time_data_check_time = time_data_check.text
-                                    time_data_check_time1 = time_data_check_time.split(" ")[0]
-                                    time_data_check_time2 = time_data_check_time1.split("H")[0]
-                                    time_data_check_decimal = int(time_data_check_time2)
+                                    time_data_check_decimal = int(time_data_check.text.split(" ")[0].split("H")[0])
 
                                     try:
                                         if time_data_check.is_displayed:
@@ -713,34 +676,22 @@ def Napproval_OT(clock_in_time):
 
     text_working_time = output(data["TIMECARD"]["text_working_time"])
     #Logging(working_time.text)
-    working_time_hour = text_working_time
-    working_time_hour1 = working_time_hour.split(" ")[0]
-    working_time_hour_2 = working_time_hour1.split("H")[0]
-    working_time_hour_decimal = int(working_time_hour_2)
+    working_time_hour_decimal = int(text_working_time.split(" ")[0].split("H")[0])
     #Logging(working_time_hour_decimal)
 
     text_break_time = output(data["TIMECARD"]["text_break_time"])
     #Logging(break_time.text)
-    break_time_hour = text_break_time
-    break_time_hour1 = break_time_hour.split(" ")[0]
-    break_time_hour_2 = break_time_hour1.split("H")[0]
-    break_time_hour_decimal = int(break_time_hour_2)
+    break_time_hour_decimal = int(text_break_time.split(" ")[0].split("H")[0])
     #Logging(break_time_hour_decimal)
 
     text_OT_time = output(data["TIMECARD"]["text_OT_time"])
     #Logging(OT_time.text)
-    OT_time_hour = text_OT_time
-    OT_time_hour1 = OT_time_hour.split(" ")[0]
-    OT_time_hour_2 = OT_time_hour1.split("H")[0]
-    OT_time_hour_decimal = int(OT_time_hour_2)
+    OT_time_hour_decimal = int(text_OT_time.split(" ")[0].split("H")[0])
     #Logging(OT_time_hour_decimal)
 
     text_total_working_hour = output(data["TIMECARD"]["text_total_working_hour"])
     #Logging(total_working_hour.text)
-    total_working_hour = text_total_working_hour
-    total_working_time_hour1 = total_working_hour.split(" ")[0]
-    total_working_time_hour2 = total_working_time_hour1.split("H")[0]
-    total_working_time_hour_decimal = int(total_working_time_hour2)
+    total_working_time_hour_decimal = int(text_total_working_hour.split(" ")[0].split("H")[0])
     #Logging(total_working_time_hour_decimal)
 
     #Clear clock-out
@@ -788,34 +739,22 @@ def Napproval_OT(clock_in_time):
 
     text_after_working_time = output(data["TIMECARD"]["text_working_time"])
     #Logging(after_working_time.text)
-    after_working_time_hour = text_after_working_time
-    after_working_time_hour1 = after_working_time_hour.split(" ")[0]
-    after_working_time_hour2 = after_working_time_hour1.split("H")[0]
-    after_working_time_hour_decimal = int(after_working_time_hour2)
+    after_working_time_hour_decimal = int(text_after_working_time.split(" ")[0].split("H")[0])
     #Logging(after_working_time_hour_decimal)
 
     text_after_break_time = output(data["TIMECARD"]["text_break_time"])
     #Logging(after_break_time.text)
-    after_break_time_hour = text_after_break_time
-    after_break_time_hour1 = after_break_time_hour.split(" ")[0]
-    after_break_time_hour2 = after_break_time_hour1.split("H")[0]
-    after_break_time_hour_decimal = int(after_break_time_hour2)
+    after_break_time_hour_decimal = int(text_after_break_time.split(" ")[0].split("H")[0])
     #Logging(after_break_time_hour_decimal)
 
     text_after_OT_time = output(data["TIMECARD"]["text_OT_time"])
     #Logging(after_OT_time.text)
-    after_OT_time_hour = text_after_OT_time
-    after_OT_time_hour1 = after_OT_time_hour.split(" ")[0]
-    after_OT_time_hour2 = after_OT_time_hour1.split("H")[0]
-    after_OT_time_hour_decimal = int(after_OT_time_hour2)
+    after_OT_time_hour_decimal = int(text_after_OT_time.split(" ")[0].split("H")[0])
     #Logging(after_OT_time_hour_decimal)
 
     text_after_total_working_hour = output(data["TIMECARD"]["text_total_working_hour"])
     #Logging(after_total_working_hour.text)
-    after_total_working_hour = text_after_total_working_hour
-    after_total_working_time_hour1 = after_total_working_hour.split(" ")[0]
-    after_total_working_time_hour2 = after_total_working_time_hour1.split("H")[0]
-    after_total_working_time_hour_decimal = int(after_total_working_time_hour2)
+    after_total_working_time_hour_decimal = int(text_after_total_working_hour.split(" ")[0].split("H")[0])
     #Logging(after_total_working_time_hour_decimal)
 
     #Calculate to find out if data has been updated or not
@@ -923,34 +862,22 @@ def report_weekly_before():
 
     text_working_time = output(data["TIMECARD"]["text_working_time"])
     #Logging(working_time.text)
-    working_time_hour = text_working_time
-    working_time_hour1 = working_time_hour.split(" ")[0]
-    working_time_hour_2 = working_time_hour1.split("H")[0]
-    working_time_hour_decimal = int(working_time_hour_2)
+    working_time_hour_decimal = int(text_working_time.split(" ")[0].split("H")[0])
     #Logging(working_time_hour_decimal)
 
     text_break_time = output(data["TIMECARD"]["text_break_time"])
     #Logging(break_time.text)
-    break_time_hour = text_break_time
-    break_time_hour1 = break_time_hour.split(" ")[0]
-    break_time_hour_2 = break_time_hour1.split("H")[0]
-    break_time_hour_decimal = int(break_time_hour_2)
+    break_time_hour_decimal = int(text_break_time.split(" ")[0].split("H")[0])
     #Logging(break_time_hour_decimal)
 
     text_OT_time = output(data["TIMECARD"]["text_OT_time"])
     #Logging(OT_time.text)
-    OT_time_hour = text_OT_time
-    OT_time_hour1 = OT_time_hour.split(" ")[0]
-    OT_time_hour_2 = OT_time_hour1.split("H")[0]
-    OT_time_hour_decimal = int(OT_time_hour_2)
+    OT_time_hour_decimal = int(text_OT_time.split(" ")[0].split("H")[0])
     #Logging(OT_time_hour_decimal)
 
     text_total_working_hour = output(data["TIMECARD"]["text_total_working_hour"])
     #Logging(total_working_hour.text)
-    total_working_hour = text_total_working_hour
-    total_working_time_hour1 = total_working_hour.split(" ")[0]
-    total_working_time_hour2 = total_working_time_hour1.split("H")[0]
-    total_working_time_hour_decimal = int(total_working_time_hour2)
+    total_working_time_hour_decimal = int(text_total_working_hour.split(" ")[0].split("H")[0])
     #Logging(total_working_time_hour_decimal)
 
     #Clear clock-out
@@ -999,34 +926,22 @@ def report_weekly_after(elements):
 
     text_after_working_time = output(data["TIMECARD"]["text_working_time"])
     #Logging(after_working_time.text)
-    after_working_time_hour = text_after_working_time
-    after_working_time_hour1 = after_working_time_hour.split(" ")[0]
-    after_working_time_hour2 = after_working_time_hour1.split("H")[0]
-    after_working_time_hour_decimal = int(after_working_time_hour2)
+    after_working_time_hour_decimal = int(text_after_working_time.split(" ")[0].split("H")[0])
     #Logging(after_working_time_hour_decimal)
 
     text_after_break_time = output(data["TIMECARD"]["text_break_time"])
     #Logging(after_break_time.text)
-    after_break_time_hour = text_after_break_time
-    after_break_time_hour1 = after_break_time_hour.split(" ")[0]
-    after_break_time_hour2 = after_break_time_hour1.split("H")[0]
-    after_break_time_hour_decimal = int(after_break_time_hour2)
+    after_break_time_hour_decimal = int(text_after_break_time.split(" ")[0].split("H")[0])
     #Logging(after_break_time_hour_decimal)
 
     text_after_OT_time = output(data["TIMECARD"]["text_OT_time"])
     #Logging(after_OT_time.text)
-    after_OT_time_hour = text_after_OT_time
-    after_OT_time_hour1 = after_OT_time_hour.split(" ")[0]
-    after_OT_time_hour2 = after_OT_time_hour1.split("H")[0]
-    after_OT_time_hour_decimal = int(after_OT_time_hour2)
+    after_OT_time_hour_decimal = int(text_after_OT_time.split(" ")[0].split("H")[0])
     #Logging(after_OT_time_hour_decimal)
 
     text_after_total_working_hour = output(data["TIMECARD"]["text_total_working_hour"])
     #Logging(after_total_working_hour.text)
-    after_total_working_hour = text_after_total_working_hour
-    after_total_working_time_hour1 = after_total_working_hour.split(" ")[0]
-    after_total_working_time_hour2 = after_total_working_time_hour1.split("H")[0]
-    after_total_working_time_hour_decimal = int(after_total_working_time_hour2)
+    after_total_working_time_hour_decimal = int(text_after_total_working_hour.split(" ")[0].split("H")[0])
     #Logging(after_total_working_time_hour_decimal)
 
     #Calculate to find out if data has been updated or not
@@ -1122,10 +1037,10 @@ def report_weekly_after(elements):
                 Logging("Clock-out already")
 
 def timecard_OT():
-    clock_in_time = clock_in()
+    time_clock_in = clock_in()
     #Napproval_OT(time_clock_in)
     #print(time_clock_in)
-    Napproval_OT(clock_in_time)
+    Napproval_OT(time_clock_in)
     #Napproval_OT()
 
 def timecard_report():
