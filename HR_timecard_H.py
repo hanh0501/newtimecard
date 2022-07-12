@@ -53,7 +53,7 @@ def account():
 def admin_user():
     admin_account = account()
     if admin_account == True:
-        timecard()
+        #timecard()
         time_card()
     else:
         normal_user()
@@ -326,15 +326,14 @@ def breaktime():
 
 def input_reason_leave_early():
     try:
-        leave_early = driver.find_element_by_xpath(data["TIMECARD"]["leave_early"])
-        if leave_early.is_displayed():
-            Commands.InputElement(data["TIMECARD"]["input_reason_leave_early"], data["TIMECARD"]["reason_leave_early"])
-            Logging("- Input reason")
-            time.sleep(2)
-            Commands.ClickElement(data["TIMECARD"]["save"]) 
-            Logging("- Save reason")
-            time.sleep(3)
-            time_clock_out()
+        Waits.Wait10s_ElementLoaded(data["TIMECARD"]["leave_early"])
+        Commands.InputElement(data["TIMECARD"]["input_reason_leave_early"], data["TIMECARD"]["reason_leave_early"])
+        Logging("- Input reason")
+        time.sleep(2)
+        Commands.ClickElement(data["TIMECARD"]["save"]) 
+        Logging("- Save reason")
+        time.sleep(3)
+        time_clock_out()
     except:
         Logging("- Clock-out on time")
 
@@ -3025,8 +3024,8 @@ def weekly_status2():
         Waits.WaitElementLoaded(30, data["TIMECARD"]["weekly_status_wait"])
 
         Commands.ClickElement(data["TIMECARD"]["open_search_box"]) 
-        # ws_search2 = driver.find_element_by_xpath(data["TIMECARD"]["ws_search2"])
-        # ws_search2.send_keys(data["name_keyword"][0])
+        ws_search2 = driver.find_element_by_xpath(data["TIMECARD"]["ws_search2"])
+        ws_search2.send_keys(data["name_keyword"][0])
         ws_search2 = Commands.InputElement(data["TIMECARD"]["ws_search2"], data["name_keyword"][0])
         ws_search2.send_keys(Keys.ENTER)
         time.sleep(3)
@@ -3039,11 +3038,9 @@ def weekly_status2():
         monday_time2 = monday2.text
         try:
             minutes_number_monday_time2 = int(monday_time2.split(" ")[1].split("m")[0])
-            #Logging(minutes_number_monday_time)
             hour_number_monday_time2 = int(monday_time2.split(" ")[0].split("H")[0])
-            #Logging(hour_number_monday_time)
             monday_time_decimal2 = ((minutes_number_monday_time2) / 60) + (hour_number_monday_time2)
-            #Logging("monday after change to decimal: " + str(monday_time_decimal2))
+            Logging("monday after change to decimal: " + str(monday_time_decimal2))
             Logging("monday after change to decimal: " + str(round(monday_time_decimal2, 2)))
         except:
             monday_time_decimal2 = int(monday_time2.split(" ")[0].split("H")[0])
@@ -3054,11 +3051,9 @@ def weekly_status2():
         tuesday_time2 = tuesday2.text
         try:
             minutes_number_tuesday_time2 = int(tuesday_time2.split(" ")[1].split("m")[0])
-            #Logging(minutes_number_tuesday_time2)
             hour_number_tuesday_time2 = int(tuesday_time2.split(" ")[0].split("H")[0])
-            #Logging(hour_number_tuesday_time2)
             tuesday_time_decimal2 = ((minutes_number_tuesday_time2) / 60) + (hour_number_tuesday_time2)
-            #Logging("tuesday after change to decimal: " + str(tuesday_time_decimal2))
+            Logging("tuesday after change to decimal: " + str(tuesday_time_decimal2))
             Logging("tuesday after change to decimal: " + str(round(tuesday_time_decimal2, 2)))
         except:
             tuesday_time_decimal2 = int(tuesday_time2.split(" ")[0].split("H")[0])
@@ -3069,11 +3064,9 @@ def weekly_status2():
         wednesday_time2 = wednesday2.text
         try:
             minutes_number_wednesday_time2 = int(wednesday_time2.split(" ")[1].split("m")[0])
-            #Logging(minutes_number_wednesday_time2)
             hour_number_wednesday_time2 = int(wednesday_time2.split(" ")[0].split("H")[0])
-            #Logging(hour_number_wednesday_time2)
             wednesday_time_decimal2 = ((minutes_number_wednesday_time2) / 60) + (hour_number_wednesday_time2)
-            #Logging("wednesday after change to decimal: " + str(wednesday_time_decimal2))
+            Logging("wednesday after change to decimal: " + str(wednesday_time_decimal2))
             Logging("wednesday after change to decimal: " + str(round(wednesday_time_decimal2, 2)))
         except:
             wednesday_time_decimal2 =  int(wednesday_time2.split(" ")[0].split("H")[0])
@@ -3084,14 +3077,13 @@ def weekly_status2():
         thursday_time2 = thursday2.text
         try:
             minutes_number_thursday_time2 = int(thursday_time2.split(" ")[1].split("m")[0])
-            #Logging(minutes_number_thursday_time2)
-            hour_number_thursday_time2 = int(thursday_time2.split2(" ")[0].split("H")[0])
-            #Logging(hour_number_thursday_time2)
+            hour_number_thursday_time2 = int(thursday_time2.split(" ")[0].split("H")[0])
             thursday_time_decimal2 = ((minutes_number_thursday_time2) / 60) + (hour_number_thursday_time2)
-            #Logging("thursday after change to decimal: " + str(thursday_time_decimal2))
+            Logging("thursday after change to decimal: " + str(thursday_time_decimal2))
+            Logging(thursday_time_decimal2)
             Logging("thursday after change to decimal: " + str(round(thursday_time_decimal2, 2)))
         except:
-            thursday_time_decimal2 = int(thursday_time2.split2(" ")[0].split("H")[0])
+            thursday_time_decimal2 = int(thursday_time2.split(" ")[0].split("H")[0])
             Logging("thursday after change to decimal: " + str(thursday_time_decimal2))
 
         friday2 = driver.find_element_by_xpath(data["TIMECARD"]["friday"])
@@ -3099,11 +3091,10 @@ def weekly_status2():
         friday_time2 = friday2.text
         try:
             minutes_number_friday_time2 = int(friday_time2.split(" ")[1].split("m")[0])
-            #Logging(minutes_number_friday_time2)
             hour_number_friday_time2 = int(friday_time2.split(" ")[0].split("H")[0])
-            #Logging(hour_number_friday_time2)
             friday_time_decimal2 = ((minutes_number_friday_time2) / 60) + (hour_number_friday_time2)
             #Logging("friday after change to decimal: " + str(friday_time_decimal2))
+            Logging(friday_time_decimal2)
             Logging("friday after change to decimal: " + str(round(friday_time_decimal2, 2)))
         except:
             friday_time_decimal2 = int(friday_time2.split(" ")[0].split("H")[0])
@@ -3114,11 +3105,10 @@ def weekly_status2():
         saturday_time2 = saturday2.text
         try:
             minutes_number_saturday_time2 = int(saturday_time2.split(" ")[1].split("m")[0])
-            #Logging(minutes_number_saturday_time2)
             hour_number_saturday_time2 = int(saturday_time2.split(" ")[0].split("H")[0])
-            #Logging(hour_number_saturday_time2)
             saturday_time_decimal2 = ((minutes_number_saturday_time2) / 60) + (hour_number_saturday_time2)
             #Logging("saturday after change to decimal: " + str(saturday_time_decimal2))
+            Logging(saturday_time_decimal2)
             Logging("saturday after change to decimal: " + str(round(saturday_time_decimal2, 2)))
         except:
             saturday_time_decimal2 = int(saturday_time2.split(" ")[0].split("H")[0])
@@ -3133,9 +3123,7 @@ def weekly_status2():
         total_time2 = total2.text
         try:
             minutes_number_total_time2 = int(total_time2.split(" ")[1].split("m")[0])
-            #Logging(minutes_number_total_time2)
             hour_number_total_time2 = int(total_time2.split(" ")[0].split("H")[0])
-            #Logging(hour_number_total_time2)
             total_time_decimal2 = ((minutes_number_total_time2) / 60) + (hour_number_total_time2)
             #Logging("total after change to decimal: " + str(total_time_decimal2))
             Logging("total after change to decimal: " + str(round(total_time_decimal2, 2)))
@@ -5298,12 +5286,10 @@ def dashboard():
         Logging("***Today's work - Before log in***")
         dashboard_work_place = driver.find_element_by_xpath(data["TIMECARD"]["dashboard_work_place"])
         Logging("Work Place: " + dashboard_work_place.text)
-        today_work = dashboard_work_place.text 
-        today_work1 = today_work.split(" ")[0]
+        today_work1 = dashboard_work_place.text.split(" ")[0]
         Logging("Work Place - Country : " + today_work1)
 
-        today_work_timezone = dashboard_work_place.text
-        today_work_timezone1 = today_work.split(" ")[1]
+        today_work_timezone1 = dashboard_work_place.text.split(" ")[1]
         Logging("Work Place - Timezone : " + today_work_timezone1)
 
         dashboard_clockin = driver.find_element_by_xpath(data["TIMECARD"]["dash_board_clockin"])
@@ -5320,30 +5306,22 @@ def dashboard():
 
         dashboard_remaining_working_time = driver.find_element_by_xpath(data["TIMECARD"]["dashboard_remaining_working_time"])
         Logging("Remaining working time: " + dashboard_remaining_working_time.text)
-        dashboard_remaining_working_time1 = dashboard_remaining_working_time.text
-        dashboard_remaining_working_time2 = dashboard_remaining_working_time1.split("H")[0] 
-        dashboard_remaining_working_time2_decimal = int(dashboard_remaining_working_time2)
+        dashboard_remaining_working_time2_decimal = int(dashboard_remaining_working_time.text.split("H")[0] )
         Logging("Remaining working time after change to decimal: " + str(dashboard_remaining_working_time2_decimal))
 
         dashboard_working_time = driver.find_element_by_xpath(data["TIMECARD"]["dashboard_working_time"])
         Logging("Working time: " + dashboard_working_time.text)
-        dashboard_working_time1 = dashboard_working_time.text
-        dashboard_working_time2 = dashboard_working_time1.split("H")[0] 
-        dashboard_working_time2_decimal = int(dashboard_working_time2)
+        dashboard_working_time2_decimal = int(dashboard_working_time.text.split("H")[0] )
         Logging("Working time after change to decimal: " + str(dashboard_working_time2_decimal))
 
         dashboard_break_time = driver.find_element_by_xpath(data["TIMECARD"]["dashboard_break_time"])
         Logging("Break time: " + dashboard_break_time.text)
-        dashboard_break_time1 = dashboard_break_time.text
-        dashboard_break_time2 = dashboard_break_time1.split("H")[0] 
-        dashboard_break_time2_decimal = int(dashboard_break_time2)
+        dashboard_break_time2_decimal = int(dashboard_break_time.text.split("H")[0] )
         Logging("Break time after change to decimal: " + str(dashboard_break_time2_decimal))
 
         dashboard_OT_time = driver.find_element_by_xpath(data["TIMECARD"]["dashboard_OT_time"])
         Logging("OT time: " + dashboard_OT_time.text)
-        dashboard_OT_time1 = dashboard_OT_time.text
-        dashboard_OT_time2 = dashboard_OT_time1.split("H")[0] 
-        dashboard_OT_time2_decimal = int(dashboard_OT_time2)
+        dashboard_OT_time2_decimal = int(dashboard_OT_time.text.split("H")[0] )
         Logging("OT time after change to decimal: " + str(dashboard_OT_time2_decimal))
         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["user_today_work"]["pass"])
     except:
@@ -5531,16 +5509,12 @@ def dashboard():
 
         dashboard_remaining_working_time_after = driver.find_element_by_xpath(data["TIMECARD"]["dashboard_remaining_working_time_after"])
         Logging("Remaining working time: " + dashboard_remaining_working_time_after.text)
-        dashboard_remaining_working_time_after1 = dashboard_remaining_working_time_after.text
-        dashboard_remaining_working_time_after2 = dashboard_remaining_working_time_after1.split("H")[0] 
-        dashboard_remaining_working_time_after2_decimal = int(dashboard_remaining_working_time_after2)
+        dashboard_remaining_working_time_after2_decimal = int(dashboard_remaining_working_time_after.text.split("H")[0] )
         Logging("Remaining working time after change to decimal: " + str(dashboard_remaining_working_time_after2_decimal))
 
         dashboard_working_time_after = driver.find_element_by_xpath(data["TIMECARD"]["dashboard_working_time_after"])
         Logging("Working time: " + dashboard_working_time_after.text)
-        dashboard_working_time_after1 = dashboard_working_time_after.text
-        dashboard_working_time_after2 = dashboard_working_time_after1.split("H")[0] 
-        dashboard_working_time_after2_decimal = int(dashboard_working_time_after2)
+        dashboard_working_time_after2_decimal = int(dashboard_working_time_after.text.split("H")[0] )
         Logging("Working time after change to decimal: " + str(dashboard_working_time_after2_decimal))
 
         period_working_time = driver.find_element_by_xpath(data["TIMECARD"]["period_working_time"])
@@ -5548,9 +5522,7 @@ def dashboard():
 
         dashboard_break_time_after = driver.find_element_by_xpath(data["TIMECARD"]["dashboard_break_time_after"])
         Logging("Break time: " + dashboard_break_time_after.text)
-        dashboard_break_time_after1 = dashboard_break_time_after.text
-        dashboard_break_time_after2 = dashboard_break_time_after1.split("H")[0] 
-        dashboard_break_time_after2_decimal = int(dashboard_break_time_after2)
+        dashboard_break_time_after2_decimal = int(dashboard_break_time_after.text.split("H")[0] )
         Logging("Break time after change to decimal: " + str(dashboard_break_time_after2_decimal))
 
         period_break_time = driver.find_element_by_xpath(data["TIMECARD"]["period_break_time"])
@@ -5558,9 +5530,7 @@ def dashboard():
 
         dashboard_OT_time_after = driver.find_element_by_xpath(data["TIMECARD"]["dashboard_OT_time_after"])
         Logging("OT time: " + dashboard_OT_time_after.text)
-        dashboard_OT_time_after1 = dashboard_OT_time_after.text
-        dashboard_OT_time_after2 = dashboard_OT_time_after1.split("H")[0] 
-        dashboard_OT_time_after2_decimal = int(dashboard_OT_time_after2)
+        dashboard_OT_time_after2_decimal = int(dashboard_OT_time_after.text.split("H")[0] )
         Logging("OT time after change to decimal: " + str(dashboard_OT_time_after2_decimal))
 
         Logging("")
@@ -5580,8 +5550,7 @@ def dashboard():
 
         avatar_work_place_timezone = driver.find_element_by_xpath(data["TIMECARD"]["avatar_work_place_timezone"])
         Logging("Work Place - Timezone: " + avatar_work_place_timezone.text)
-        avatar_work = avatar_work_place_timezone.text 
-        avatar_work1 = avatar_work.split("(")[0]
+        avatar_work1 = avatar_work_place_timezone.text.split("(")[0]
         Logging("Work Place - Timezone: " + avatar_work1)
 
         avatar_clockin = driver.find_element_by_xpath(data["TIMECARD"]["avatar_clockin"])
@@ -5644,9 +5613,7 @@ def dashboard():
         time.sleep(10)
         total3 = driver.find_element_by_xpath(data["TIMECARD"]["total3"])
         Logging("Total hour before change to decimal: " + total3.text)
-        total_time3 = total3.text
-        total_hour3 = total_time3.split("H")[0]
-        total_number3 = int(total_hour3)
+        total_number3 = int(total3.text.split("H")[0])
         Logging("Total hour after change to decimal: " + str(total_number3))
 
         #Reports - OT + Night shift
@@ -5656,16 +5623,12 @@ def dashboard():
         Logging("")
         OT2 = driver.find_element_by_xpath(data["TIMECARD"]["OT2"])
         Logging("OT before change to decimal: " + OT2.text)
-        OT_time = OT2.text
-        OT_hour = OT_time.split("H")[0]
-        OT_number = int(OT_hour)
+        OT_number = int(OT2.text.split("H")[0])
         Logging("OT after change to decimal: " + str(OT_number))
 
         reports_night_shift = driver.find_element_by_xpath(data["TIMECARD"]["reports_night_shift"])
         Logging("Night shift before change to decimal: " + reports_night_shift.text)
-        reports_night_shift_time = reports_night_shift.text
-        reports_night_shift_hour = reports_night_shift_time.split("H")[0]
-        reports_night_shift_number = int(reports_night_shift_hour)
+        reports_night_shift_number = int(reports_night_shift.text.split("H")[0])
         Logging("Night shift after change to decimal: " + str(reports_night_shift_number))
 
 
@@ -5677,23 +5640,17 @@ def dashboard():
         time.sleep(2)
         WWT_working_time = driver.find_element_by_xpath(data["TIMECARD"]["WWT_working_time"])
         Logging("Working time before change to decimal: " + WWT_working_time.text)
-        WWT_working_time_time = WWT_working_time.text
-        WWT_working_time_time_hour = WWT_working_time_time.split("H")[0]
-        WWT_working_time_time_number = int(WWT_working_time_time_hour)
+        WWT_working_time_time_number = int(WWT_working_time.text.split("H")[0])
         Logging("Working time after change to decimal: " + str(WWT_working_time_time_number))
 
         WWT_OT = driver.find_element_by_xpath(data["TIMECARD"]["WWT_OT"])
         Logging("OT time before change to decimal: " + WWT_OT.text)
-        WWT_OT_time = WWT_OT.text
-        WWT_OT_hour = WWT_OT_time.split("H")[0]
-        WWT_OT_time_number = int(WWT_OT_hour)
+        WWT_OT_time_number = int(WWT_OT.text.split("H")[0])
         Logging("OT time after change to decimal: " + str(WWT_OT_time_number))
 
         WWT_night_shift = driver.find_element_by_xpath(data["TIMECARD"]["WWT_night_shift"])
         Logging("Night shift before change to decimal: " + WWT_night_shift.text)
-        WWT_night_shift_time = WWT_night_shift.text
-        WWT_night_shift_hour = WWT_night_shift_time.split("H")[0]
-        WWT_night_shift_time_number = int(WWT_night_shift_hour)
+        WWT_night_shift_time_number = int(WWT_night_shift.text.split("H")[0])
         Logging("Night shift after change to decimal: " + str(WWT_night_shift_time_number))
         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["user_weekly_working_time"]["pass"])
 
@@ -5726,44 +5683,32 @@ def dashboard():
         Logging("**Time clock status**")
         TCS_clockin = driver.find_element_by_xpath(data["TIMECARD"]["TCS_clockin"])
         Logging("Clockin before change to decimal: " + TCS_clockin.text)
-        TCS_clockin_time = TCS_clockin.text
-        TCS_clockin_hour = TCS_clockin_time.split(" ")[0]
-        TCS_clockin_time_number = int(TCS_clockin_hour)
+        TCS_clockin_time_number = int(TCS_clockin.text.split(" ")[0])
         Logging("Clockin after change to decimal: " + str(TCS_clockin_time_number))
 
         TCS_tardiness = driver.find_element_by_xpath(data["TIMECARD"]["TCS_tardiness"])
         Logging("Tardiness before change to decimal: " + TCS_tardiness.text)
-        TCS_tardiness_time = TCS_tardiness.text
-        TCS_tardiness_hour = TCS_tardiness_time.split(" ")[0]
-        TCS_tardiness_time_number = int(TCS_tardiness_hour)
+        TCS_tardiness_time_number = int(TCS_tardiness.text.split(" ")[0])
         Logging("Tardiness after change to decimal: " + str(TCS_tardiness_time_number))
 
         TCS_no_clockin = driver.find_element_by_xpath(data["TIMECARD"]["TCS_no_clockin"])
         Logging("No clockin before change to decimal: " + TCS_no_clockin.text)
-        TCS_no_clockin_time = TCS_no_clockin.text
-        TCS_no_clockin_hour = TCS_no_clockin_time.split(" ")[0]
-        TCS_no_clockin_time_number = int(TCS_no_clockin_hour)
+        TCS_no_clockin_time_number = int(TCS_no_clockin.text.split(" ")[0])
         Logging("No clockin after change to decimal: " + str(TCS_no_clockin_time_number))
 
         TCS_clockout = driver.find_element_by_xpath(data["TIMECARD"]["TCS_clockout"])
         Logging("Clockout before change to decimal: " + TCS_clockout.text)
-        TCS_clockout_time = TCS_clockout.text
-        TCS_clockout_hour = TCS_clockout_time.split(" ")[0]
-        TCS_clockout_time_number = int(TCS_clockout_hour)
+        TCS_clockout_time_number = int(TCS_clockout.text.split(" ")[0])
         Logging("Clockout after change to decimal: " + str(TCS_clockout_time_number))
 
         TCS_leave_early = driver.find_element_by_xpath(data["TIMECARD"]["TCS_leave_early"])
         Logging("Leave early before change to decimal: " + TCS_leave_early.text)
-        TCS_leave_early_time = TCS_leave_early.text
-        TCS_leave_early_hour = TCS_leave_early_time.split(" ")[0]
-        TCS_leave_early_time_number = int(TCS_leave_early_hour)
+        TCS_leave_early_time_number = int(TCS_leave_early.text.split(" ")[0])
         Logging("Leave early after change to decimal: " + str(TCS_leave_early_time_number))
 
         TCS_vacation = driver.find_element_by_xpath(data["TIMECARD"]["TCS_vacation"])
         Logging("Vacation before change to decimal: " + TCS_vacation.text)
-        TCS_vacation_time = TCS_vacation.text
-        TCS_vacation_hour = TCS_vacation_time.split(" ")[0]
-        TCS_vacation_time_number = int(TCS_vacation_hour)
+        TCS_vacation_time_number = int(TCS_vacation.text.split(" ")[0])
         Logging("Vacation after change to decimal: " + str(TCS_vacation_time_number))
         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["user_time_clock_status"]["pass"])
 
@@ -5776,44 +5721,32 @@ def dashboard():
         Logging("***Reports - Events***")
         events_clockin1 = driver.find_element_by_xpath(data["TIMECARD"]["events_clockin1"])
         Logging("Clock-In: " + events_clockin1.text)
-        events_clockin_day1 = events_clockin1.text
-        events_clockin_time1 = events_clockin_day1.split(" ")[0]
-        events_clockin_decimal1 = int(events_clockin_time1)
+        events_clockin_decimal1 = int(events_clockin1.text.split(" ")[0])
         Logging("Clock-In after change to decimal: " + str(events_clockin_decimal1))
 
         tardiness1 = driver.find_element_by_xpath(data["TIMECARD"]["tardiness1"])
         Logging("Tardiness: " + tardiness1.text)
-        tardiness_day1 = tardiness1.text
-        tardiness_time1 = tardiness_day1.split(" ")[0]
-        tardiness_decimal1 = int(tardiness_time1)
+        tardiness_decimal1 = int(tardiness1.text.split(" ")[0])
         Logging("Tardiness after change to decimal: " + str(tardiness_decimal1))
 
         no_clockin1 = driver.find_element_by_xpath(data["TIMECARD"]["no_clockin1"])
         Logging("No Clock-In: " + no_clockin1.text)
-        no_clockin_day1 = no_clockin1.text
-        no_clockin_time1 = no_clockin_day1.split(" ")[0]
-        no_clockin_decimal1 = int(no_clockin_time1)
+        no_clockin_decimal1 = int(no_clockin1.text.split(" ")[0])
         Logging("No Clock-In after change to decimal: " + str(no_clockin_decimal1))
 
         events_clockout1 = driver.find_element_by_xpath(data["TIMECARD"]["events_clockout1"])
         Logging("Clock-Out: " + events_clockout1.text)
-        events_clockout_day1 = events_clockout1.text
-        events_clockout_time1 = events_clockout_day1.split(" ")[0]
-        events_clockout_decimal1 = int(events_clockout_time1)
+        events_clockout_decimal1 = int(events_clockout1.text.split(" ")[0])
         Logging("Clock-Out after change to decimal: " + str(events_clockout_decimal1))
 
         leave_early1 = driver.find_element_by_xpath(data["TIMECARD"]["leave_early1"])
         Logging("Leave Early: " + leave_early1.text)
-        leave_early_day1 = leave_early1.text
-        leave_early_time1 = leave_early_day1.split(" ")[0]
-        leave_early_decimal1 = int(leave_early_time1)
+        leave_early_decimal1 = int(leave_early1.text.split(" ")[0])
         Logging("Leave Early after change to decimal: " + str(leave_early_decimal1))
 
         vacation1 = driver.find_element_by_xpath(data["TIMECARD"]["vacation1"])
         Logging("Vacation: " + vacation1.text)
-        vacation_day1 = vacation1.text
-        vacation_time1 = vacation_day1.split(" ")[0]
-        vacation_decimal1 = int(vacation_time1)
+        vacation_decimal1 = int(vacation1.text.split(" ")[0])
         Logging("Vacation after change to decimal: " + str(vacation_decimal1))
 
 
@@ -5922,23 +5855,17 @@ def dashboard():
         Logging("*My work - Work day*")
         WD_worked_days = driver.find_element_by_xpath(data["TIMECARD"]["WD_worked_days"])
         Logging("Worked days: " + WD_worked_days.text)
-        WD_worked_days_day = WD_worked_days.text
-        WD_worked_days_time = WD_worked_days_day.split(" ")[0]
-        WD_worked_days_decimal = int(WD_worked_days_time)
+        WD_worked_days_decimal = int(WD_worked_days.text.split(" ")[0])
         Logging("Worked days after change to decimal: " + str(WD_worked_days_decimal))
 
         WD_scheduled_working_days = driver.find_element_by_xpath(data["TIMECARD"]["WD_scheduled_working_days"])
         Logging("Scheduled working day: " + WD_scheduled_working_days.text)
-        WD_scheduled_working_days_day = WD_scheduled_working_days.text
-        WD_scheduled_working_days_time = WD_scheduled_working_days_day.split(" ")[0]
-        WD_scheduled_working_days_decimal = int(WD_scheduled_working_days_time)
+        WD_scheduled_working_days_decimal = int(WD_scheduled_working_days.text.split(" ")[0])
         Logging("Scheduled working day after change to decimal: " + str(WD_scheduled_working_days_decimal))
 
         WD_remaining_working_days = driver.find_element_by_xpath(data["TIMECARD"]["WD_remaining_working_days"])
         Logging("Remaining working days: " + WD_remaining_working_days.text)
-        WD_remaining_working_days_day = WD_remaining_working_days.text
-        WD_remaining_working_days_time = WD_remaining_working_days_day.split(" ")[0]
-        WD_remaining_working_days_decimal = int(WD_remaining_working_days_time)
+        WD_remaining_working_days_decimal = int(WD_remaining_working_days.text.split(" ")[0])
         Logging("Remaining working days after change to decimal: " + str(WD_remaining_working_days_decimal))
         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["user_mywork_workday"]["pass"])
 
@@ -5952,24 +5879,14 @@ def dashboard():
         worked_time_mywork1 = worked_time_mywork.text
         #Logging(worked_time_mywork1)
         try:
-            hour_worked_time_mywork = worked_time_mywork1.split(" ")[0]
-            #Logging(hour_worked_time_mywork)
-            hour_worked_time_mywork = hour_worked_time_mywork.split("H")[0]
-            hour_number_worked_time_mywork = int(hour_worked_time_mywork)
+            hour_number_worked_time_mywork = int(worked_time_mywork1.split(" ")[0].split("H")[0])
             #Logging(hour_number_worked_time_mywork)
-            minute_worked_time_mywork = worked_time_mywork1.split(" ")[1]
-            minutes_worked_time_mywork = minute_worked_time_mywork.split("M")[0]
-            minutes_number_worked_time_mywork = int(minutes_worked_time_mywork)
+            minutes_number_worked_time_mywork = int(worked_time_mywork1.split(" ")[1].split("M")[0])
             #Logging(minutes_number_worked_time_mywork)
             worked_time_mywork_decimal = ((minutes_number_worked_time_mywork) / 60) + (hour_number_worked_time_mywork)
             Logging("Worked time after change to decimal: " + str(worked_time_mywork_decimal))
         except:
-            hour_worked_time_mywork = worked_time_mywork1.split(" ")[0]
-            #Logging(hour_worked_time_mywork)
-            hour_worked_time_mywork = hour_worked_time_mywork.split("H")[0]
-            hour_number_worked_time_mywork = int(hour_worked_time_mywork)
-            #Logging(hour_number_worked_time_mywork)
-            worked_time_mywork_decimal = hour_number_worked_time_mywork
+            worked_time_mywork_decimal = int(worked_time_mywork1.split(" ")[0].split("H")[0])
             Logging("Worked time after change to decimal: " + str(worked_time_mywork_decimal))
 
 
@@ -5977,25 +5894,14 @@ def dashboard():
         Logging("Remaining working time: " +  remaining_working_time_mywork.text)
         remaining_working_time_mywork1 = remaining_working_time_mywork.text
         try:
-            hour_remaining_working_time_mywork = remaining_working_time_mywork1.split(" ")[0]
-            #Logging(hour_remaining_working_time_mywork)
-            hour_remaining_working_time_mywork = hour_remaining_working_time_mywork.split("H")[0]
-            hour_number_remaining_working_time_mywork = int(hour_remaining_working_time_mywork)
+            hour_number_remaining_working_time_mywork = int(remaining_working_time_mywork1.split(" ")[0].split("H")[0])
             #Logging(hour_number_remaining_working_time_mywork)
-            minute_remaining_working_time_mywork = remaining_working_time_mywork1.split(" ")[1]
-            #Logging(minute_remaining_working_time_mywork)
-            minutes_remaining_working_time_mywork = minute_remaining_working_time_mywork.split("M")[0]
-            minutes_number_remaining_working_time_mywork = int(minutes_remaining_working_time_mywork)
+            minutes_number_remaining_working_time_mywork = int(remaining_working_time_mywork1.split(" ")[1].split("M")[0])
             #Logging(minutes_number_remaining_working_time_mywork)
             remaining_working_time_mywork_decimal = ((minutes_number_remaining_working_time_mywork) / 60) + (hour_number_remaining_working_time_mywork)
             Logging("Remaining working time after change to decimal: " + str(remaining_working_time_mywork_decimal))
         except:
-            hour_remaining_working_time_mywork = remaining_working_time_mywork1.split(" ")[0]
-            #Logging(hour_remaining_working_time_mywork)
-            hour_remaining_working_time_mywork = hour_remaining_working_time_mywork.split("H")[0]
-            hour_number_remaining_working_time_mywork = int(hour_remaining_working_time_mywork)
-            #Logging(hour_number_remaining_working_time_mywork)
-            remaining_working_time_mywork_decimal =hour_number_remaining_working_time_mywork
+            remaining_working_time_mywork_decimal = int(remaining_working_time_mywork1.split(" ")[0].split("H")[0])
             Logging("Remaining working time after change to decimal: " + str(remaining_working_time_mywork_decimal))
 
 
@@ -6003,25 +5909,15 @@ def dashboard():
         Logging("Scheduled working time: " +  scheduled_working_time_mywork.text)
         scheduled_working_time_mywork1 = scheduled_working_time_mywork.text
         try:
-            hour_scheduled_working_time_mywork = scheduled_working_time_mywork1.split(" ")[0]
-            #Logging(hour_worked_time_mywork)
-            hour_scheduled_working_time_mywork = hour_scheduled_working_time_mywork.split("H")[0]
-            hour_scheduled_working_time_mywork = int(hour_scheduled_working_time_mywork)
+            hour_scheduled_working_time_mywork = int(scheduled_working_time_mywork1.split(" ")[0].split("H")[0])
             #Logging(scheduled_working_time_mywork)
-            minute_scheduled_working_time_mywork = scheduled_working_time_mywork1.split(" ")[1]
-            minutes_scheduled_working_time_mywork = minute_scheduled_working_time_mywork.split("M")[0]
-            minutes_number_scheduled_working_time_mywork = int(minutes_scheduled_working_time_mywork)
+            minutes_number_scheduled_working_time_mywork = int(scheduled_working_time_mywork1.split(" ")[1].split("M")[0])
             #Logging(minutes_numberscheduled_working_time_mywork)
             scheduled_working_time_mywork_decimal = ((minutes_number_scheduled_working_time_mywork) / 60) + (hour_scheduled_working_time_mywork)
             Logging("Scheduled working time after change to decimal: " + str(scheduled_working_time_mywork_decimal))
             TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["user_mywork_workingtime"]["pass"])
         except:
-            hour_scheduled_working_time_mywork = scheduled_working_time_mywork1.split(" ")[0]
-            #Logging(hour_scheduled_working_time_mywork)
-            hour_scheduled_working_time_mywork = hour_scheduled_working_time_mywork.split("H")[0]
-            hour_number_scheduled_working_time_mywork = int(hour_scheduled_working_time_mywork)
-            #Logging(hour_number_scheduled_working_time_mywork)
-            scheduled_working_time_mywork_decimal = hour_number_scheduled_working_time_mywork
+            scheduled_working_time_mywork_decimal = int(scheduled_working_time_mywork1.split(" ")[0].split("H")[0])
             Logging("Scheduled working time after change to decimal: " + str(scheduled_working_time_mywork_decimal))
             TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["user_mywork_workingtime"]["pass"])
 
@@ -6032,25 +5928,14 @@ def dashboard():
         Logging("Working time: " +  worked_time_settlement.text)
         worked_time_settlement1 = worked_time_settlement.text
         try:
-            hour_worked_time_settlement = worked_time_settlement1.split(" ")[0]
-            #Logging(hour_worked_time_settlement)
-            hour_worked_time_settlement = hour_worked_time_settlement.split("H")[0]
-            hour_number_worked_time_settlement = int(hour_worked_time_settlement)
+            hour_number_worked_time_settlement = int(worked_time_settlement1.split(" ")[0].split("H")[0])
             #Logging(hour_number_worked_time_settlement)
-            minute_worked_time_settlement = worked_time_settlement1.split(" ")[1]
-            #Logging(minute_worked_time_settlement)
-            minutes_worked_time_settlement = minute_worked_time_settlement.split("M")[0]
-            minutes_number_worked_time_settlement = int(minutes_worked_time_settlement)
+            minutes_number_worked_time_settlement = int(worked_time_settlement1.split(" ")[1].split("M")[0])
             #Logging(minutes_number_worked_time_settlement)
             worked_time_settlement_decimal = ((minutes_number_worked_time_settlement) / 60) + (hour_number_worked_time_settlement)
             Logging("Working time after change to decimal: " + str(worked_time_settlement_decimal))
         except:
-            hour_worked_time_settlement = worked_time_settlement1.split(" ")[0]
-            #Logging(hour_worked_time_settlement)
-            hour_worked_time_settlement = hour_worked_time_settlement.split("H")[0]
-            hour_number_worked_time_settlement = int(hour_worked_time_settlement)
-            #Logging(hour_number_worked_time_settlement)
-            worked_time_settlement_decimal = hour_number_worked_time_settlement
+            worked_time_settlement_decimal = int(worked_time_settlement1.split(" ")[0].split("H")[0])
             Logging("Working time after change to decimal: " + str(worked_time_settlement_decimal))
 
 
@@ -6058,24 +5943,14 @@ def dashboard():
         Logging("OT time: " +  OT_settlement.text)
         OT_settlement1 = OT_settlement.text
         try:
-            hour_OT_settlement = OT_settlement1.split(" ")[0]
-            #Logging(hour_OT_settlement)
-            hour_OT_settlement = hour_OT_settlement.split("H")[0]
-            hour_number_OT_settlement = int(hour_OT_settlement)
+            hour_number_OT_settlement = int(OT_settlement1.split(" ")[0].split("H")[0])
             #Logging(hour_number_OT_settlement)
-            minute_OT_settlement = OT_settlement1.split(" ")[1]
-            minutes_OT_settlement = minute_OT_settlement.split("M")[0]
-            minutes_number_OT_settlement = int(minutes_OT_settlement)
+            minutes_number_OT_settlement = int(OT_settlement1.split(" ")[1].split("M")[0])
             #Logging(minutes_OT_settlement)
             OT_settlement_decimal = ((minutes_number_OT_settlement) / 60) + (hour_number_OT_settlement)
             Logging("Worked time after change to decimal: " + str(OT_settlement_decimal))
         except:
-            hour_OT_settlement = OT_settlement1.split(" ")[0]
-            #Logging(hour_OT_settlement)
-            hour_OT_settlement = hour_OT_settlement.split("H")[0]
-            hour_number_OT_settlement = int(hour_OT_settlement)
-            #Logging(hour_number_OT_settlement)
-            OT_settlement_decimal = hour_number_OT_settlement
+            OT_settlement_decimal = int(OT_settlement1.split(" ")[0].split("H")[0])
             Logging("OT time after change to decimal: " + str(OT_settlement_decimal))
 
 
@@ -6083,74 +5958,45 @@ def dashboard():
         Logging("Night shift time: " +  nightshift_settlement.text)
         nightshift_settlement1 = nightshift_settlement.text
         try:
-            hour_nightshift_settlement = nightshift_settlement1.split(" ")[0]
-            #Logging(hour_nightshift_settlement)
-            hour_nightshift_settlement = hour_nightshift_settlement.split("H")[0]
-            hour_number_nightshift_settlement = int(hour_nightshift_settlement)
+            hour_number_nightshift_settlement = int(nightshift_settlement1.split(" ")[0].split("H")[0])
             #Logging(hour_number_nightshift_settlement)
-            minute_nightshift_settlement1 = nightshift_settlement1.split(" ")[0][1]
-            minutes_nightshift_settlement1 = minute_nightshift_settlement1.split("M")[0]
-            minutes_nightshift_settlement1 = int(minutes_nightshift_settlement1)
+            minutes_nightshift_settlement1 = int(nightshift_settlement1.split(" ")[1].split("M")[0])
             #Logging(minutes_OT_settlement)
             nightshift_settlement_decimal = ((minutes_nightshift_settlement1) / 60) + (hour_number_nightshift_settlement)
             Logging("Worked time after change to decimal: " + str(nightshift_settlement_decimal))
         except:
-            hour_nightshift_settlement = nightshift_settlement1.split(" ")[0]
-            #Logging(hour_nightshift_settlement)
-            hour_nightshift_settlement = hour_nightshift_settlement.split("H")[0]
-            hour_number_nightshift_settlement = int(hour_nightshift_settlement)
-            #Logging(hour_number_nightshift_settlement)
-            nightshift_settlement_decimal = hour_number_nightshift_settlement
+            nightshift_settlement_decimal = int(nightshift_settlement1.split(" ")[0].split("H")[0])
             Logging("Night shift time after change to decimal: " + str(nightshift_settlement_decimal))
 
         holiday_work_settlement = driver.find_element_by_xpath(data["TIMECARD"]["holiday_work_settlement"])
         Logging("Holiday work time: " +  holiday_work_settlement.text)
         holiday_work_settlement1 = holiday_work_settlement.text
         try:
-            hour_holiday_work_settlement = holiday_work_settlement1.split(" ")[0]
-            #Logging(hour_holiday_work_settlement)
-            hour_holiday_work_settlement = hour_holiday_work_settlement.split("H")[0]
-            hour_number_holiday_work_settlement = int(hour_holiday_work_settlement)
+            hour_number_holiday_work_settlement = int(holiday_work_settlement1.split(" ")[0].split("H")[0])
             #Logging(hour_number_holiday_work_settlement)
-            minute_holiday_work_settlement = holiday_work_settlement.split(" ")[0][1]
-            minutes_holiday_work_settlement = minute_holiday_work_settlement.split("M")[0]
-            minutes_holiday_work_settlement = int(minutes_holiday_work_settlement)
+            minutes_holiday_work_settlement = int(holiday_work_settlement.split(" ")[1].split("M")[0])
             #Logging(minutes_OT_settlement)
             holiday_work_settlement_decimal = ((minutes_holiday_work_settlement) / 60) + (hour_number_holiday_work_settlement)
             Logging("Worked time after change to decimal: " + str(holiday_work_settlement_decimal))
         except:
-            hour_holiday_work_settlement = holiday_work_settlement1.split(" ")[0]
-            #Logging(hour_holiday_work_settlement)
-            hour_holiday_work_settlement = hour_holiday_work_settlement.split("H")[0]
-            hour_number_holiday_work_settlement = int(hour_holiday_work_settlement)
-            #Logging(hour_number_holiday_work_settlement)
-            holiday_work_settlement_decimal = hour_number_holiday_work_settlement
+            holiday_work_settlement_decimal = int(holiday_work_settlement1.split(" ")[0].split("H")[0])
             Logging("Holiday work time after change to decimal: " + str(holiday_work_settlement_decimal))
 
 
 
         holiday_settlement = driver.find_element_by_xpath(data["TIMECARD"]["holiday_settlement"])
         Logging("Holiday: " +  holiday_settlement.text)
-
-        holiday_settlement1 = holiday_settlement.text
-        hour_holiday_settlement = holiday_settlement1.split(" ")[0]
-        holiday_settlement_decimal = int(hour_holiday_settlement)
+        holiday_settlement_decimal = int(holiday_settlement.text.split(" ")[0])
         Logging("Holiday after change to decimal: " + str(holiday_settlement_decimal))
 
         day_off_settlement = driver.find_element_by_xpath(data["TIMECARD"]["day_off_settlement"])
         Logging("Day off: " +  day_off_settlement.text)
-
-        day_off_settlement1 = day_off_settlement.text
-        hour_day_off_settlement = day_off_settlement1.split(" ")[0]
-        day_off_settlement_decimal = int(hour_day_off_settlement)
+        day_off_settlement_decimal = int(day_off_settlement.text.split(" ")[0])
         Logging("Day off after change to decimal: " + str(day_off_settlement_decimal))
 
         vacation_settlement = driver.find_element_by_xpath(data["TIMECARD"]["vacation_settlement"])
         Logging("Vacation: " +  vacation_settlement.text)
-
-        vacation_settlement1 = vacation_settlement.text
-        hour_vacation_settlement = vacation_settlement1.split(" ")[0]
-        vacation_settlement_decimal = int(hour_vacation_settlement)
+        vacation_settlement_decimal = int(vacation_settlement.text.split(" ")[0])
         Logging("Vacation after change to decimal: " + str(vacation_settlement_decimal))
         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["user_mywork_settlement"]["pass"])
 
@@ -6165,23 +6011,17 @@ def dashboard():
         Logging("***Schedules - Working days***")
         WD_cumulative_days = driver.find_element_by_xpath(data["TIMECARD"]["WD_cumulative_days"])
         Logging("Cumulative days: " + WD_cumulative_days.text)
-        WD_cumulative_days_day = WD_cumulative_days.text
-        WD_cumulative_days_time = WD_cumulative_days_day.split(" ")[0]
-        WD_cumulative_days_decimal = int(WD_cumulative_days_time)
+        WD_cumulative_days_decimal = int(WD_cumulative_days.text.split(" ")[0])
         Logging("Cumulative days after change to decimal: " + str(WD_cumulative_days_decimal))
 
         WD_contractual_working_days = driver.find_element_by_xpath(data["TIMECARD"]["WD_contractual_working_days"])
         Logging("Contractual working day: " + WD_contractual_working_days.text)
-        WD_contractual_working_days_day = WD_contractual_working_days.text
-        WD_contractual_working_days_time = WD_contractual_working_days_day.split(" ")[0]
-        WD_contractual_working_days_decimal = int(WD_contractual_working_days_time)
+        WD_contractual_working_days_decimal = int(WD_contractual_working_days.text.split(" ")[0])
         Logging("Contractual working day after change to decimal: " + str(WD_contractual_working_days_decimal))
 
         schedules_remaining_working_days = driver.find_element_by_xpath(data["TIMECARD"]["schedules_remaining_working_days"])
         Logging("Remaining working days: " + schedules_remaining_working_days.text)
-        schedules_remaining_working_days_day = schedules_remaining_working_days.text
-        schedules_remaining_working_days_time = schedules_remaining_working_days_day.split(" ")[0]
-        schedules_remaining_working_days_decimal = int(schedules_remaining_working_days_time)
+        schedules_remaining_working_days_decimal = int(schedules_remaining_working_days.text.split(" ")[0])
         Logging("Remaining working days after change to decimal: " + str(schedules_remaining_working_days_decimal))
         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["schedule_working_days"]["pass"])
 
@@ -6193,50 +6033,28 @@ def dashboard():
         Logging("Worked time: " +  worked_time_schedules.text)
         worked_time_schedules1 = worked_time_schedules.text
         try:
-            hour_worked_time_schedules = worked_time_schedules1.split(" ")[0]
-            #Logging(hour_worked_time_schedules)
-            hour_worked_time_schedules = hour_worked_time_schedules.split("H")[0]
-            hour_number_worked_time_schedules = int(hour_worked_time_schedules)
+            hour_number_worked_time_schedules = int(worked_time_schedules1.split(" ")[0].split("H")[0])
             #Logging(hour_number_worked_time_schedules)
-            minute_worked_time_schedules = worked_time_schedules1.split(" ")[1]
-            #Logging(minute_worked_time_schedules)
-            minutes_worked_time_schedules = minute_worked_time_schedules.split("M")[0]
-            minutes_number_worked_time_schedules = int(minutes_worked_time_schedules)
+            minutes_number_worked_time_schedules = int(worked_time_schedules1.split(" ")[1].split("M")[0])
             #Logging(minutes_number_worked_time_schedules)
             worked_time_schedules_decimal = ((minutes_number_worked_time_schedules) / 60) + (hour_number_worked_time_schedules)
             Logging("Worked time after change to decimal: " + str(worked_time_schedules_decimal))
         except:
-            hour_worked_time_schedules = worked_time_schedules1.split(" ")[0]
-            #Logging(hour_worked_time_schedules)
-            hour_worked_time_schedules = hour_worked_time_schedules.split("H")[0]
-            hour_number_worked_time_schedules = int(hour_worked_time_schedules)
-            #Logging(hour_number_worked_time_schedules)
-            worked_time_schedules_decimal = hour_number_worked_time_schedules
+            worked_time_schedules_decimal = int(worked_time_schedules1.split(" ")[0].split("H")[0])
             Logging("Worked time after change to decimal: " + str(worked_time_schedules_decimal))
 
         remaining_working_time_schedules = driver.find_element_by_xpath(data["TIMECARD"]["remaining_working_time_schedules"])
         Logging("Remaining working time: " +  remaining_working_time_schedules.text)
         remaining_working_time_schedules1 = remaining_working_time_schedules.text
         try:
-            hour_remaining_working_time_schedules = remaining_working_time_schedules1.split(" ")[0]
-            #Logging(hour_remaining_working_time_schedules)
-            hour_remaining_working_time_schedules = hour_remaining_working_time_schedules.split("H")[0]
-            hour_number_remaining_working_time_schedules = int(hour_remaining_working_time_schedules)
+            hour_number_remaining_working_time_schedules = int(remaining_working_time_schedules1.split(" ")[0].split("H")[0])
             #Logging(hour_number_remaining_working_time_schedules)
-            minute_remaining_working_time_schedules = remaining_working_time_schedules1.split(" ")[1]
-            #Logging(minute_remaining_working_time_schedules)
-            minutes_remaining_working_time_schedules = minute_remaining_working_time_schedules.split("M")[0]
-            minutes_number_remaining_working_time_schedules = int(minutes_remaining_working_time_schedules)
+            minutes_number_remaining_working_time_schedules = int(remaining_working_time_schedules1.split(" ")[1].split("M")[0])
             #Logging(minutes_number_remaining_working_time_schedules)
             remaining_working_time_schedules_decimal = ((minutes_number_remaining_working_time_schedules) / 60) + (hour_number_remaining_working_time_schedules)
             Logging("Remaining working time after change to decimal: " + str(remaining_working_time_schedules_decimal))
         except:
-            hour_remaining_working_time_schedules = remaining_working_time_schedules1.split(" ")[0]
-            #Logging(hour_remaining_working_time_schedules)
-            hour_remaining_working_time_schedules = hour_remaining_working_time_schedules.split("H")[0]
-            hour_number_remaining_working_time_schedules = int(hour_remaining_working_time_schedules)
-            #Logging(hour_number_remaining_working_time_schedules)
-            remaining_working_time_schedules_decimal = hour_number_remaining_working_time_schedules
+            remaining_working_time_schedules_decimal = int(remaining_working_time_schedules1.split(" ")[0].split("H")[0])
             Logging("Remaining working time after change to decimal: " + str(remaining_working_time_schedules_decimal))
 
 
@@ -6244,25 +6062,15 @@ def dashboard():
         Logging("Scheduled working time: " +  scheduled_working_time_schedules.text)
         scheduled_working_time_schedules1 = scheduled_working_time_schedules.text
         try:
-            hour_scheduled_working_time_schedules = scheduled_working_time_schedules1.split(" ")[0]
-            #Logging(hour_scheduled_working_time_schedules)
-            hour_scheduled_working_time_schedules = hour_scheduled_working_time_schedules.split("H")[0]
-            hour_number_scheduled_working_time_schedules = int(hour_scheduled_working_time_schedules)
+            hour_number_scheduled_working_time_schedules = int(scheduled_working_time_schedules1.split(" ")[0].split("H")[0])
             #Logging(hour_number_scheduled_working_time_schedules)
-            minute_OT_settlement = OT_settlement1.split(" ")[1]
-            minutes_OT_settlement = minute_OT_settlement.split("M")[0]
-            minutes_OT_settlement = int(minutes_OT_settlement)
+            minutes_OT_settlement = int(OT_settlement1.split(" ")[1].split("M")[0])
             #Logging(minutes_OT_settlement)
             scheduled_working_time_schedules_decimal = ((minutes_OT_settlement) / 60) + (hour_number_scheduled_working_time_schedules)
             Logging("Worked time after change to decimal: " + str(scheduled_working_time_schedules_decimal))
             TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["schedule_working_time"]["pass"])
         except:
-            hour_scheduled_working_time_schedules = scheduled_working_time_schedules1.split(" ")[0]
-            #Logging(hour_scheduled_working_time_schedules)
-            hour_scheduled_working_time_schedules = hour_scheduled_working_time_schedules.split("H")[0]
-            hour_number_scheduled_working_time_schedules = int(hour_scheduled_working_time_schedules)
-            #Logging(hour_number_scheduled_working_time_schedules)
-            scheduled_working_time_schedules_decimal = hour_number_scheduled_working_time_schedules
+            scheduled_working_time_schedules_decimal = nt(scheduled_working_time_schedules1.split(" ")[0].split("H")[0])
             Logging("Scheduled working time after change to decimal: " + str(scheduled_working_time_schedules_decimal))
             TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["schedule_working_time"]["pass"])
 
@@ -6273,25 +6081,14 @@ def dashboard():
         Logging("Working time: " +  schedules_working_time_settlement.text)
         schedules_working_time_settlement1 = schedules_working_time_settlement.text
         try:
-            schedules_hour_working_time_settlement = schedules_working_time_settlement1.split(" ")[0]
-            #Logging(schedules_hour_working_time_settlement)
-            schedules_hour_working_time_settlement = schedules_hour_working_time_settlement.split("H")[0]
-            schedules_hour_number_working_time_settlement = int(schedules_hour_working_time_settlement)
+            schedules_hour_number_working_time_settlement = int(schedules_working_time_settlement1.split(" ")[0].split("H")[0])
             #Logging(schedules_hour_number_working_time_settlement)
-            schedules_minute_working_time_settlement = schedules_working_time_settlement1.split(" ")[1]
-            #Logging(schedules_minute_working_time_settlement)
-            schedules_minutes_working_time_settlement = schedules_minute_working_time_settlement.split("M")[0]
-            schedules_minutes_number_working_time_settlement = int(schedules_minutes_working_time_settlement)
+            schedules_minutes_number_working_time_settlement = int(schedules_working_time_settlement1.split(" ")[1].split("M")[0])
             #Logging(schedules_minutes_number_working_time_settlement)
             schedules_working_time_settlement_decimal = ((schedules_minutes_number_working_time_settlement) / 60) + (schedules_hour_number_working_time_settlement)
             Logging("Working time after change to decimal: " + str(schedules_working_time_settlement_decimal))
         except:
-            schedules_hour_working_time_settlement = schedules_working_time_settlement1.split(" ")[0]
-            #Logging(schedules_hour_working_time_settlement)
-            schedules_hour_working_time_settlement = schedules_hour_working_time_settlement.split("H")[0]
-            schedules_hour_number_working_time_settlement = int(schedules_hour_working_time_settlement)
-            #Logging(schedules_hour_number_working_time_settlement)
-            schedules_working_time_settlement_decimal = schedules_hour_number_working_time_settlement
+            schedules_working_time_settlement_decimal = int(schedules_working_time_settlement1.split(" ")[0].split("H")[0])
             Logging("Working time after change to decimal: " + str(schedules_working_time_settlement_decimal))
         
 
@@ -6299,87 +6096,48 @@ def dashboard():
         Logging("OT time: " +  schedules_OT_settlement.text)
         schedules_OT_settlement1 = schedules_OT_settlement.text
         try:
-            schedules_hour_OT_settlement = schedules_OT_settlement1.split(" ")[0]
-            #Logging(schedules_hour_OT_settlement)
-            schedules_hour_OT_settlement = schedules_hour_OT_settlement.split("H")[0]
-            schedules_hour_number_OT_settlement = int(schedules_hour_OT_settlement)
+            schedules_hour_number_OT_settlement = int(schedules_OT_settlement1.split(" ")[0].split("H")[0])
             #Logging(schedules_hour_number_OT_settlement)
-            minute_OT_settlement1 = schedules_OT_settlement1.split(" ")[1]
-            minutes_OT_settlement1 = minute_OT_settlement1.split("M")[0]
-            minutes_number_OT_settlement1 = int(minutes_OT_settlement1)
+            minutes_number_OT_settlement1 = int(schedules_OT_settlement1.split(" ")[1].split("M")[0])
             #Logging(minutes_number_worked_time_mywork)
             schedules_OT_settlement_decimal = ((minutes_number_OT_settlement1) / 60) + (schedules_hour_number_OT_settlement)
             Logging("Worked time after change to decimal: " + str(schedules_OT_settlement_decimal))
         except:
-            schedules_hour_OT_settlement = schedules_OT_settlement1.split(" ")[0]
-            #Logging(schedules_hour_OT_settlement)
-            schedules_hour_OT_settlement = schedules_hour_OT_settlement.split("H")[0]
-            schedules_hour_number_OT_settlement = int(schedules_hour_OT_settlement)
-            #Logging(schedules_hour_number_OT_settlement)
-            schedules_OT_settlement_decimal = schedules_hour_number_OT_settlement
+            schedules_OT_settlement_decimal = int(schedules_OT_settlement1.split(" ")[0].split("H")[0])
             Logging("OT time after change to decimal: " + str(schedules_OT_settlement_decimal))
 
         schedules_nightshift_settlement = driver.find_element_by_xpath(data["TIMECARD"]["schedules_nightshift_settlement"])
         Logging("Night shift time: " +  schedules_nightshift_settlement.text)
 
-        # schedules_nightshift_settlement1 = schedules_nightshift_settlement.text
-        # schedules_hour_nightshift_settlement = schedules_nightshift_settlement1.split(" ")[0]
-        # #Logging(schedules_hour_nightshift_settlement)
-        # schedules_hour_nightshift_settlement = schedules_hour_nightshift_settlement.split("H")[0]
-        # schedules_hour_number_nightshift_settlement = int(schedules_hour_nightshift_settlement)
-        # #Logging(schedules_hour_number_nightshift_settlement)
-
-        # schedules_nightshift_settlement_decimal = schedules_hour_number_nightshift_settlement
-        # Logging("Night shift time after change to decimal: " + str(schedules_nightshift_settlement_decimal))
-
         schedules_holiday_work_settlement = driver.find_element_by_xpath(data["TIMECARD"]["schedules_holiday_work_settlement"])
         Logging("Holiday work time: " +  schedules_holiday_work_settlement.text)
         schedules_holiday_work_settlement1 = schedules_holiday_work_settlement.text
         try:
-            schedules_hour_holiday_work_settlement = schedules_holiday_work_settlement1.split(" ")[0]
-            #Logging(schedules_hour_holiday_work_settlement)
-            schedules_hour_holiday_work_settlement = schedules_hour_holiday_work_settlement.split("H")[0]
-            schedules_hour_number_holiday_work_settlement = int(schedules_hour_holiday_work_settlement)
+            schedules_hour_number_holiday_work_settlement = int(schedules_holiday_work_settlement1.split(" ")[0].split("H")[0])
             #Logging(schedules_hour_number_holiday_work_settlement)
-            minute_holiday_work_settlement1 = schedules_holiday_work_settlement1.split(" ")[1]
-            minutes_holiday_work_settlement1 = minute_holiday_work_settlement1.split("M")[0]
-            minutes_number_holiday_work_settlement1 = int(minutes_holiday_work_settlement1)
+            minutes_number_holiday_work_settlement1 = int(schedules_holiday_work_settlement1.split(" ")[1].split("M")[0])
             #Logging(minutes_number_worked_time_mywork)
-            schedules_holiday_work_settlement_decimal = ((minutes_number_holiday_work_settlement1) / 60) + (schedules_hour_holiday_work_settlement)
+            schedules_holiday_work_settlement_decimal = ((minutes_number_holiday_work_settlement1) / 60) + (schedules_hour_number_holiday_work_settlement)
             Logging("Worked time after change to decimal: " + str(schedules_holiday_work_settlement_decimal))
         except:
-            schedules_hour_holiday_work_settlement = schedules_holiday_work_settlement1.split(" ")[0]
-            #Logging(schedules_hour_holiday_work_settlement)
-            schedules_hour_holiday_work_settlement = schedules_hour_holiday_work_settlement.split("H")[0]
-            schedules_hour_number_holiday_work_settlement = int(schedules_hour_holiday_work_settlement)
-            #Logging(schedules_hour_number_holiday_work_settlement)
-            schedules_holiday_work_settlement_decimal = schedules_hour_number_holiday_work_settlement
+            schedules_holiday_work_settlement_decimal = int(schedules_holiday_work_settlement1.split(" ")[0].split("H")[0])
             Logging("Holiday work time after change to decimal: " + str(schedules_holiday_work_settlement_decimal))
 
 
         
         schedules_holiday_settlement = driver.find_element_by_xpath(data["TIMECARD"]["schedules_holiday_settlement"])
         Logging("Holiday: " +  schedules_holiday_settlement.text)
-
-        schedules_holiday_settlement1 = schedules_holiday_settlement.text
-        schedules_hour_holiday_settlement = schedules_holiday_settlement1.split(" ")[0]
-        schedules_holiday_settlement_decimal = int(schedules_hour_holiday_settlement)
+        schedules_holiday_settlement_decimal = int(schedules_holiday_settlement.text.split(" ")[0])
         Logging("Holiday after change to decimal: " + str(schedules_holiday_settlement_decimal))
 
         schedules_day_off_settlement = driver.find_element_by_xpath(data["TIMECARD"]["schedules_day_off_settlement"])
         Logging("Day off: " +  schedules_day_off_settlement.text)
-
-        schedules_day_off_settlement1 = schedules_day_off_settlement.text
-        schedules_hour_day_off_settlement = schedules_day_off_settlement1.split(" ")[0]
-        schedules_day_off_settlement_decimal = int(schedules_hour_day_off_settlement)
+        schedules_day_off_settlement_decimal = int(schedules_day_off_settlement.text.split(" ")[0])
         Logging("Day off after change to decimal: " + str(schedules_day_off_settlement_decimal))
 
         schedules_vacation_settlement = driver.find_element_by_xpath(data["TIMECARD"]["schedules_vacation_settlement"])
         Logging("Vacation: " +  schedules_vacation_settlement.text)
-
-        schedules_vacation_settlement1 = schedules_vacation_settlement.text
-        schedules_hour_vacation_settlement = schedules_vacation_settlement1.split(" ")[0]
-        schedules_vacation_settlement_decimal = int(schedules_hour_vacation_settlement)
+        schedules_vacation_settlement_decimal = int(schedules_vacation_settlement.text.split(" ")[0])
         Logging("Vacation after change to decimal: " + str(schedules_vacation_settlement_decimal))
         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["schedule_settlement"]["pass"])
 
@@ -6812,39 +6570,27 @@ def dashboard():
         Logging("")
         Logging("***Time Clock Status***")
         TCS_clock_in = driver.find_element_by_xpath(data["TIMECARD"]["TCS_clock_in"])
-        TCS_clock_in_time = TCS_clock_in.text
-        TCS_clock_in_hour = TCS_clock_in_time.split(" ")[0]
-        TCS_clock_in_number = int(TCS_clock_in_hour)
+        TCS_clock_in_number = int(TCS_clock_in.text.split(" ")[0])
         Logging("Total people - Clock In: " + str(TCS_clock_in_number))
 
         TCS_tardiness = driver.find_element_by_xpath(data["TIMECARD"]["TCS_tardi_ness"])
-        TCS_tardiness_time = TCS_tardiness.text
-        TCS_tardiness_hour = TCS_tardiness_time.split(" ")[0]
-        TCS_tardiness_number = int(TCS_tardiness_hour)
+        TCS_tardiness_number = int(TCS_tardiness.text.split(" ")[0])
         Logging("Total people - Tardiness: " + str(TCS_tardiness_number))
 
         TCS_no_clock_in = driver.find_element_by_xpath(data["TIMECARD"]["TCS_no_clock_in"])
-        TCS_no_clock_in_time = TCS_no_clock_in.text
-        TCS_no_clock_in_hour = TCS_no_clock_in_time.split(" ")[0]
-        TCS_no_clock_in_number = int(TCS_no_clock_in_hour)
+        TCS_no_clock_in_number = int(TCS_no_clock_in.text.split(" ")[0])
         Logging("Total people - No Clock In: " + str(TCS_no_clock_in_number))
 
         TCS_clock_out = driver.find_element_by_xpath(data["TIMECARD"]["TCS_clock_out"])
-        TCS_clock_out_time = TCS_clock_out.text
-        TCS_clock_out_hour = TCS_clock_out_time.split(" ")[0]
-        TCS_clock_out_number = int(TCS_clock_out_hour)
+        TCS_clock_out_number = int(TCS_clock_out.text.split(" ")[0])
         Logging("Total people - Clock Out: " + str(TCS_clock_out_number))
 
         TCS_leave_early = driver.find_element_by_xpath(data["TIMECARD"]["TCS_leave_ear_ly"])
-        TCS_leave_early_time = TCS_leave_early.text
-        TCS_leave_early_hour = TCS_leave_early_time.split(" ")[0]
-        TCS_leave_early_number = int(TCS_leave_early_hour)
+        TCS_leave_early_number = int(TCS_leave_early.text.split(" ")[0])
         Logging("Total people - Leave Early: " + str(TCS_leave_early_number))
 
         TCS_vacation = driver.find_element_by_xpath(data["TIMECARD"]["TCS_vaca_tion"])
-        TCS_vacation_time = TCS_vacation.text
-        TCS_vacation_hour = TCS_vacation_time.split(" ")[0]
-        TCS_vacation_number = int(TCS_vacation_hour)
+        TCS_vacation_number = int(TCS_vacation.text.split(" ")[0])
         Logging("Total people - Vacation: " + str(TCS_vacation_number))
         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["admin_time_clock_status"]["pass"])
     except:
@@ -7468,8 +7214,8 @@ def timecard():
     view_details()
     working_status()
     
-    #day_list = find_date(today_work_date)
-    #work_schedule(day_list)
+    # day_list = find_date(today_work_date)
+    # work_schedule(day_list)
     manager()
     total_manager()
     delete_punch()
