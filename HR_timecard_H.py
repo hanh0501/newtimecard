@@ -53,39 +53,37 @@ def account():
 def admin_user():
     admin_account = account()
     if admin_account == True:
-        #timecard()
+        timecard()
         time_card()
     else:
         normal_user()
 
 def input_reason_late():
     try:
-        tardiness = driver.find_element_by_xpath(data["TIMECARD"]["tardiness"])
-        if tardiness.is_displayed():
-            Commands.InputElement(data["TIMECARD"]["input_reason_late"], data["TIMECARD"]["reason_late"])
-            Logging("- Input reason late")
-            #add_data_in_excel(param_excel["checkin"],"f","Input reason late")
-            Commands.ClickElement(data["TIMECARD"]["save"])
-            Logging("- Save reason late")
-            #add_data_in_excel(param_excel["checkout"],"p","Save reason late")
-            time_clock_in()
+        Waits.Wait10s_ElementLoaded(data["TIMECARD"]["tardiness"])
+        Commands.InputElement(data["TIMECARD"]["input_reason_late"], data["TIMECARD"]["reason_late"])
+        Logging("- Input reason late")
+        #add_data_in_excel(param_excel["checkin"],"f","Input reason late")
+        Commands.ClickElement(data["TIMECARD"]["save"])
+        Logging("- Save reason late")
+        #add_data_in_excel(param_excel["checkout"],"p","Save reason late")
+        time_clock_in()
     except:
         Logging("- Clock-in on time")
 
 def clock_in():
     try:
         #pop up clock-in display
-        pop_up = driver.find_element_by_xpath(data["TIMECARD"]["pop_up"])
+        Waits.Wait10s_ElementLoaded(data["TIMECARD"]["pop_up"])
         time.sleep(1)
-        if pop_up.is_displayed():
-            try:
-                clock_in_but = driver.find_element_by_xpath(data["TIMECARD"]["clock_in_but"])
-                clock_in_but.click()
-                Logging("- Clock-in")
-                time.sleep(5)
-                input_reason_late()
-            except:
-                Logging("- Clock-in already")
+        try:
+            clock_in_but = driver.find_element_by_xpath(data["TIMECARD"]["clock_in_but"])
+            clock_in_but.click()
+            Logging("- Clock-in")
+            time.sleep(5)
+            input_reason_late()
+        except:
+            Logging("- Clock-in already")
             
     except:
         #pop up clock-in don't display
@@ -93,16 +91,15 @@ def clock_in():
         pop_up_hid.click()
         Logging("- Click show pop up")
         time.sleep(2)
-        pop_up = driver.find_element_by_xpath(data["TIMECARD"]["pop_up"])
-        if pop_up.is_displayed():
-            try:
-                clock_in_but = driver.find_element_by_xpath(data["TIMECARD"]["clock_in_but"])
-                clock_in_but.click()
-                Logging("- Clock-in")
-                time.sleep(5)
-                input_reason_late()
-            except:
-                Logging("- Clock-in already")
+        Waits.Wait10s_ElementLoaded(data["TIMECARD"]["pop_up"])
+        try:
+            clock_in_but = driver.find_element_by_xpath(data["TIMECARD"]["clock_in_but"])
+            clock_in_but.click()
+            Logging("- Clock-in")
+            time.sleep(5)
+            input_reason_late()
+        except:
+            Logging("- Clock-in already")
 
 def nightwork():
     time.sleep(4)
@@ -208,61 +205,51 @@ def time_clock_in():
 def breaktime():
     try:
         #pop up clock-in display
-        pop_up = driver.find_element_by_xpath(data["TIMECARD"]["pop_up"])
+        Waits.Wait10s_ElementLoaded(data["TIMECARD"]["pop_up"])
         time.sleep(1)
-        if pop_up.is_displayed():
+        try:
+            breaktime_but = driver.find_element_by_xpath(data["TIMECARD"]["breaktime_but"])
+            breaktime_but.click()
+            Logging("- Break time")
+            time.sleep(3)
             try:
-                breaktime_but = driver.find_element_by_xpath(data["TIMECARD"]["breaktime_but"])
-                breaktime_but.click()
-                Logging("- Break time")
-                time.sleep(3)
-                try:
-                    pop_up_breaktime = driver.find_element_by_xpath(data["TIMECARD"]["pop_up_breaktime"])
-                    if pop_up_breaktime.is_displayed():
-                        Logging("=> Break time successfully")
-                        TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["breaktime"]["pass"])
-                        pop_up_breaktime.click()
-                        time.sleep(3)
-                        try:
-                            pop_up_breaktime = driver.find_element_by_xpath(data["TIMECARD"]["pop_up_breaktime"])
-                            if pop_up_breaktime.is_displayed():
-                                Logging("- End break time fail")
-                                TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["end_breaktime"]["fail"])
-
-                            else:
-                                Logging("- End break time successfully")
-                                TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["end_breaktime"]["pass"])
-                        except:
-                            Logging("- End break time successfully")
-                            TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["end_breaktime"]["pass"])
-                    else:
-                        Logging("=> Break time fail")
-                        TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["breaktime"]["fail"])
-                except:
-                    driver.refresh()
+                pop_up_breaktime = driver.find_element_by_xpath(data["TIMECARD"]["pop_up_breaktime"])
+                if pop_up_breaktime.is_displayed():
+                    Logging("=> Break time successfully")
+                    TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["breaktime"]["pass"])
+                    pop_up_breaktime.click()
                     time.sleep(3)
-                    pop_up_breaktime = driver.find_element_by_xpath(data["TIMECARD"]["pop_up_breaktime"])
-                    if pop_up_breaktime.is_displayed():
-                        Logging("=> Break time successfully")
-                        TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["breaktime"]["pass"])
-                        pop_up_breaktime.click()
-                        time.sleep(3)
-                        try:
-                            pop_up_breaktime = driver.find_element_by_xpath(data["TIMECARD"]["pop_up_breaktime"])
-                            if pop_up_breaktime.is_displayed():
-                                Logging("- End break time fail")
-                                TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["end_breaktime"]["fail"])
-                            else:
-                                Logging("- End break time successfully")
-                                TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["end_breaktime"]["pass"])
-                        except:
-                            Logging("- End break time successfully")
-                            TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["end_breaktime"]["pass"])
-                    else:
-                        Logging("=> Break time fail")
-                        TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["breaktime"]["fail"])
+                    try:
+                        pop_up_breaktime = Waits.Wait10s_ElementLoaded(data["TIMECARD"]["pop_up_breaktime"])
+                        Logging("- End break time fail")
+                        TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["end_breaktime"]["fail"])
+                    except:
+                        Logging("- End break time successfully")
+                        TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["end_breaktime"]["pass"])
+                else:
+                    Logging("=> Break time fail")
+                    TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["breaktime"]["fail"])
             except:
-                Logging("- Don't show button breaktime")
+                driver.refresh()
+                time.sleep(3)
+                pop_up_breaktime = driver.find_element_by_xpath(data["TIMECARD"]["pop_up_breaktime"])
+                if pop_up_breaktime.is_displayed():
+                    Logging("=> Break time successfully")
+                    TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["breaktime"]["pass"])
+                    pop_up_breaktime.click()
+                    time.sleep(3)
+                    try:
+                        pop_up_breaktime = Waits.Wait10s_ElementLoaded(data["TIMECARD"]["pop_up_breaktime"])
+                        Logging("- End break time fail")
+                        TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["end_breaktime"]["fail"])
+                    except:
+                        Logging("- End break time successfully")
+                        TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["end_breaktime"]["pass"])
+                else:
+                    Logging("=> Break time fail")
+                    TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["breaktime"]["fail"])
+        except:
+            Logging("- Don't show button breaktime")
             
     except:
         #pop up clock-in don't display
@@ -278,7 +265,7 @@ def breaktime():
                 Logging("- Break time")
                 time.sleep(3)
                 try:
-                    pop_up_breaktime = driver.find_element_by_xpath(data["TIMECARD"]["pop_up_breaktime"])
+                    pop_up_breaktime = Waits.Wait10s_ElementLoaded(data["TIMECARD"]["pop_up_breaktime"])
                     if pop_up_breaktime.is_displayed():
                         Logging("=> Break time successfully")
                         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["breaktime"]["pass"])
@@ -286,12 +273,8 @@ def breaktime():
                         time.sleep(3)
                         try:
                             pop_up_breaktime = driver.find_element_by_xpath(data["TIMECARD"]["pop_up_breaktime"])
-                            if pop_up_breaktime.is_displayed():
-                                Logging("- End break time fail")
-                                TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["end_breaktime"]["fail"])
-                            else:
-                                Logging("- End break time successfully")
-                                TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["end_breaktime"]["pass"])
+                            Logging("- End break time fail")
+                            TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["end_breaktime"]["fail"])
                         except:
                             Logging("- End break time successfully")
                             TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["end_breaktime"]["pass"])
@@ -308,13 +291,9 @@ def breaktime():
                         pop_up_breaktime.click()
                         time.sleep(3)
                         try:
-                            pop_up_breaktime = driver.find_element_by_xpath(data["TIMECARD"]["pop_up_breaktime"])
-                            if pop_up_breaktime.is_displayed():
-                                Logging("- End break time fail")
-                                TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["end_breaktime"]["fail"])
-                            else:
-                                Logging("- End break time successfully")
-                                TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["end_breaktime"]["pass"])
+                            pop_up_breaktime = Waits.Wait10s_ElementLoaded(data["TIMECARD"]["pop_up_breaktime"])
+                            Logging("- End break time fail")
+                            TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["end_breaktime"]["fail"])
                         except:
                             Logging("- End break time successfully")
                             TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["end_breaktime"]["pass"])
@@ -427,9 +406,8 @@ def time_clock_out():
 
 def add_clock_in_clock_out():
     try:
-        clock_in_but = driver.find_element_by_xpath(data["TIMECARD"]["clock_in_but"])
-        if clock_in_but.is_displayed():
-            click_close = Commands.ClickElement(data["TIMECARD"]["click_close"]) 
+        clock_in_but = Waits.Wait10s_ElementLoaded(data["TIMECARD"]["clock_in_but"])
+        click_close = Commands.ClickElement(data["TIMECARD"]["click_close"]) 
     except:
         Logging(" ")
 
