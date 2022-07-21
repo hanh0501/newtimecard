@@ -1,6 +1,7 @@
 #from NQ_HR_timecard import clock_in
 import re, sys, json#, testlink
 import time, random
+from xml.etree.ElementPath import xpath_tokenizer
 from selenium import webdriver
 from random import randint
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
@@ -912,7 +913,7 @@ def define_valid_time():
     print_date_minute_decimal = int(print_date.split(":")[1])
     print_date_decimal = ((print_date_minute_decimal) / 60) + (print_date_hour_decimal)
     Logging("Current time after change to decimal: " + str(print_date_decimal))
-
+    
     if int(print_date_decimal) < int(result):
         Logging("=> Able to apply pre-OT")
         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["pre_OT_check"]["pass"])
@@ -933,7 +934,8 @@ def define_valid_time():
         Logging("Can't apply pre-OT")
         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["pre_OT_check"]["fail"])
         pass
-
+    
+    return OT_data_time_decimal
     # try:
     #     # Logging(print_date)
     #     # Logging(result)
@@ -947,7 +949,6 @@ def define_valid_time():
     # except:
     #     Logging("Pass")
     
-    return OT_data_time_decimal
 
 def approval_setting():
     Commands.ClickElement(data["TIMECARD"]["setting_approval"])
@@ -962,7 +963,7 @@ def approval_setting():
     i = 0
     for i in range(OT_list):
         i += 1
-        approvalOT = driver.find_element_by_xpath(data["TIMECARD"]["approvalOT"] + data["TIMECARD"]["approval_OT"] % str(i))
+        approvalOT = driver.find_element_by_xpath(data["TIMECARD"]["approvalOT"] + "[" + str(i) + "]/label")
         approval_OT_list.append(approvalOT.text)
     
     Logging("Total of type Approval OT: " + str(len(approval_OT_list)))
@@ -970,7 +971,7 @@ def approval_setting():
 
     x = random.choice(approval_OT_list)
     time.sleep(1)
-    select_approval_OT = driver.find_element_by_xpath(data["TIMECARD"]["OT_list"] + data["TIMECARD"]["select_approval_OT"] % str(x))
+    select_approval_OT = driver.find_element_by_xpath(data["TIMECARD"]["OT_list"] + "[contains(.,'" + str(x) + "')]")
     select_approval_OT.click()
     Logging("Select Approval OT type")
     time.sleep(2)
@@ -1005,186 +1006,195 @@ def approval_setting():
     return x
 
 def apply_OT(OT_data_time_decimal):
-    try:
-        Commands.ClickElement(data["TIMECARD"]["my_timesheets"])
-        Commands.ClickElement(data["TIMECARD"]["calendar"])
-        Waits.WaitElementLoaded(10, data["TIMECARD"]["wait_calendar"])
-        Commands.ClickElement(data["TIMECARD"]["add_event"])
-        Commands.ClickElement(data["TIMECARD"]["add_OT"])
-        #Check max application time
-        text_max_application_time = output(data["TIMECARD"]["text_max_application_time"])
-        #Logging("Max application time: " + text_max_application_time)
-        max_application_hour = text_max_application_time.split("H")[0]
-        Logging("Max application time: " + max_application_hour)
+    # try:
+    Commands.ClickElement(data["TIMECARD"]["my_timesheets"])
+    Commands.ClickElement(data["TIMECARD"]["calendar"])
+    Waits.WaitElementLoaded(10, data["TIMECARD"]["wait_calendar"])
+    Commands.ClickElement(data["TIMECARD"]["add_event"])
+    Commands.ClickElement(data["TIMECARD"]["add_OT"])
+    time.sleep(5)
+    #Check max application time
+    text_max_application_time = driver.find_element_by_xpath(data["TIMECARD"]["text_max_application_time"]).text
+    Logging(type(text_max_application_time))
+    Logging(text_max_application_time)
+    #Logging("Max application time: " + text_max_application_time)
+    max_application_hour = text_max_application_time.split("H")[0]
+    Logging("Max application time: " + max_application_hour)
 
-        text_remaining_OT_time = output(data["TIMECARD"]["text_remaining_OT_time"])
-        #Logging("Remaining OT time: " + text_remaining_OT_time)
-        remaining_OT_number = text_remaining_OT_time.split("/")[0].split("H")[0]
-        Logging("Remaining OT time: " + remaining_OT_number)
+    text_remaining_OT_time = driver.find_element_by_xpath(data["TIMECARD"]["text_remaining_OT_time"])
+    Logging(text_remaining_OT_time)
+    #Logging("Remaining OT time: " + text_remaining_OT_time)
+    remaining_OT_number = text_remaining_OT_time.split("/")[0].split("H")[0]
+    Logging("Remaining OT time: " + remaining_OT_number)
 
-        #Calculation to check pre OT data
-        # Logging(max_application_hour)
-        # Logging(remaining_OT_number)
-        # Logging(OT_data_time_decimal)
-        if int(max_application_hour) + int(remaining_OT_number) == OT_data_time_decimal:
-            Logging("Max application time is correct")
-            TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["data_check_OT_max"]["pass"])
-        else:
-            Logging("Max application time is false")
-            TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["data_check_OT_max"]["fail"])
+    #Calculation to check pre OT data
+    # Logging(max_application_hour)
+    # Logging(remaining_OT_number)
+    # Logging(OT_data_time_decimal)
+    if int(max_application_hour) + int(remaining_OT_number) == OT_data_time_decimal:
+        Logging("Max application time is correct")
+        TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["data_check_OT_max"]["pass"])
+    else:
+        Logging("Max application time is false")
+        TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["data_check_OT_max"]["fail"])
 
-        #Estimate working hours
-        text_estimate_default = output(data["TIMECARD"]["text_estimate_default"])
-        Logging("Estimate time before select filter: " + text_estimate_default)
-        estimate_time_decimal = int(text_estimate_default.split("~")[1].split(":")[0])
-        #Logging(estimate_time_decimal)
-
-
-        Commands.ClickElement(data["TIMECARD"]["filter"])
-        filters_OT_list = Functions.GetListLength(data["TIMECARD"]["filters_OT_list"])
-
-        list_filters_OT = []
-        y = 0
-        for y in range(filters_OT_list):
-            y += 1
-            filters = driver.find_element_by_xpath(data["TIMECARD"]["filters"] % str(y))
-            list_filters_OT.append(filters.text)
-
-        m = random.choice(list_filters_OT)
-        filter_time = driver.find_element_by_xpath(data["TIMECARD"]["filter_time"] % str(m))
-        #filter_time.click()
-        Logging("Select filters time OT")
-        time.sleep(3)
-
-        filter_number = driver.find_element_by_xpath(data["TIMECARD"]["filter_number"])
-        m1 = filter_number.text
-        #Logging(m1)
-        filter_number_decimal = int(m1.split(" ")[0])
-        #Logging(filter_number_decimal)
-
-        #Check max application time
-        text_max_application_time = output(data["TIMECARD"]["text_max_application_time"])
-        #Logging("Max application time: " + text_max_application_time)
-        max_application_hour = text_max_application_time.split("H")[0]
-        Logging("Max application time: " + max_application_hour)
-
-        text_remaining_OT_time = output(data["TIMECARD"]["text_remaining_OT_time"])
-        #Logging("Remaining OT time: " + text_remaining_OT_time)
-        remaining_OT_number = text_remaining_OT_time.split("/")[0].split("H")[0]
-        Logging("Remaining OT time: " + remaining_OT_number)
-
-        #Calculation to check pre OT data
-        # Logging(max_application_hour)
-        # Logging(remaining_OT_number)
-        # Logging(OT_data_time_decimal)
-        if int(max_application_hour) + int(remaining_OT_number) == OT_data_time_decimal:
-            Logging("Max application time is correct")
-            TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["data_check_OT_max"]["pass"])
-        else:
-            Logging("Max application time is false")
-            TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["data_check_OT_max"]["fail"])
-
-        #Estimate working hours
-        text_estimate_default = output(data["TIMECARD"]["text_estimate_default"])
-        Logging("Estimate time before select filter: " + text_estimate_default)
-        estimate_time_decimal = int(text_estimate_default.split("~")[1].split(":")[0])
-        #Logging(estimate_time_decimal)
+    # #Estimate working hours
+    # text_estimate_default = Functions.GetElementText(data["TIMECARD"]["text_estimate_default"])
+    # Logging("Estimate time before select filter: " + text_estimate_default)
+    # estimate_time_decimal = text_estimate_default.split("~")[1].split(":")[0]
+    # #Logging(estimate_time_decimal)
 
 
-        driver.find_element_by_xpath(data["TIMECARD"]["filter"]).click()
-        filters_OT_list = Functions.GetListLength(data["TIMECARD"]["filters_OT_list"])
+    # Commands.ClickElement(data["TIMECARD"]["filter"])
+    # filters_OT_list = Functions.GetListLength(data["TIMECARD"]["filters_OT_list"])
 
-        list_filters_OT = []
-        y = 0
-        for y in range(filters_OT_list):
-            y += 1
-            filters = driver.find_element_by_xpath(data["TIMECARD"]["filters"] % str(y))
-            list_filters_OT.append(filters.text)
+    # list_filters_OT = []
+    # y = 0
+    # for y in range(filters_OT_list):
+    #     y += 1
+    #     filters = driver.find_element_by_xpath(data["TIMECARD"]["filters"] % str(y))
+    #     list_filters_OT.append(filters.text)
 
-        m = random.choice(list_filters_OT)
-        filter_time = driver.find_element_by_xpath(data["TIMECARD"]["filter_time"] % str(m))
-        filter_time.click()
-        Logging("Select filters time OT")
-        time.sleep(3)
+    # m = random.choice(list_filters_OT)
+    # filter_time = driver.find_element_by_xpath(data["TIMECARD"]["filter_time"] % str(m))
+    # #filter_time.click()
+    # Logging("Select filters time OT")
+    # time.sleep(3)
 
-        filter_number = driver.find_element_by_xpath(data["TIMECARD"]["filter_number"])
-        m1 = filter_number.text
-        #Logging(m1)
-        filter_number_decimal = int(m1.split(" ")[0])
-        #Logging(filter_number_decimal)
+    # filter_number = driver.find_element_by_xpath(data["TIMECARD"]["filter_number"])
+    # m1 = filter_number.text
+    # #Logging(m1)
+    # filter_number_decimal = int(m1.split(" ")[0])
+    # #Logging(filter_number_decimal)
 
-        #Check estimate time
-        text_estimate_after_select_OT = output(data["TIMECARD"]["text_estimate_after_select_OT"])
-        Logging("Estimate time after select filter: " + text_estimate_after_select_OT)
-        estimate_after_select_OT_decimal = int(text_estimate_after_select_OT.split("~")[1].split(":")[0])
-        #Logging(estimate_after_select_OT_decimal)
+    # #Check max application time
+    # text_max_application_time = Functions.GetElementText(data["TIMECARD"]["text_max_application_time"])
+    # #Logging("Max application time: " + text_max_application_time)
+    # max_application_hour = text_max_application_time.split("H")[0]
+    # Logging("Max application time: " + max_application_hour)
 
-        try:
-            if estimate_time_decimal + filter_number_decimal == estimate_after_select_OT_decimal:
-                Logging("Estimate working hours is correct")
-                TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["data_check_OT_estimate"]["pass"])
-            else:
-                Logging("Estimate working hours is false")
-                TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["data_check_OT_estimate"]["fail"])
-        except:
-            Logging(" ")
+    # text_remaining_OT_time = Functions.GetElementText(data["TIMECARD"]["text_remaining_OT_time"])
+    # #Logging("Remaining OT time: " + text_remaining_OT_time)
+    # remaining_OT_number = text_remaining_OT_time.split("/")[0].split("H")[0]
+    # Logging("Remaining OT time: " + remaining_OT_number)
 
+    # #Calculation to check pre OT data
+    # # Logging(max_application_hour)
+    # # Logging(remaining_OT_number)
+    # # Logging(OT_data_time_decimal)
+    # if int(max_application_hour) + int(remaining_OT_number) == OT_data_time_decimal:
+    #     Logging("Max application time is correct")
+    #     TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["data_check_OT_max"]["pass"])
+    # else:
+    #     Logging("Max application time is false")
+    #     TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["data_check_OT_max"]["fail"])
 
-        memo_approval_line = Commands.InputElement(data["TIMECARD"]["memo_approval_line"], "I would like to OT " + str(m) + " after work. Date: " + date)
-        time.sleep(3)
-        #Check details data
-        try:  
-            # date_data = driver.find_element_by_xpath(data["TIMECARD"]["date_data"])
-            # date_data_value = date_data.get_attribute("value")
-            date_data = Functions.GetInputValue(data["TIMECARD"]["date_data"])
-            #Logging("Date: " + str(date_data_value))
-        except:
-            Logging(" ")
-        
-        try:
-            #memo_data = driver.find_element_by_xpath(data["TIMECARD"]["memo_approval_line"]).text
-            memo_data = Functions.GetElementText(data["TIMECARD"]["memo_approval_line"])
-            #Logging("Memo: " + memo_data)
-        except:
-            Logging(" ")
-        try:
-            #approver_data = driver.find_element_by_xpath(data["TIMECARD"]["route_add_event"]).text
-            approver_data = Functions.GetElementText(data["TIMECARD"]["route_add_event"])
-            #Logging ("Approver: " + approver_data)
-        except:
-            Logging(" ")
-
-        Commands.ClickElement(data["TIMECARD"]["save_approval_line"])
-        Logging("- Apply Pre OT")
-
-        try:
-            noty_success = WebDriverWait(driver,10).until(EC.presence_of_element_located((By.XPATH, data["TIMECARD"]["pre_OT_noty"])))
-            time.sleep(3)
-            noty_list = [data["TIMECARD"]["pre_OT_noty_success"][0], data["TIMECARD"]["pre_OT_noty_success"][1]]
-            if noty_success.text in noty_list:
-                Logging("- Apply Pre OT Successfully")
-                TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["pre_OT"]["pass"])
-            elif noty_success.text == data["TIMECARD"]["pre_OT_noty_error"]:
-                Logging("- Apply Pre OT has already")
-                TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["pre_OT"]["pass"])
-                time.sleep(3)
-                Commands.ClickElement(data["TIMECARD"]["exit_button"])
-                time.sleep(2)
-                WebDriverWait(driver,10).until(EC.presence_of_element_located((By.XPATH, data["TIMECARD"]["exit"]))).click()
-            else:
-                Logging("- Apply Pre OT Fail")
-                TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["pre_OT"]["fail"])
-
-        except:
-            Logging("- Apply Pre OT Fail")
-            TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["pre_OT"]["fail"])
-    except: 
-        Logging("Can't run pre OT function")
-        TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["check_true"]["fail"])
+    # #Estimate working hours
+    # text_estimate_default = Functions.GetElementText(data["TIMECARD"]["text_estimate_default"])
+    # Logging("Estimate time before select filter: " + text_estimate_default)
+    # estimate_time_decimal = int(text_estimate_default.split("~")[1].split(":")[0])
+    # #Logging(estimate_time_decimal)
 
 
-# def check_popup_OT():
+    # Commands.ClickElement(data["TIMECARD"]["filter"])
+    # filters_OT_list = Functions.GetListLength(data["TIMECARD"]["filters_OT_list"])
+
+    # list_filters_OT = []
+    # y = 0
+    # for y in range(filters_OT_list):
+    #     y += 1
+    #     filters = driver.find_element_by_xpath(data["TIMECARD"]["filters"] % str(y))
+    #     list_filters_OT.append(filters.text)
+
+    # m = random.choice(list_filters_OT)
+    # filter_time = driver.find_element_by_xpath(data["TIMECARD"]["filter_time"] % str(m))
+    # filter_time.click()
+    # Logging("Select filters time OT")
+    # time.sleep(3)
+
+    # filter_number = driver.find_element_by_xpath(data["TIMECARD"]["filter_number"])
+    # m1 = filter_number.text
+    # #Logging(m1)
+    # filter_number_decimal = int(m1.split(" ")[0])
+    # #Logging(filter_number_decimal)
+
+    # #Check estimate time
+    # text_estimate_after_select_OT = output(data["TIMECARD"]["text_estimate_after_select_OT"])
+    # Logging("Estimate time after select filter: " + text_estimate_after_select_OT)
+    # estimate_after_select_OT_decimal = int(text_estimate_after_select_OT.split("~")[1].split(":")[0])
+    # #Logging(estimate_after_select_OT_decimal)
+
+    # try:
+    #     if estimate_time_decimal + filter_number_decimal == estimate_after_select_OT_decimal:
+    #         Logging("Estimate working hours is correct")
+    #         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["data_check_OT_estimate"]["pass"])
+    #     else:
+    #         Logging("Estimate working hours is false")
+    #         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["data_check_OT_estimate"]["fail"])
+    # except:
+    #     Logging(" ")
+
+
+    # memo_approval_line = Commands.InputElement(data["TIMECARD"]["memo_approval_line"], "I would like to OT " + str(m) + " after work. Date: " + date)
+    # time.sleep(3)
+    # #Check details data
+    # try:  
+    #     # date_data = driver.find_element_by_xpath(data["TIMECARD"]["date_data"])
+    #     # date_data_value = date_data.get_attribute("value")
+    #     date_data = Functions.GetInputValue(data["TIMECARD"]["date_data"])
+    #     #Logging("Date: " + str(date_data_value))
+    # except:
+    #     Logging(" ")
     
+    # try:
+    #     #memo_data = driver.find_element_by_xpath(data["TIMECARD"]["memo_approval_line"]).text
+    #     memo_data = Functions.GetElementText(data["TIMECARD"]["memo_approval_line"])
+    #     #Logging("Memo: " + memo_data)
+    # except:
+    #     Logging(" ")
+    # try:
+    #     #approver_data = driver.find_element_by_xpath(data["TIMECARD"]["route_add_event"]).text
+    #     approver_data = Functions.GetElementText(data["TIMECARD"]["route_add_event"])
+    #     #Logging ("Approver: " + approver_data)
+    # except:
+    #     Logging(" ")
+
+    # Commands.ClickElement(data["TIMECARD"]["save_approval_line"])
+    # Logging("- Apply Pre OT")
+
+    # try:
+    #     noty_success = WebDriverWait(driver,10).until(EC.presence_of_element_located((By.XPATH, data["TIMECARD"]["pre_OT_noty"])))
+    #     time.sleep(3)
+    #     noty_list = [data["TIMECARD"]["pre_OT_noty_success"][0], data["TIMECARD"]["pre_OT_noty_success"][1]]
+    #     if noty_success.text in noty_list:
+    #         Logging("- Apply Pre OT Successfully")
+    #         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["pre_OT"]["pass"])
+    #     elif noty_success.text == data["TIMECARD"]["pre_OT_noty_error"]:
+    #         Logging("- Apply Pre OT has already")
+    #         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["pre_OT"]["pass"])
+    #         time.sleep(3)
+    #         Commands.ClickElement(data["TIMECARD"]["exit_button"])
+    #         time.sleep(2)
+    #         WebDriverWait(driver,10).until(EC.presence_of_element_located((By.XPATH, data["TIMECARD"]["exit"]))).click()
+    # except:
+    #     Logging("- Apply Pre OT Fail")
+    #     TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["pre_OT"]["fail"])
+
+    # check_popup_OT()    
+    # except: 
+    #     Logging("Can't run pre OT function")
+    #     TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["check_true"]["fail"])
+
+
+def check_popup_OT():
+    try:
+        Logging("Pop-up is still displayed")
+        Waits.WaitElementLoaded(10, data["TIMECARD"]["pop_up_OT"])
+        Commands.ClickElement(data["TIMECARD"]["cancel_OT"])
+        Commands.ClickElement(data["TIMECARD"]["cancel_OT_yes"])
+    except:
+        Logging("Pop-up was already closed")
+
 def report_weekly_before():
     Commands.ClickElement(data["TIMECARD"]["report_page"])
     Waits.WaitElementLoaded(30, data["TIMECARD"]["report_wait"])
