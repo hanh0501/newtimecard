@@ -1106,7 +1106,7 @@ def apply_OT(OT_data_time_decimal):
     except:
         Logging(" ")
 
-    #Commands.ClickElement(data["TIMECARD"]["save_approval_line"])
+    Commands.ClickElement(data["TIMECARD"]["save_approval_line"])
     Logging("- Apply Pre OT")
 
     try:
@@ -1127,15 +1127,14 @@ def apply_OT(OT_data_time_decimal):
         Logging("- Apply Pre OT Fail")
         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["pre_OT"]["fail"])
 
-    check_popup_OT()    
+    check_popup_OT()   
     return details_data
     # except: 
     #     Logging("Can't run pre OT function")
     #     TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["check_true"]["fail"])
 
-def check_popup_OT():
+def check_popup_OT(x):
     try:
-        Logging("Pop-up is still displayed")
         Waits.WaitElementLoaded(10, data["TIMECARD"]["pop_up_OT"])
         Commands.ClickElement(data["TIMECARD"]["cancel_OT"])
         Commands.ClickElement(data["TIMECARD"]["cancel_OT_yes"])
@@ -1143,11 +1142,10 @@ def check_popup_OT():
     except:
         Logging("Pop-up was already closed")
 
-def check_details_data(details_data, x):
-    filter_number_decimal = details_data["filter_number_decimal"]
-    date_data = details_data["date_data"]
-    memo_data = details_data["memo_data"]
-    approver_data = details_data["approver_data"]
+    check_details_data(x) 
+    
+
+def check_details_data(x):
     time.sleep(5)
     Commands.ClickElement(data["TIMECARD"]["approval"])
     #Logging("- My Timecard: Approval")
@@ -1181,7 +1179,41 @@ def check_details_data(details_data, x):
                     Commands.ClickElement(data["TIMECARD"]["turn_off_view"])
                     time.sleep(2)
             else:
-                Logging(" ") 
+                status_pre_OT = driver.find_element_by_xpath(data["TIMECARD"]["status_pre_OT"])
+                time.sleep(2)
+                if status_pre_OT.text == "Approved":
+                    Logging("- Pre OT has been Approved")
+                    TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["approve_pre_OT"]["pass"])
+                    detail_data()
+                    Commands.ClickElement(data["TIMECARD"]["turn_off_view"])
+                    time.sleep(2)
+                elif status_pre_OT == "Cancelled":
+                    Logging("- Pre OT has been Cancelled")
+                    TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["cancel_pre_OT"]["pass"])
+                    Commands.ClickElement(data["TIMECARD"]["turn_off_view"])
+                    time.sleep(2)
+                elif status_pre_OT == "Progressing":
+                    Logging("- Pre OT is in progressing")
+                    TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["progress_pre_OT"]["pass"])
+                    detail_data()
+                    Commands.ClickElement(data["TIMECARD"]["turn_off_view"])
+                    time.sleep(2)
+                else:
+                    status_pre_OT.click()
+                    Logging("- Cancel Pre OT")
+                    time.sleep(2)
+                    Commands.ClickElement(data["TIMECARD"]["yes_but"][1])
+                    time.sleep(5)
+                    Commands.ClickElement(data["TIMECARD"]["reload"])
+                    status_update = Waits.WaitElementLoaded(10, data["TIMECARD"]["status_update"])
+                    time.sleep(5)
+                    if status_update.text == "Cancelled":
+                        Logging("- Cancel Pre OT successfully")
+                        TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["click_cancel_pre_OT"]["pass"])
+                        detail_data()
+                    else:
+                        Logging("- Cancel Pre OT fail")
+                        TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["click_cancel_pre_OT"]["pass"])
     except:
         Logging(" ")   
 
