@@ -919,7 +919,7 @@ def define_valid_time():
 
         if bool(x) == True:
             Logging("Apply OT")
-            apply_OT(OT_data_time_decimal)
+            apply_OT(OT_data_time_decimal, x)
         else:
             Logging("Can't apply OT")
             pass
@@ -987,7 +987,7 @@ def approval_setting():
     driver.refresh()
     return x
 
-def apply_OT(OT_data_time_decimal):
+def apply_OT(OT_data_time_decimal, x):
     details_data = {}
     # try:
     Commands.ClickElement(data["TIMECARD"]["my_timesheets"])
@@ -1127,7 +1127,7 @@ def apply_OT(OT_data_time_decimal):
         Logging("- Apply Pre OT Fail")
         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["pre_OT"]["fail"])
 
-    check_popup_OT()   
+    check_popup_OT(x)   
     return details_data
     # except: 
     #     Logging("Can't run pre OT function")
@@ -1147,7 +1147,7 @@ def check_popup_OT(x):
 
 def check_details_data(x):
     time.sleep(5)
-    Commands.ClickElement(data["TIMECARD"]["approval"])
+    Commands.ClickElement(data["TIMECARD"]["ap_proval_page"])
     #Logging("- My Timecard: Approval")
     WebDriverWait(driver,10).until(EC.presence_of_element_located((By.XPATH, data["TIMECARD"]["approval_list"])))
     time.sleep(3)
@@ -1156,13 +1156,13 @@ def check_details_data(x):
         if pre_OT.text == "Over Time (Pre)":
             Logging("- Approval list: Pre OT")
             TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["pre_OT_displayed"]["pass"])
-            #Scroll to detail
+            # #Scroll to detail
             slider = driver.find_element_by_xpath("//div[@ref='eBodyHorizontalScrollViewport']")
             horizontal_bar = driver.find_element_by_xpath("//div[@ref='eHorizontalRightSpacer']")
             webdriver.ActionChains(driver).click_and_hold(slider).move_to_element(horizontal_bar).perform()
             webdriver.ActionChains(driver).release().perform()
             time.sleep(5)
-            Commands.ClickElement(data["TIMECARD"]["detail"])
+            Commands.ClickElement(data["TIMECARD"]["approval_detail"])
             Logging("- View detail approval")
             if str(x) == "Automatic approval":
                 status_pre_OT = driver.find_element_by_xpath(data["TIMECARD"]["status_pre_OT"])
@@ -1192,7 +1192,8 @@ def check_details_data(x):
                     TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["cancel_pre_OT"]["pass"])
                     Commands.ClickElement(data["TIMECARD"]["turn_off_view"])
                     time.sleep(2)
-                elif status_pre_OT == "Progressing":
+                
+                elif status_pre_OT == "Pending":
                     Logging("- Pre OT is in progressing")
                     TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["progress_pre_OT"]["pass"])
                     detail_data()
