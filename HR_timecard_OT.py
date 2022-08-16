@@ -1116,6 +1116,7 @@ def apply_OT(OT_data_time_decimal, x):
         if noty_success.text in noty_list:
             Logging("- Apply Pre OT Successfully")
             TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["pre_OT"]["pass"])
+            check_details_data(x) 
         elif noty_success.text == data["TIMECARD"]["pre_OT_noty_error"]:
             Logging("- Apply Pre OT has already")
             TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["pre_OT"]["pass"])
@@ -1142,13 +1143,13 @@ def check_popup_OT(x):
     except:
         Logging("Pop-up was already closed")
 
-    check_details_data(x) 
+    
     
 
-def check_details_data(x):
+def check_details_data(x, details_data):
     time.sleep(5)
     Commands.ClickElement(data["TIMECARD"]["ap_proval_page"])
-    #Logging("- My Timecard: Approval")
+    Logging("- My Timecard: Approval")
     WebDriverWait(driver,10).until(EC.presence_of_element_located((By.XPATH, data["TIMECARD"]["approval_list"])))
     time.sleep(3)
     pre_OT = driver.find_element_by_xpath(data["TIMECARD"]["pre_OT"])
@@ -1157,10 +1158,10 @@ def check_details_data(x):
             Logging("- Approval list: Pre OT")
             TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["pre_OT_displayed"]["pass"])
             # #Scroll to detail
-            slider = driver.find_element_by_xpath("//div[@ref='eBodyHorizontalScrollViewport']")
-            horizontal_bar = driver.find_element_by_xpath("//div[@ref='eHorizontalRightSpacer']")
-            webdriver.ActionChains(driver).click_and_hold(slider).move_to_element(horizontal_bar).perform()
-            webdriver.ActionChains(driver).release().perform()
+            # slider = driver.find_element_by_xpath("//div[@ref='eBodyHorizontalScrollViewport']")
+            # horizontal_bar = driver.find_element_by_xpath("//div[@ref='eHorizontalRightSpacer']")
+            # webdriver.ActionChains(driver).click_and_hold(slider).move_to_element(horizontal_bar).perform()
+            # webdriver.ActionChains(driver).release().perform()
             time.sleep(5)
             Commands.ClickElement(data["TIMECARD"]["approval_detail"])
             Logging("- View detail approval")
@@ -1169,7 +1170,7 @@ def check_details_data(x):
                 if status_pre_OT.text == "Approved":
                     Logging("- Pre OT has been approved automatically")
                     TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["cancel_pre_OT_auto"]["pass"])
-                    detail_data()
+                    detail_data(details_data)
                     Commands.ClickElement(data["TIMECARD"]["turn_off_view"])
                     time.sleep(2)
                 else:
@@ -1179,42 +1180,43 @@ def check_details_data(x):
                     Commands.ClickElement(data["TIMECARD"]["turn_off_view"])
                     time.sleep(2)
             else:
+                Logging("Not auto approval")
                 status_pre_OT = driver.find_element_by_xpath(data["TIMECARD"]["status_pre_OT"])
                 time.sleep(2)
                 if status_pre_OT.text == "Approved":
                     Logging("- Pre OT has been Approved")
                     TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["approve_pre_OT"]["pass"])
-                    detail_data()
+                    detail_data(details_data)
                     Commands.ClickElement(data["TIMECARD"]["turn_off_view"])
                     time.sleep(2)
                 elif status_pre_OT == "Cancelled":
                     Logging("- Pre OT has been Cancelled")
                     TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["cancel_pre_OT"]["pass"])
+                    detail_data(details_data)
                     Commands.ClickElement(data["TIMECARD"]["turn_off_view"])
                     time.sleep(2)
                 
                 elif status_pre_OT == "Pending":
-                    Logging("- Pre OT is in progressing")
+                    Logging("- Pre OT is pending")
                     TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["progress_pre_OT"]["pass"])
-                    detail_data()
+                    detail_data(details_data)
                     Commands.ClickElement(data["TIMECARD"]["turn_off_view"])
                     time.sleep(2)
-                else:
-                    status_pre_OT.click()
-                    Logging("- Cancel Pre OT")
-                    time.sleep(2)
-                    Commands.ClickElement(data["TIMECARD"]["yes_but"][1])
-                    time.sleep(5)
-                    Commands.ClickElement(data["TIMECARD"]["reload"])
-                    status_update = Waits.WaitElementLoaded(10, data["TIMECARD"]["status_update"])
-                    time.sleep(5)
-                    if status_update.text == "Cancelled":
-                        Logging("- Cancel Pre OT successfully")
-                        TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["click_cancel_pre_OT"]["pass"])
-                        detail_data()
-                    else:
-                        Logging("- Cancel Pre OT fail")
-                        TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["click_cancel_pre_OT"]["pass"])
+                # else:
+                #     status_pre_OT.click()
+                #     Logging("- Cancel Pre OT")
+                #     time.sleep(2)
+                #     Commands.ClickElement(data["TIMECARD"]["yes_but"][1])
+                #     time.sleep(5)
+                #     Commands.ClickElement(data["TIMECARD"]["reload"])
+                #     status_update = Waits.WaitElementLoaded(10, data["TIMECARD"]["status_update"])
+                #     time.sleep(5)
+                #     if status_update.text == "Cancelled":
+                #         Logging("- Cancel Pre OT successfully")
+                #         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["click_cancel_pre_OT"]["pass"])
+                #     else:
+                #         Logging("- Cancel Pre OT fail")
+                #         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["click_cancel_pre_OT"]["pass"])
     except:
         Logging(" ")   
 
@@ -1298,7 +1300,7 @@ def detail_data(details_data):
     except:
         Logging ("Approver is empty")
 
-
+    
 
 
 
