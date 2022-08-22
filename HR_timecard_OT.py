@@ -987,8 +987,8 @@ def approval_setting():
     driver.refresh()
     return x
 
-def apply_OT(OT_data_time_decimal, x):
-    details_data = {}
+def apply_OT(x, OT_data_time_decimal, **details_data):
+    # details_data = {}
     # try:
     Commands.ClickElement(data["TIMECARD"]["my_timesheets"])
     Commands.ClickElement(data["TIMECARD"]["calendar"])
@@ -1047,7 +1047,7 @@ def apply_OT(OT_data_time_decimal, x):
     m1 = filter_number.text
     #Logging(m1)
     filter_number_decimal = int(m1.split(" ")[0])
-    details_data["filter_number_decimal"] = filter_number_decimal
+    # details_data["filter_number_decimal"] = filter_number_decimal
     #Logging(filter_number_decimal)
 
     #Check max application time
@@ -1081,30 +1081,8 @@ def apply_OT(OT_data_time_decimal, x):
 
     memo_approval_line = Commands.InputElement(data["TIMECARD"]["memo_approval_line"], "I would like to OT " + str(m) + " after work. Date: " + date)
     time.sleep(3)
-    #Check details data
-    try:  
-        # date_data = driver.find_element_by_xpath(data["TIMECARD"]["date_data"])
-        # date_data_value = date_data.get_attribute("value")
-        date_data = Functions.GetInputValue(data["TIMECARD"]["date_data"])
-        details_data["date_data"] = date_data
-        #Logging("Date: " + str(date_data_value))
-    except:
-        Logging(" ")
-    
-    try:
-        #memo_data = driver.find_element_by_xpath(data["TIMECARD"]["memo_approval_line"]).text
-        memo_data = Functions.GetElementText(data["TIMECARD"]["memo_approval_line"])
-        details_data["memo_data"] = memo_data
-        #Logging("Memo: " + memo_data)
-    except:
-        Logging(" ")
-    try:
-        #approver_data = driver.find_element_by_xpath(data["TIMECARD"]["route_add_event"]).text
-        approver_data = Functions.GetElementText(data["TIMECARD"]["route_add_event"])
-        details_data["approver_data"] = approver_data
-        #Logging ("Approver: " + approver_data)
-    except:
-        Logging(" ")
+
+    datas()
 
     Commands.ClickElement(data["TIMECARD"]["save_approval_line"])
     Logging("- Apply Pre OT")
@@ -1128,25 +1106,56 @@ def apply_OT(OT_data_time_decimal, x):
         Logging("- Apply Pre OT Fail")
         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["pre_OT"]["fail"])
 
-    check_popup_OT(x)   
-    return details_data
+    check_popup_OT(x, **details_data)   
     # except: 
     #     Logging("Can't run pre OT function")
     #     TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["check_true"]["fail"])
 
-def check_popup_OT(x):
+def datas():
+    #Check details data
+    try:  
+        # date_data = driver.find_element_by_xpath(data["TIMECARD"]["date_data"])
+        # date_data_value = date_data.get_attribute("value")
+        date_data = Functions.GetInputValue(data["TIMECARD"]["date_data"])
+        #Logging("Date: " + str(date_data_value))
+    except:
+        Logging(" ")
+    
+    try:
+        #memo_data = driver.find_element_by_xpath(data["TIMECARD"]["memo_approval_line"]).text
+        memo_data = Functions.GetElementText(data["TIMECARD"]["memo_approval_line"])
+        #Logging("Memo: " + memo_data)
+    except:
+        Logging(" ")
+    try:
+        #approver_data = driver.find_element_by_xpath(data["TIMECARD"]["route_add_event"]).text
+        approver_data = Functions.GetElementText(data["TIMECARD"]["route_add_event"])
+        #Logging ("Approver: " + approver_data)
+    except:
+        Logging(" ")
+
+    details_data = {
+        "date_data": date_data,
+        "memo_data": memo_data,
+        "approver_data": approver_data, 
+    }
+
+    return details_data
+
+def check_popup_OT(x, **details_data):
     try:
         Waits.WaitElementLoaded(10, data["TIMECARD"]["pop_up_OT"])
         Commands.ClickElement(data["TIMECARD"]["cancel_OT"])
         Commands.ClickElement(data["TIMECARD"]["cancel_OT_yes"])
         Logging("Close pop-up OT")
+        check_details_data(x, **details_data)
     except:
         Logging("Pop-up was already closed")
 
     
     
 
-def check_details_data(x, details_data):
+def check_details_data(x, **details_data):
     time.sleep(5)
     Commands.ClickElement(data["TIMECARD"]["ap_proval_page"])
     Logging("- My Timecard: Approval")
@@ -1186,20 +1195,20 @@ def check_details_data(x, details_data):
                 if status_pre_OT.text == "Approved":
                     Logging("- Pre OT has been Approved")
                     TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["approve_pre_OT"]["pass"])
-                    detail_data(details_data)
+                    detail_data(**details_data)
                     Commands.ClickElement(data["TIMECARD"]["turn_off_view"])
                     time.sleep(2)
                 elif status_pre_OT == "Cancelled":
                     Logging("- Pre OT has been Cancelled")
                     TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["cancel_pre_OT"]["pass"])
-                    detail_data(details_data)
+                    detail_data(**details_data)
                     Commands.ClickElement(data["TIMECARD"]["turn_off_view"])
                     time.sleep(2)
                 
                 elif status_pre_OT == "Pending":
                     Logging("- Pre OT is pending")
                     TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["progress_pre_OT"]["pass"])
-                    detail_data(details_data)
+                    detail_data(**details_data)
                     Commands.ClickElement(data["TIMECARD"]["turn_off_view"])
                     time.sleep(2)
                 # else:
@@ -1220,12 +1229,16 @@ def check_details_data(x, details_data):
     except:
         Logging(" ")   
 
-def detail_data(details_data):
+def detail_data(**details_data):
     filter_number_decimal = details_data["filter_number_decimal"]
     date_data = details_data["date_data"]
     memo_data = details_data["memo_data"]
     approver_data = details_data["approver_data"]
 
+    Logging(filter_number_decimal)
+    Logging(date_data)
+    Logging(memo_data)
+    Logging(approver_data)
     #Details data
     date_data_check = driver.find_element_by_xpath(data["TIMECARD"]["date_data_check"])
     Logging("Date: " + date_data_check.text)
@@ -1503,6 +1516,9 @@ def timecard_OT():
     #print(time_clock_in)
     #OT_data_time_decimal = define_valid_time()
     Napproval_OT(output_clockin)#, OT_data_time_decimal)
+    details_data = datas()
+    filter_number_decimal = apply_OT(**details_data)
+    x = approval_setting(**details_data)
     #OT_data_time_decimal = define_valid_time()
     #Napproval_OT()
 
