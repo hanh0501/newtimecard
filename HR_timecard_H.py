@@ -774,7 +774,7 @@ def add_event2():
     i = 0
     for i in range(EV_list):
         i += 1
-        approvalEV = driver.find_element_by_xpath(data["TIMECARD"]["approvalEV"] + "['%s']/label" % str(i))
+        approvalEV = driver.find_element_by_xpath(data["TIMECARD"]["approvalEV"] + "[" + str(i) + "]/label")
         approval_EV_list.append(approvalEV.text)
 
     Logging("- Total of type Approval Event: " + str(len(approval_EV_list)))
@@ -782,7 +782,7 @@ def add_event2():
 
     x = random.choice(approval_EV_list)
     time.sleep(1)
-    select_approval_EV = driver.find_element_by_xpath(data["TIMECARD"]["EV_list"] + "[contains(.,'%s')]" % str(x))
+    select_approval_EV = driver.find_element_by_xpath(data["TIMECARD"]["EV_list"] + "[contains(.,'" + str(x) + "')]")
     select_approval_EV.click()
     Logging("- Select Approval Event type")
     time.sleep(2)
@@ -1630,6 +1630,7 @@ def approval_OT():
 
 def manager():
     manager = driver.find_element_by_xpath(data["TIMECARD"]["manager"])
+    
     manager.location_once_scrolled_into_view
     manager.click()
     Logging("- Settings: Manager")
@@ -1668,8 +1669,6 @@ def manager():
     Logging("- Select permission")
 
     if str(x) == "Select Department/User":
-        # search_dept = driver.find_element_by_xpath(data["TIMECARD"]["search_dept"])
-        # search_dept.send_keys("Selenium")
         search_dept = Commands.InputElement(data["TIMECARD"]["search_dept"], "Selenium")
         search_dept.send_keys(Keys.ENTER)
         time.sleep(3)
@@ -1687,22 +1686,23 @@ def manager():
 
                 time.sleep(3)
                 # search = driver.find_element_by_xpath(data["TIMECARD"]["search_duplicate"])
-                # search.send_keys(data["name_keyword"][1])
+                # search.send_keys(data["name_keyword"][1]
                 search = Commands.InputElement(data["TIMECARD"]["search_duplicate"], data["name_keyword"][1])
                 search.send_keys(Keys.ENTER)
-                time.sleep(2)
+                # slider = driver.find_element_by_xpath("//div[@ref='eBodyHorizontalScrollViewport']")
+                # horizontal_bar = driver.find_element_by_xpath("//div[@ref='eHorizontalRightSpacer']")
 
-                slider = driver.find_element_by_xpath("//div[@ref='eBodyHorizontalScrollViewport']")
-                horizontal_bar = driver.find_element_by_xpath("//div[@ref='eHorizontalRightSpacer']")
-
-                webdriver.ActionChains(driver).click_and_hold(slider).move_to_element(horizontal_bar).perform()
-                webdriver.ActionChains(driver).release().perform()
-                time.sleep(2)
-                Commands.ClickElement(data["TIMECARD"]["detail_duplicate"]) 
-                Logging("- Delete Dept. Manager")
+                # webdriver.ActionChains(driver).click_and_hold(slider).move_to_element(horizontal_bar).perform()
+                # webdriver.ActionChains(driver).release().perform()
+                time.sleep(5)
+                Commands.ClickElement(data["TIMECARD"]["detail_duplicate"] ) 
+                Logging("- Check box Dept. Manager")
+                time.sleep(5)
+                Commands.ClickElement(data["TIMECARD"]["click_delete_button"]) 
+                Logging("- Click delete button")
                 time.sleep(2)
                 Commands.ClickElement(data["TIMECARD"]["delete_dept"]) 
-                Logging("- Click Delete button")
+                Logging("- Delete Dept. Manager")
         except:
             Logging("=> Save manager successfully")
             TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["add_manager"]["pass"])
@@ -1713,12 +1713,12 @@ def manager():
             search.send_keys(Keys.ENTER)
             time.sleep(2)
 
-            slider = driver.find_element_by_xpath("//div[@ref='eBodyHorizontalScrollViewport']")
-            horizontal_bar = driver.find_element_by_xpath("//div[@ref='eHorizontalRightSpacer']")
+            # slider = driver.find_element_by_xpath("//div[@ref='eBodyHorizontalScrollViewport']")
+            # horizontal_bar = driver.find_element_by_xpath("//div[@ref='eHorizontalRightSpacer']")
 
-            webdriver.ActionChains(driver).click_and_hold(slider).move_to_element(horizontal_bar).perform()
-            webdriver.ActionChains(driver).release().perform()
-            time.sleep(2)
+            # webdriver.ActionChains(driver).click_and_hold(slider).move_to_element(horizontal_bar).perform()
+            # webdriver.ActionChains(driver).release().perform()
+            time.sleep(5)
 
             Commands.ClickElement(data["TIMECARD"]["view_detail"]) 
             Logging("- View detail")
@@ -1733,11 +1733,15 @@ def manager():
 
             Commands.ClickElement(data["TIMECARD"]["close_detail"]) 
 
-            Commands.ClickElement(data["TIMECARD"]["detail_duplicate"]) 
-            Logging("- Delete Dept. Manager")
+            time.sleep(5)
+            Commands.ClickElement(data["TIMECARD"]["detail_duplicate"] ) 
+            Logging("- Check box Dept. Manager")
+            time.sleep(5)
+            Commands.ClickElement(data["TIMECARD"]["click_delete_button"]) 
+            Logging("- Click delete button")
             time.sleep(2)
             Commands.ClickElement(data["TIMECARD"]["delete_dept"]) 
-            Logging("- Click Delete button")
+            Logging("- Delete Dept. Manager")
     else:
         Commands.ClickElement(data["TIMECARD"]["save_dept"]) 
         Logging("save")
@@ -1754,17 +1758,20 @@ def manager():
                 search.send_keys(Keys.ENTER)
                 time.sleep(2)
 
-                slider = driver.find_element_by_xpath("//div[@ref='eBodyHorizontalScrollViewport']")
-                horizontal_bar = driver.find_element_by_xpath("//div[@ref='eHorizontalRightSpacer']")
+                # slider = driver.find_element_by_xpath("//div[@ref='eBodyHorizontalScrollViewport']")
+                # horizontal_bar = driver.find_element_by_xpath("//div[@ref='eHorizontalRightSpacer']")
 
-                webdriver.ActionChains(driver).click_and_hold(slider).move_to_element(horizontal_bar).perform()
-                webdriver.ActionChains(driver).release().perform()
-                time.sleep(2)
-                Commands.ClickElement(data["TIMECARD"]["detail_duplicate"]) 
-                Logging("- Delete Dept. Manager")
+                # webdriver.ActionChains(driver).click_and_hold(slider).move_to_element(horizontal_bar).perform()
+                # webdriver.ActionChains(driver).release().perform()
+                time.sleep(5)
+                Commands.ClickElement(data["TIMECARD"]["detail_duplicate"] ) 
+                Logging("- Check box Dept. Manager")
+                time.sleep(5)
+                Commands.ClickElement(data["TIMECARD"]["click_delete_button"]) 
+                Logging("- Click delete button")
                 time.sleep(2)
                 Commands.ClickElement(data["TIMECARD"]["delete_dept"]) 
-                Logging("- Click Delete button")
+                Logging("- Delete Dept. Manager")
         except:
             Logging("=> Save manager successfully")
             TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["add_manager"]["pass"])
@@ -1775,11 +1782,11 @@ def manager():
             search.send_keys(Keys.ENTER)
             time.sleep(2)
 
-            slider = driver.find_element_by_xpath("//div[@ref='eBodyHorizontalScrollViewport']")
-            horizontal_bar = driver.find_element_by_xpath("//div[@ref='eHorizontalRightSpacer']")
+            # slider = driver.find_element_by_xpath("//div[@ref='eBodyHorizontalScrollViewport']")
+            # horizontal_bar = driver.find_element_by_xpath("//div[@ref='eHorizontalRightSpacer']")
 
-            webdriver.ActionChains(driver).click_and_hold(slider).move_to_element(horizontal_bar).perform()
-            webdriver.ActionChains(driver).release().perform()
+            # webdriver.ActionChains(driver).click_and_hold(slider).move_to_element(horizontal_bar).perform()
+            # webdriver.ActionChains(driver).release().perform()
             time.sleep(2)
 
             Commands.ClickElement(data["TIMECARD"]["view_detail"]) 
@@ -1795,11 +1802,15 @@ def manager():
 
             Commands.ClickElement(data["TIMECARD"]["close_detail"]) 
 
-            Commands.ClickElement(data["TIMECARD"]["detail_duplicate"]) 
-            Logging("- Delete Dept. Manager")
+            time.sleep(5)
+            Commands.ClickElement(data["TIMECARD"]["detail_duplicate"] ) 
+            Logging("- Check box Dept. Manager")
+            time.sleep(5)
+            Commands.ClickElement(data["TIMECARD"]["click_delete_button"]) 
+            Logging("- Click delete button")
             time.sleep(2)
             Commands.ClickElement(data["TIMECARD"]["delete_dept"]) 
-            Logging("- Click Delete button")
+            Logging("- Delete Dept. Manager")
 
     time.sleep(2)
     try:
@@ -2050,7 +2061,6 @@ def work_schedule(day_list):
 
 
 def delete_punch():
-    
     Commands.ClickElement(data["TIMECARD"]["timeline_page"]) 
     Waits.WaitElementLoaded(40, data["TIMECARD"]["timeline_wait"])
     time.sleep(2)
@@ -2218,8 +2228,9 @@ def daily_status():
         try:
             Logging("***Download Excel File***")
             Commands.ClickElement(data["TIMECARD"]["click_download"]) 
+            Commands.ClickElement(data["TIMECARD"]["click_accept_download"]) 
             time.sleep(10)
-            if '2022' in driver.page_source:
+            if '2023' in driver.page_source:
                 PrintGreen(">>>Download file successfully")
                 TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["download_excel_file"]["pass"])
             else:
@@ -2236,12 +2247,10 @@ def daily_status():
     try:
         Logging("")
         Commands.ClickElement(data["TIMECARD"]["open_searchbox"]) 
-        # search = driver.find_element_by_xpath(data["TIMECARD"]["search"])
-        # search.send_keys(data["name_keyword"][0])
         search = Commands.InputElement(data["TIMECARD"]["search"], data["name_keyword"][0])
         search.send_keys(Keys.ENTER)
         time.sleep(5)
-        Commands.ClickElement(data["TIMECARD"]["click_first_choice"]) 
+        Commands.ClickElement(data["TIMECARD"]["click_first_choice"] % data["name_keyword"][0])
         Commands.ClickElement(data["TIMECARD"]["open_searchbox"]) 
 
         time.sleep(5)
@@ -2260,9 +2269,6 @@ def daily_status():
 
         achievement = driver.find_element_by_xpath(data["TIMECARD"]["achievement"])
         Logging("achievement: " + achievement.text)
-
-        estimate = driver.find_element_by_xpath(data["TIMECARD"]["estimate"])
-        Logging("estimate: " + estimate.text)
         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["daily_status_data"]["pass"])
         return status1
     except:
@@ -2870,10 +2876,7 @@ def daily_status2(working_time):
         Logging("break time after change to decimal: " + str(breaktime_number))
 
         achievement2 = driver.find_element_by_xpath(data["TIMECARD"]["achievement2"])
-        Logging("Achievement: " + achievement2.text)
-
-        estimate2 = driver.find_element_by_xpath(data["TIMECARD"]["estimate2"])
-        Logging("Estimate: " + estimate2.text)   
+        Logging("Achievement: " + achievement2.text) 
 
         #Scroll to the end
         slider = driver.find_element_by_xpath("//div[@ref='eBodyHorizontalScrollViewport']")
@@ -3646,82 +3649,82 @@ def company_timecard_reports():
             #Logging("Result was different - System was false")
             PrintRed(">>>Result was different - System was false")
 
-        Logging("")
-        Logging("Compare Events - No Clockout with List - No Clockout")
-        if no_clockout_decimal == list_no_clockout_decimal:
-            #Logging(no_clockout_decimal)
-            #Logging(list_no_clockout_decimal)
-            #Logging("Result was the same - System was correct")
-            PrintGreen(">>>Result was the same - System was correct") 
-        else:
-            #Logging("Result was different - System was false")
-            PrintRed(">>>Result was different - System was false")
+        # Logging("")
+        # Logging("Compare Events - No Clockout with List - No Clockout")
+        # if no_clockout_decimal == list_no_clockout_decimal:
+        #     #Logging(no_clockout_decimal)
+        #     #Logging(list_no_clockout_decimal)
+        #     #Logging("Result was the same - System was correct")
+        #     PrintGreen(">>>Result was the same - System was correct") 
+        # else:
+        #     #Logging("Result was different - System was false")
+        #     PrintRed(">>>Result was different - System was false")
 
-        Logging("")
-        Logging("Compare Events - OT with List - OT")
-        if events_OT_decimal == list_OT_decimal:
-            #Logging(events_OT_decimal)
-            #Logging(list_OT_decimal)
-            #Logging("Result was the same - System was correct")
-            PrintGreen(">>>Result was the same - System was correct") 
-        else:
-            #Logging("Result was different - System was false")
-            PrintRed(">>>Result was different - System was false")
+        # Logging("")
+        # Logging("Compare Events - OT with List - OT")
+        # if events_OT_decimal == list_OT_decimal:
+        #     #Logging(events_OT_decimal)
+        #     #Logging(list_OT_decimal)
+        #     #Logging("Result was the same - System was correct")
+        #     PrintGreen(">>>Result was the same - System was correct") 
+        # else:
+        #     #Logging("Result was different - System was false")
+        #     PrintRed(">>>Result was different - System was false")
 
-        Logging("")
-        Logging("Compare Events - Night Shifts with List - Night Shifts")
-        if night_shift_decimal == list_night_shift_decimal:
-            #Logging(night_shift_decimal)
-            #Logging(list_night_shift_decimal)
-            #Logging("Result was the same - System was correct")
-            PrintGreen(">>>Result was the same - System was correct") 
-        else:
-            #Logging("Result was different - System was false")
-            PrintRed(">>>Result was different - System was false")
+        # Logging("")
+        # Logging("Compare Events - Night Shifts with List - Night Shifts")
+        # if night_shift_decimal == list_night_shift_decimal:
+        #     #Logging(night_shift_decimal)
+        #     #Logging(list_night_shift_decimal)
+        #     #Logging("Result was the same - System was correct")
+        #     PrintGreen(">>>Result was the same - System was correct") 
+        # else:
+        #     #Logging("Result was different - System was false")
+        #     PrintRed(">>>Result was different - System was false")
 
-        Logging("")
-        Logging("Compare Events - Vacation with List - Vacation")
-        if vacation_decimal == list_vacation_decimal:
-            #Logging(vacation_decimal)
-            #Logging(list_vacation_decimal)
-            #Logging("Result was the same - System was correct")
-            PrintGreen(">>>Result was the same - System was correct") 
-        else:
-            #Logging("Result was different - System was false")
-            PrintRed(">>>Result was different - System was false")
+        # Logging("")
+        # Logging("Compare Events - Vacation with List - Vacation")
+        # if vacation_decimal == list_vacation_decimal:
+        #     #Logging(vacation_decimal)
+        #     #Logging(list_vacation_decimal)
+        #     #Logging("Result was the same - System was correct")
+        #     PrintGreen(">>>Result was the same - System was correct") 
+        # else:
+        #     #Logging("Result was different - System was false")
+        #     PrintRed(">>>Result was different - System was false")
 
-        Logging("")
-        Logging("Compare Settlement - Holiday with Monthly Scheduled Working - Holiday")
-        if settlement_holiday_decimal == holiday_number1:
-            #Logging(settlement_holiday_decimal)
-            #Logging(holiday_number1)
-            #Logging("Result was the same - System was correct")
-            PrintGreen(">>>Result was the same - System was correct") 
-        else:
-            #Logging("Result was different - System was false")
-            PrintRed(">>>Result was different - System was false")
+        # Logging("")
+        # Logging("Compare Settlement - Holiday with Monthly Scheduled Working - Holiday")
+        # if settlement_holiday_decimal == holiday_number1:
+        #     #Logging(settlement_holiday_decimal)
+        #     #Logging(holiday_number1)
+        #     #Logging("Result was the same - System was correct")
+        #     PrintGreen(">>>Result was the same - System was correct") 
+        # else:
+        #     #Logging("Result was different - System was false")
+        #     PrintRed(">>>Result was different - System was false")
 
-        Logging("")
-        Logging("Compare Settlement - Day off with Monthly Scheduled Working - Day off")
-        if settlement_day_off_decimal == day_off_number1:
-            #Logging(settlement_day_off_decimal)
-            #Logging(day_off_number1)
-            #Logging("Result was the same - System was correct")
-            PrintGreen(">>>Result was the same - System was correct") 
-        else:
-            #Logging("Result was different - System was false")
-            PrintRed(">>>Result was different - System was false")
+        # Logging("")
+        # Logging("Compare Settlement - Day off with Monthly Scheduled Working - Day off")
+        # if settlement_day_off_decimal == day_off_number1:
+        #     #Logging(settlement_day_off_decimal)
+        #     #Logging(day_off_number1)
+        #     #Logging("Result was the same - System was correct")
+        #     PrintGreen(">>>Result was the same - System was correct") 
+        # else:
+        #     #Logging("Result was different - System was false")
+        #     PrintRed(">>>Result was different - System was false")
 
-        Logging("")
-        Logging("Compare Settlement - Vacation with Monthly Scheduled Working - Vacation")
-        if settlement_vacation_decimal == scheduled_working_vacation_number1:
-            #Logging(settlement_vacation_decimal)
-            #Logging(scheduled_working_vacation_number1)
-            #Logging("Result was the same - System was correct")
-            PrintGreen(">>>Result was the same - System was correct") 
-        else:
-            #Logging("Result was different - System was false")
-            PrintRed(">>>Result was different - System was false")
+        # Logging("")
+        # Logging("Compare Settlement - Vacation with Monthly Scheduled Working - Vacation")
+        # if settlement_vacation_decimal == scheduled_working_vacation_number1:
+        #     #Logging(settlement_vacation_decimal)
+        #     #Logging(scheduled_working_vacation_number1)
+        #     #Logging("Result was the same - System was correct")
+        #     PrintGreen(">>>Result was the same - System was correct") 
+        # else:
+        #     #Logging("Result was different - System was false")
+        #     PrintRed(">>>Result was different - System was false")
     except:
         Logging("Can't compare")
         #PrintRed(">>>Cant compare") 
@@ -3985,7 +3988,7 @@ def work_place():
         Logging("")
         input_other_name = driver.find_element_by_xpath(data["TIMECARD"]["input_other_name"])
         input_other_name.clear()
-        input_other_name.send_keys("hanh06")
+        input_other_name.send_keys("Hanbiro2")
         Commands.ClickElement("//*[@id='app']//li[1]/span[1]") 
         time.sleep(5)
         input_other_name1 = driver.find_element_by_xpath(data["TIMECARD"]["input_other_name1"]).text
@@ -4015,7 +4018,7 @@ def work_place():
         #Edit holiday name
         edit_name = driver.find_element_by_xpath(data["TIMECARD"]["edit_name"])
         edit_name.clear()
-        edit_name.send_keys("test")
+        edit_name.send_keys("hanbiro2")
 
         holiday_type_list = ["Legal Holiday",  "Company Holiday",  "Substitute Holiday"]
         select_holiday_type = Select(driver.find_element_by_xpath("//*[@id='form-holiday-setting']//select"))
@@ -6048,7 +6051,7 @@ def dashboard():
             Logging("Worked time after change to decimal: " + str(scheduled_working_time_schedules_decimal))
             TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["schedule_working_time"]["pass"])
         except:
-            scheduled_working_time_schedules_decimal = nt(scheduled_working_time_schedules1.split(" ")[0].split("H")[0])
+            scheduled_working_time_schedules_decimal = int(scheduled_working_time_schedules1.split(" ")[0].split("H")[0])
             Logging("Scheduled working time after change to decimal: " + str(scheduled_working_time_schedules_decimal))
             TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["schedule_working_time"]["pass"])
 
@@ -7187,13 +7190,13 @@ def timecard():
     timecard_data = check_time()
     date_clock_in = timesheet_list(**timecard_data)
     timecard_data["date_clock_in"] = date_clock_in
-    #report_list1(**timecard_data)
-    add_event2()
-    view_details()
+    # report_list1(**timecard_data)
+    # add_event2()
+    # view_details()
     working_status()
     
-    # day_list = find_date(today_work_date)
-    # work_schedule(day_list)
+    day_list = find_date(today_work_date)
+    work_schedule(day_list)
     manager()
     total_manager()
     delete_punch()
@@ -7201,7 +7204,7 @@ def timecard():
 
 def time_card():
     # # # # # Napproval_OT()
-    weekly_status()
+    #weekly_status()
     daily_status()
 
 
@@ -7219,7 +7222,7 @@ def time_card():
 
     daily_status2(working_time)
 
-    weekly_status2()
+    #weekly_status2()
 
     company_timecard_reports()
 
@@ -7230,7 +7233,7 @@ def time_card():
 
     report_weekly()
 
-    report_list()
+    #report_list()
 
 
     #dashboard()
