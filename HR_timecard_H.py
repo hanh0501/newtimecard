@@ -314,7 +314,7 @@ def input_reason_leave_early():
         time.sleep(3)
         time_clock_out()
     except:
-        Logging("- Clock-out on time")
+        Logging("")
 
 def clock_out():
     try:
@@ -444,6 +444,7 @@ def add_clock_in_clock_out():
         time_select2 = Commands.ClickElement(data["TIMECARD"]["time_select2"]) 
         time.sleep(5)
         hour2 = Commands.ClickElement(data["TIMECARD"]["hour2"]) 
+        time.sleep(5)
         clock_out = Commands.ClickElement(data["TIMECARD"]["clock_out"])
         time.sleep(5)
         save2 = Commands.ClickElement(data["TIMECARD"]["save2"]) 
@@ -2066,7 +2067,9 @@ def delete_punch():
     time.sleep(2)
 
     filters_input_dashboard_del = driver.find_element_by_xpath(data["TIMECARD"]["filters_input"])
+    time.sleep(2)
     filters_input_dashboard_del.send_keys(Keys.ARROW_DOWN)
+    time.sleep(2)
     filters_input_dashboard_del.send_keys(Keys.ENTER)
     time.sleep(3)
     Commands.ClickElement(data["TIMECARD"]["delete"]) 
@@ -2094,12 +2097,10 @@ def weekly_status():
 
     try:
         Commands.ClickElement(data["TIMECARD"]["open_search_box"])
-        # ws_search = driver.find_element_by_xpath(data["TIMECARD"]["ws_search"])
-        # ws_search.send_keys(data["name_keyword"][0])
         ws_search = Commands.InputElement(data["TIMECARD"]["ws_search"], data["name_keyword"][0])
         ws_search.send_keys(Keys.ENTER)
         time.sleep(5)
-        Commands.ClickElement(data["TIMECARD"]["click_first_choice"]) 
+        Commands.ClickElement(data["TIMECARD"]["click_first_choice"] % data["name_keyword"][0]) 
         Commands.ClickElement(data["TIMECARD"]["open_search_box"]) 
         time.sleep(3)
 
@@ -2854,7 +2855,7 @@ def daily_status2(working_time):
         search2 = Commands.InputElement(data["TIMECARD"]["search2"], data["name_keyword"][0])
         search2.send_keys(Keys.ENTER)
         time.sleep(5)
-        Commands.ClickElement(data["TIMECARD"]["click_first_choice"]) 
+        Commands.ClickElement(data["TIMECARD"]["click_first_choice"] % data["name_keyword"][0]) 
         Commands.ClickElement(data["TIMECARD"]["open_searchbox"]) 
 
         time.sleep(5)
@@ -2874,6 +2875,7 @@ def daily_status2(working_time):
         Logging("break time before change to decimal: " + dailystatus_breaktime2.text)
         breaktime_number = int(dailystatus_breaktime2.text.split("H")[0])
         Logging("break time after change to decimal: " + str(breaktime_number))
+        
 
         achievement2 = driver.find_element_by_xpath(data["TIMECARD"]["achievement2"])
         Logging("Achievement: " + achievement2.text) 
@@ -3005,12 +3007,11 @@ def weekly_status2():
         Waits.WaitElementLoaded(30, data["TIMECARD"]["weekly_status_wait"])
 
         Commands.ClickElement(data["TIMECARD"]["open_search_box"]) 
-        ws_search2 = driver.find_element_by_xpath(data["TIMECARD"]["ws_search2"])
-        ws_search2.send_keys(data["name_keyword"][0])
         ws_search2 = Commands.InputElement(data["TIMECARD"]["ws_search2"], data["name_keyword"][0])
         ws_search2.send_keys(Keys.ENTER)
+        time.sleep(6)
+        Commands.ClickElement(data["TIMECARD"]["click_first_choice"] % data["name_keyword"][0]) 
         time.sleep(3)
-        Commands.ClickElement(data["TIMECARD"]["click_first_choice"]) 
         Commands.ClickElement(data["TIMECARD"]["open_search_box"]) 
 
         time.sleep(3)
@@ -3249,7 +3250,6 @@ def weekly_status2():
             PrintRed(">>>Result was different - System was false") 
 
         TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["view_detail_weekly_status_data"]["pass"])
-
     except:
         #Logging("Check data fail")
         PrintRed(">>>Check data failed") 
@@ -3267,7 +3267,8 @@ def company_timecard_reports():
         ws_search2 = Commands.InputElement(data["TIMECARD"]["ws_search2"], data["name_keyword"][0])
         ws_search2.send_keys(Keys.ENTER)
         time.sleep(5)
-        Commands.ClickElement(data["TIMECARD"]["click_first_choice"]) 
+        Commands.ClickElement(data["TIMECARD"]["click_first_choice"] % data["name_keyword"][0]) 
+        time.sleep(5)
         Commands.ClickElement(data["TIMECARD"]["company_setting"]) 
 
         time.sleep(5)
@@ -3323,7 +3324,6 @@ def company_timecard_reports():
             avg_worked_time_per_week_decimal = int(avg_worked_time_per_week_time.split(" ")[0].split("H")[0])
             Logging("Avg.Worked time per week after change to decimal: " + str(avg_worked_time_per_week_decimal))
             TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["after_login_company_report_data"]["pass"])
-
     except:
         #Logging("Check data fail")
         PrintRed(">>>Check data failed") 
@@ -3809,7 +3809,8 @@ def timeline():
         time.sleep(5)
         time_select2 = Commands.ClickElement(data["TIMECARD"]["time_select2"]) 
         time.sleep(5)
-        hour2 = Commands.ClickElement(data["TIMECARD"]["hour2"]) 
+        hour2 = Commands.ClickElement(data["TIMECARD"]["hour2"])
+        time.sleep(5)
         clock_out = Commands.ClickElement(data["TIMECARD"]["clock_out"])
         time.sleep(5)
         save2 = Commands.ClickElement(data["TIMECARD"]["save2"]) 
@@ -3830,8 +3831,6 @@ def timeline():
         filters_all = Commands.ClickElement(data["TIMECARD"]["filters_all"])
         time.sleep(3)
         filters_input = driver.find_element_by_xpath(data["TIMECARD"]["filters_input"])
-        filters_input.send_keys(Keys.ARROW_DOWN)
-        time.sleep(2)
         filters_input.send_keys(Keys.ARROW_DOWN)
         time.sleep(2)
         filters_input.send_keys(Keys.ARROW_DOWN)
@@ -3920,15 +3919,7 @@ def work_place():
         time.sleep(3)
         Commands.ClickElement(data["TIMECARD"]["add_work_place"]) 
         add_button = Commands.ClickElement(data["TIMECARD"]["add_button"]) 
-        Logging("")
-        #Logging("Add work place successfully")
-        work_place_noti =  driver.find_element_by_xpath(data["TIMECARD"]["work_place_noti"])
-        Logging(work_place_noti.text)
-        if work_place_noti.text == "Data inserted successfully.":
-            PrintGreen(">>>Add work place successfully")
-        else:
-            Logging("Duplicated data is available")
-            TesCase_LogResult(**data["testcase_result"]["HR-Timecard"]["work_place"]["pass"])
+        Logging("Add work place successfully")
     except:
         #Logging("Add work place fail")
         PrintRed(">>>Add work place failed")
@@ -7186,25 +7177,25 @@ def timecard():
     clock_out()
 
     delete_punch()
-    add_clock_in_clock_out()
-    timecard_data = check_time()
-    date_clock_in = timesheet_list(**timecard_data)
-    timecard_data["date_clock_in"] = date_clock_in
-    # report_list1(**timecard_data)
-    # add_event2()
-    # view_details()
-    working_status()
+    # add_clock_in_clock_out()
+    # timecard_data = check_time()
+    # date_clock_in = timesheet_list(**timecard_data)
+    # timecard_data["date_clock_in"] = date_clock_in
+    # # report_list1(**timecard_data)
+    # # add_event2()
+    # # view_details()
+    # working_status()
     
-    day_list = find_date(today_work_date)
-    work_schedule(day_list)
-    manager()
-    total_manager()
-    delete_punch()
+    # # day_list = find_date(today_work_date)
+    # # work_schedule(day_list)
+    # manager()
+    # total_manager()
+    # delete_punch()
     
 
 def time_card():
     # # # # # Napproval_OT()
-    #weekly_status()
+    weekly_status()
     daily_status()
 
 
@@ -7222,7 +7213,7 @@ def time_card():
 
     daily_status2(working_time)
 
-    #weekly_status2()
+    weekly_status2()
 
     company_timecard_reports()
 

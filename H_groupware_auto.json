@@ -3,8 +3,8 @@
 
     "user_name": "automationtest1",
     "name_keyword": [
-        "AutomationTest1",
-        "AutomationTest2"
+        "hanh1",
+        "hanh2"
     ],
     
     "user_password": "automationtest1!",
@@ -2646,7 +2646,7 @@
         "input_reason_leave_early": "//*[@class='modal-content']//form//div//div//textarea",
         "reason_leave_early": "I have a personal reason. Thank you!",
 
-        "breaktime_but": "//*[@id='click-out-side-3']//button[contains(.,'Break Time')]",
+        "breaktime_but": "//button//span[contains(@data-lang-id,'tc_status_break_time')]",
         "pop_up_breaktime": "//*[@class='modal-content']//button[contains(.,'End Break Time')]",
         "OT_popup": "//div[@class='modal-content']/div/span/span[contains(@data-lang-id,'tc_title_apply_overtime_approval')]",
         "OT_clockout": "//div[@class='text-center']/button[contains(.,'Clock-Out')]",
@@ -2659,7 +2659,7 @@
         "day_off": "//*[@class='main-calendar']//div[contains(@class,'tui-full-calendar-weekday-schedules')]//span[contains(@title,'Day Off')]",
         "holiday": "//*[@class='main-calendar']//div[contains(@class,'tui-full-calendar-weekday-schedules')]//span[contains(@title,'Holiday')]",
 
-        "clock_out_but": "//*[@id='click-out-side-3']//button[contains(.,'Clock-Out')]",
+        "clock_out_but": "//button//span[contains(@data-lang-id,'tc_action_clock_out')]",
         "edit_clockout_time": "//*[@id='app']//div[contains(@class, 'timeline-item')]//div[contains(.,'Clock-Out')]//div[contains(@class, 'd-flex ')]/span[1]//div[@class='cursor-pointer']",
 
         "output_clockin": "//div[contains(@class, 'content-body')]//div[contains(@class, 'header')]//div[contains(@class, 'check-in-status')]",
@@ -2705,7 +2705,7 @@
         ],
         
         
-        "admin_account": "//label[contains(@data-lang-id,'tc_menu_company')]",
+        "admin_account": "//label[contains(@data-lang-id,'tc_permissions_settings')]",
         "add_working_status": "//div[contains(@class,'icon-user-status down')]",
         "working_status": "//*[@id='click-out-side-6']//div[contains(@class,'item-header-content')]//div[2]/div/div/div",
         "dropdown_time": "//*[starts-with(@id,'dropdown')]/button",
@@ -2886,9 +2886,9 @@
         "hour2": "//div[starts-with(@id, 'dropdown')]//div//button[contains(.,'16')]",
         "clock_out": "//div[contains(@class,'custom-control custom-radio')]//span[contains(.,'Clock-Out')]",
         "save2": "//span[contains(.,'Save')]",
-        "clockin_time_a": "//div[contains(@class,'timeline-group')]//div[1]//nav//div[5]",
+        "clockin_time_a": "//div[contains(@class,'timeline-group')]//div[1]//nav//div[6]",
         "filters_input": "//input[starts-with(@id, 'react-select')]",
-        "clockout_time_a": "//div[contains(@class,'timeline-group')]//div[1]//nav//div[5]",
+        "clockout_time_a": "//div[contains(@class,'timeline-group')]//div[1]//nav//div[6]",
         "dashboard_clockin": "//div[contains(@class,'check-in-status')]",
         "dashboard_clockout": "//div[contains(@class,'check-out-status')]",
         "working_method": "//div[contains(@class,'work-method-name')]",
@@ -3246,7 +3246,7 @@
         "clock_in": "//span[contains(.,'Clock-In')]",
         "clock_Out": "//span[contains(.,'Clock-Out')]",
         "clock_in_close": "//div[contains(@class,'modal-content')]//button[contains(@type,'button')]/span",
-        "ws_click_detail": "//*[@col-id='view-detail']//div[contains(@class,'cursor-pointer')]",
+        "ws_click_detail": "//div[contains(@class,'btn-view-detail')]",
         "click_details": "//div[contains(@class,'btn-view-detail')]",
         "list": "//span[contains(.,'List')]",
         "dashboard_page": "//span[contains(@class, 'text-truncate') and contains(., 'Dashboard')]",
